@@ -1,0 +1,57 @@
+import { create } from "zustand";
+
+type Author = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+export interface BlogType {
+  id?: string;
+  title: string;
+  content: string;
+  published: boolean;
+  author: Author;
+  tags: string[];
+  category: string;
+  thumbnail: string;
+  readTime: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CommentType {
+  id?: string;
+  content: string;
+  blog: string;
+  author: Author;
+  parentComment: string | null 
+  likes: number;
+  flagged?: boolean;
+  dislikes?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+type BlogStore = {
+  blog: BlogType | null;
+  blogs: BlogType[];
+  comment: CommentType | null;
+  comments: CommentType[];
+  setComment: (newComment: CommentType) => void;
+  setComments: (newComments: CommentType[]) => void;
+  setBlogs: (newBlogs: BlogType[]) => void;
+  setBlog: (newBlog: BlogType) => void;
+  clearBlog: () => void;
+};
+
+export const useBlog = create<BlogStore>((set) => ({
+  blog: null,
+  blogs: [],
+  comment: null,
+  comments: [],
+  setComment: (newComment: CommentType) => set({ comment: newComment }),
+  setComments: (newComments: CommentType[]) => set({ comments: newComments }),
+  setBlogs: (newBlogs: BlogType[]) => set({ blogs: newBlogs }),
+  setBlog: (newBlog: BlogType) => set({ blog: newBlog }),
+  clearBlog: () => set({ blog: null }),
+}));
