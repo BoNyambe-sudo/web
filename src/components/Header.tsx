@@ -35,13 +35,13 @@ const Header = () => {
   return (
     <div className="container flex items-center justify-between py-3">
       <div className="flex items-center justify-between gap-4">
-      <Logo size={32} className="text-foreground"/>
+      <Logo size={32} className="lightText" />
 
       <div className="flex items-center text-sm gap-3">
-        <Link to="/" className="ml-4 text-foreground hover:text-primary transition-colors">
+        <Link to="/" className="ml-4 lightText hover:text-primary transition-colors">
           Home
         </Link>
-        <Link to="/blogs" className="text-foreground hover:text-primary transition-colors">
+        <Link to="/blogs" className="lightText hover:text-primary transition-colors">
           Blogs
         </Link>
       </div>

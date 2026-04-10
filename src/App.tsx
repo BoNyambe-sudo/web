@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient } from "./hooks/queryClient";
 import { useTheme } from "./hooks/clientState/useTheme";
-//import ThemeToggle from "./components/ToggleTheme";
+import ThemeToggle from "./components/ToggleTheme";
 import { useToken } from "./hooks/clientState/useToken";
 import Home from "./pages/user/Home";
 import SingleBlog from "./pages/user/SingleBlog";
@@ -40,7 +40,7 @@ function App() {
             },
           }}
         />
-        {/* <ThemeToggle /> */}
+        <ThemeToggle />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Router>

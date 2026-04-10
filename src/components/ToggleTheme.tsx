@@ -1,13 +1,19 @@
-/* import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { useTheme } from "@/hooks/clientState/useTheme";
 
+type IconProps = {
+  size?: number;
+  className?: string;
+};
+
 // Simple icon components
-const SunIcon = () => (
+const SunIcon = ({size = 20, className}: IconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
+    width={size}
+    height={size}
+    className={className}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -27,11 +33,12 @@ const SunIcon = () => (
   </svg>
 );
 
-const MoonIcon = () => (
+const MoonIcon = ({size = 20, className}: IconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
+    width={size}
+    height={size}
+    className={className}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -43,11 +50,12 @@ const MoonIcon = () => (
   </svg>
 );
 
-const MonitorIcon = () => (
+const MonitorIcon = ({size = 20, className}: IconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
+    width={size}
+    height={size}
+    className={className}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -65,8 +73,8 @@ const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({
-    x: window.innerWidth - 140,
-    y: window.innerHeight - 140,
+    x: window.innerWidth - 100,
+    y: window.innerHeight - 70,
   });
   const toggleRef = useRef<HTMLDivElement>(null);
   const startPos = useRef({ x: 0, y: 0 });
@@ -75,8 +83,8 @@ const ThemeToggle = () => {
   useEffect(() => {
     const handleResize = () => {
       setPosition((prev) => ({
-        x: Math.min(prev.x, window.innerWidth - 140),
-        y: Math.min(prev.y, window.innerHeight - 140),
+        x: Math.min(prev.x, window.innerWidth - 100),
+        y: Math.min(prev.y, window.innerHeight - 70),
       }));
     };
 
@@ -100,8 +108,8 @@ const ThemeToggle = () => {
       const newY = e.clientY - startPos.current.y;
 
       // Boundaries
-      const maxX = window.innerWidth - 140;
-      const maxY = window.innerHeight - 140;
+      const maxX = window.innerWidth - 100;
+      const maxY = window.innerHeight - 70;
 
       setPosition({
         x: Math.max(0, Math.min(newX, maxX)),
@@ -129,7 +137,7 @@ const ThemeToggle = () => {
   return (
     <div
       ref={toggleRef}
-      className={`fixed z-50 flex items-center justify-center p-2 rounded-lg shadow-lg bg-background border border-border transition-all duration-200 ${
+      className={`fixed z-50 flex items-center justify-center p-1 rounded-xl shadow-lg bg-background border border-border transition-all duration-200 ${
         isDragging
           ? "cursor-grabbing opacity-90"
           : "cursor-grab hover:opacity-100"
@@ -143,21 +151,21 @@ const ThemeToggle = () => {
       <ToggleGroup
         type="single"
         value={theme}
-        onValueChange={(value: undefined | "light" | "dark" | "system") =>
-          value && setTheme(value as "light" | "dark" | "system")
-        }
+        onValueChange={(value: "light" | "dark" | "system") => {
+          setTheme(value);
+        }}
         variant="outline"
         size="sm"
         className="bg-background"
       >
         <ToggleGroupItem value="light" aria-label="Light theme">
-          <SunIcon />
+          <SunIcon size={16} />
         </ToggleGroupItem>
         <ToggleGroupItem value="dark" aria-label="Dark theme">
-          <MoonIcon />
+          <MoonIcon size={16} />
         </ToggleGroupItem>
         <ToggleGroupItem value="system" aria-label="System theme">
-          <MonitorIcon />
+          <MonitorIcon size={16} />
         </ToggleGroupItem>
       </ToggleGroup>
     </div>
@@ -165,4 +173,3 @@ const ThemeToggle = () => {
 };
 
 export default ThemeToggle;
- */

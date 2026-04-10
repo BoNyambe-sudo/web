@@ -138,3 +138,7 @@
 .container {
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
+
+.lightText {
+  color: oklch(0.95 0.01 250);
+}

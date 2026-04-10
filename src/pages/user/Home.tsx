@@ -297,14 +297,16 @@ const Home = () => {
       </div>
       <div className="absolute bottom-4 left-4 text-xs text-foreground flex-col sm:flex-row flex gap-4">
         <div className="flex items-center gap-2">
-          <Mail size={"16"} className="text-foreground" />
-          <Link to="mailto:franknyambe202205@gmail.com">
+          <Mail size={"16"} className="lightText" />
+          <Link className="lightText" to="mailto:franknyambe202205@gmail.com">
             franknyambe202205@gmail.com
           </Link>
         </div>
         <div className="flex items-center gap-2">
-          <Phone size={"16"} className="text-foreground" />
-          <Link to="tel:+260978000956">+260978000956</Link>
+          <Phone size={"16"} className="lightText" />
+          <Link className="lightText" to="tel:+260978000956">
+            +260978000956
+          </Link>
         </div>
       </div>
       <p className="absolute bottom-4 right-4 text-xs text-muted-foreground">
