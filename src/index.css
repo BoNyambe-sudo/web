@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -132,6 +133,7 @@
   }
   input[type="time"] {
   color-scheme: dark; /* Automatically switches icon to light color */
+  
 }
 }
 
@@ -141,4 +143,5 @@
 
 .lightText {
   color: oklch(0.95 0.01 250);
+  @apply hover:text-primary
 }

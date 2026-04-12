@@ -1,5 +1,234 @@
+import BlogRenderer from "@/components/BlogRenderer";
+import CommentSection from "@/components/CommentSection";
+import Header from "@/components/Header";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useBlog } from "@/hooks/clientState/useBlog";
+import {
+  AlertCircle,
+  Clock,
+  Share2,
+  Tag,
+  User,
+  MessageSquare,
+  Copy,
+} from "lucide-react";
+import Facebook from "@/components/icons/facebook";
+//import { Separator } from "@/components/ui/separator";
+//import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router";
+import BlogCard from "@/components/BlogCard";
+import Footer from "@/components/Footer";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import Instagram from "@/components/icons/instagram";
+import LinkedIn from "@/components/icons/linkedIn";
+import Twitter from "@/components/icons/twitter";
+
 const SingleBlog = () => {
-  return <div></div>;
+  const { id } = useParams();
+  const blogs = useBlog((state) => state.blogs);
+  const blog = useBlog((state) => state.blogs.find((b) => b.id === id));
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+
+  const currentUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareMessage = `Check out this amazing blog: ${blog?.title}!`;
+  const similarBlogs = blogs.filter((b) => b.id !== id);
+
+  const handleShare = (platform: string) => {
+    const encodedUrl = encodeURIComponent(currentUrl);
+    const encodedMessage = encodeURIComponent(shareMessage);
+
+    let shareUrl = "";
+
+    switch (platform) {
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+        break;
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedMessage}`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+        break;
+      case "whatsapp":
+        shareUrl = `https://wa.me/?text=${encodedMessage}%20${encodedUrl}`;
+        break;
+      case "instagram":
+        // Instagram doesn't support direct sharing via URL, but we can open the app
+        shareUrl = `instagram://share?url=${encodedUrl}`;
+        break;
+    }
+
+    if (shareUrl) {
+      window.open(shareUrl, "_blank");
+    }
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(currentUrl);
+      toast.success("Copied to clipboard");
+    } catch (error) {
+      console.error("Failed to copy link:", error);
+    }
+  };
+
+  if (!blog) {
+    return (
+      <Card className="self-center mx-auto flex flex-col">
+        <AlertCircle />
+        <CardHeader>Blog not found!</CardHeader>
+        <CardContent>
+          Go back to the <Link to="/blogs">blogs page</Link>
+        </CardContent>
+      </Card>
+    );
+  }
+  return (
+    <>
+      <Header
+        className="bg-background backdrop-blur-xl"
+      />
+      {/* <Separator /> */}
+      <div className="container py-10">
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+              {blog?.category}
+            </span>
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <Clock size={16} />
+              <span>{blog?.readTime} min read</span>
+            </div>
+            <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
+              <DialogTrigger asChild>
+                <div className="flex items-center gap-2.5 text-muted-foreground hover:text-primary  cursor-pointer">
+                  <Share2 className="text-lg" />
+                  <p>Share</p>
+                </div>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="text-center">Share Blog</DialogTitle>
+                </DialogHeader>
+                <div className="grid grid-cols-3 gap-4 py-4">
+                  <Button
+                    variant="outline"
+                    className="flex flex-col items-center gap-2 p-4 h-auto hover:text-blue-600 hover:border-blue-200 transition-all"
+                    onClick={() => handleShare("facebook")}
+                  >
+                    <Facebook className="size-6" />
+                    <span className="text-sm">Facebook</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex flex-col items-center gap-2 p-4 h-auto hover:text-blue-400 hover:border-blue-400 transition-all"
+                    onClick={() => handleShare("twitter")}
+                  >
+                    <Twitter className="size-6" />
+                    <span className="text-sm">Twitter</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex flex-col items-center gap-2 p-4 h-auto hover:text-blue-700 hover:border-blue-700 transition-all"
+                    onClick={() => handleShare("linkedin")}
+                  >
+                    <LinkedIn className="size-6" />
+                    <span className="text-sm">LinkedIn</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex flex-col items-center gap-2 p-4 h-auto hover:text-green-500 hover:border-green-500 transition-all"
+                    onClick={() => handleShare("whatsapp")}
+                  >
+                    <MessageSquare className="size-6" />
+                    <span className="text-sm">WhatsApp</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex flex-col items-center gap-2 p-4 h-auto hover:text-pink-500 hover:border-pink-500 transition-all"
+                    onClick={() => handleShare("instagram")}
+                  >
+                    <Instagram className="size-6" />
+                    <span className="text-sm">Instagram</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex flex-col items-center gap-2 p-4 h-auto hover:bg-muted hover:text-muted-foreground hover:border-gray-500 transition-all"
+                    onClick={handleCopyLink}
+                  >
+                    <Copy className="size-6" />
+                    <span className="text-sm">Copy Link</span>
+                  </Button>
+                </div>
+                <div className="text-center text-sm text-muted-foreground">
+                  Share this Blog with your friends and family!
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          <h1 className="text-3xl lg:text-4xl font-bold mb-4">{blog?.title}</h1>
+
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <User size={20} className="text-primary" />
+            </div>
+            <div>
+              <p className="font-medium">
+                {blog?.author?.firstName} {blog?.author?.lastName}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {blog?.createdAt?.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+          </div>
+        </div>
+        <BlogRenderer htmlContent={blog?.content} />
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-3">
+            <Tag size={16} className="text-muted-foreground" />
+            <span className="font-medium">Tags</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {blog?.tags?.map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1 bg-muted rounded-full text-sm text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+        <CommentSection blogId={blog?.id as string} />
+        <div className="mt-12">
+          <div className="flex items-center gap-2 mb-6">
+            <Tag size={20} className="text-primary" />
+            <h2 className="text-2xl font-bold">Similar Blogs</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {similarBlogs?.slice(0, 3)?.map((blog) => (
+              <BlogCard key={blog.id} blog={blog} />
+            ))}
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
 };
 
 export default SingleBlog;

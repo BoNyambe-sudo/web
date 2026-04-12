@@ -22,12 +22,13 @@ export interface BlogType {
 export interface CommentType {
   id?: string;
   content: string;
-  blog: string;
+  blogId: string;
   author: Author;
-  parentComment: string | null 
-  likes: number;
+  parentComment: string | null;
+  likedBy: string[];
+  dislikedBy: string[];
+  replies?: CommentType[];
   flagged?: boolean;
-  dislikes?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

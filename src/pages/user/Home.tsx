@@ -85,7 +85,7 @@ const Home = () => {
       className={`h-screen w-screen bg-cover bg-center flex flex-col relative`}
       style={{ backgroundImage: `url(${heroImg})` }}
     >
-      <Header />
+      <Header textClassName="lightText" />
       <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col max-w-4xl w-6/10 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg p-6">
         <div className="flex flex-col mx-auto items-center gap-4">
           <div className="w-full relative">
@@ -94,7 +94,12 @@ const Home = () => {
               placeholder={placeholders[currentPlaceholderIndex]}
               autoFocus
               value={messageFormData.message}
-              onChange={(e) => setMessageFormData({...messageFormData, message: e.target.value})}
+              onChange={(e) =>
+                setMessageFormData({
+                  ...messageFormData,
+                  message: e.target.value,
+                })
+              }
             />
             <datalist id="placeholders">
               {placeholders.map((placeholder, index) => (
@@ -118,7 +123,18 @@ const Home = () => {
                 <form className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name</Label>
-                    <Input required id="name" placeholder="Your name" value={messageFormData.name} onChange={(e) => setMessageFormData({...messageFormData, name: e.target.value})} />
+                    <Input
+                      required
+                      id="name"
+                      placeholder="Your name"
+                      value={messageFormData.name}
+                      onChange={(e) =>
+                        setMessageFormData({
+                          ...messageFormData,
+                          name: e.target.value,
+                        })
+                      }
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
@@ -128,12 +144,27 @@ const Home = () => {
                       type="email"
                       placeholder="Your email"
                       value={messageFormData.email}
-                      onChange={(e) => setMessageFormData({...messageFormData, email: e.target.value})}
+                      onChange={(e) =>
+                        setMessageFormData({
+                          ...messageFormData,
+                          email: e.target.value,
+                        })
+                      }
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="subject">Subject (optional)</Label>
-                    <Input id="subject" placeholder="Subject" value={messageFormData.subject} onChange={(e) => setMessageFormData({...messageFormData, subject: e.target.value})} />
+                    <Input
+                      id="subject"
+                      placeholder="Subject"
+                      value={messageFormData.subject}
+                      onChange={(e) =>
+                        setMessageFormData({
+                          ...messageFormData,
+                          subject: e.target.value,
+                        })
+                      }
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="message">Message</Label>
@@ -142,7 +173,12 @@ const Home = () => {
                       id="message"
                       placeholder="Your message"
                       value={messageFormData.message}
-                      onChange={(e) => setMessageFormData({...messageFormData, message: e.target.value})}
+                      onChange={(e) =>
+                        setMessageFormData({
+                          ...messageFormData,
+                          message: e.target.value,
+                        })
+                      }
                     />
                   </div>
                   <div className="flex justify-end">

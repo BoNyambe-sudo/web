@@ -9,6 +9,7 @@ export type AppointmentStatus =
 
 export interface AppointmentType {
   id?: string;
+  name: string;
   phoneNumber: string;
   scheduledDate: Date;
   scheduledTime: string;
