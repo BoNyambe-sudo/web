@@ -132,7 +132,7 @@
     @apply cursor-pointer;
   }
   input[type="time"] {
-  color-scheme: dark; /* Automatically switches icon to light color */
+  color-scheme: light dark; /* Automatically switches icon to light color */
   
 }
 }
@@ -144,4 +144,13 @@
 .lightText {
   color: oklch(0.95 0.01 250);
   @apply hover:text-primary
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    /* If the icon is black and you can't see it, 
+       invert(1) will turn it white. */
+    filter: invert(0.5); /* Try 0.5 for gray or 1 for white */
+    
+    /* Ensure it has full opacity */
+    opacity: 1;
 }
