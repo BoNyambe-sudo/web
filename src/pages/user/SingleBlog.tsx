@@ -83,20 +83,20 @@ const SingleBlog = () => {
 
   if (!blog) {
     return (
-      <Card className="self-center mx-auto flex flex-col">
-        <AlertCircle />
-        <CardHeader>Blog not found!</CardHeader>
-        <CardContent>
-          Go back to the <Link to="/blogs">blogs page</Link>
-        </CardContent>
-      </Card>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Card>
+          <AlertCircle />
+          <CardHeader>Blog not found!</CardHeader>
+          <CardContent>
+            Go back to the <Link to="/blogs">blogs page</Link>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
   return (
     <>
-      <Header
-        className="bg-background backdrop-blur-xl"
-      />
+      <Header className="bg-background backdrop-blur-xl" />
       {/* <Separator /> */}
       <div className="container py-10">
         <div className="mb-8">

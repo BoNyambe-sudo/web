@@ -12,7 +12,7 @@ interface CommentsSectionProps {
   currentUserId?: string;
 }
 
-const CommentSection = ({ blogId, currentUserId }: CommentsSectionProps) => {
+const CommentSection = ({ blogId }: CommentsSectionProps) => {
   const setComments = useBlog((state) => state.setComments);
   const user = useUser(state => state.user)
   const [commentText, setCommentText] = useState("");

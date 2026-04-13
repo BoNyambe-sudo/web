@@ -37,6 +37,8 @@ const Blogs = () => {
   const blogs = useBlog((state) => state.blogs);
   const setBlogs = useBlog((state) => state.setBlogs);
 
+  
+
   useEffect(() => {
     setBlogs(sampleBlogs);
   }, [setBlogs]);

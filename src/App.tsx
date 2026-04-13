@@ -12,36 +12,46 @@ import Blogs from "./pages/user/Blogs";
 import FAQs from "./pages/user/FAQs";
 import NotFoundPage from "./pages/NotFoundPage";
 import ManageAccount from "./pages/user/ManageAccount";
+import { useUser } from "./hooks/clientState/useUser";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
   useTheme();
   useToken();
+  const user = useUser((state) => state.user);
 
   return (
     <Router>
       <QueryClientProvider client={queryClient}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path='/blogs' element={<Blogs />} />
-          <Route path='/faqs' element={<FAQs />} />
-          <Route path='/blogs/:id' element={<SingleBlog />} />
-          <Route path='/manage-account' element={<ManageAccount />} />
-          <Route path='*' element={<NotFoundPage />} />
-        </Routes>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            className:
-              "bg-background text-foreground border border-border shadow-lg rounded-md",
-            style: {
-              background: "inherit",
-              color: "inherit",
-              padding: "12px 16px",
-            },
-          }}
-        />
-        <ThemeToggle />
-        <ReactQueryDevtools initialIsOpen={false} />
+        <TooltipProvider>
+          {user && (user.role === "ADMIN" || user.role === "CONTRIBUTOR") ? (
+            <AdminDashboard />
+          ) : (
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/faqs" element={<FAQs />} />
+              <Route path="/blogs/:id" element={<SingleBlog />} />
+              <Route path="/manage-account" element={<ManageAccount />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          )}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              className:
+                "bg-background text-foreground border border-border shadow-lg rounded-md",
+              style: {
+                background: "inherit",
+                color: "inherit",
+                padding: "12px 16px",
+              },
+            }}
+          />
+          <ThemeToggle />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </TooltipProvider>
       </QueryClientProvider>
     </Router>
   );

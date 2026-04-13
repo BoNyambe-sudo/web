@@ -154,3 +154,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     /* Ensure it has full opacity */
     opacity: 1;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
