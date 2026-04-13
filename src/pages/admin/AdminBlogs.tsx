@@ -64,6 +64,7 @@ import { blogMetrics, sampleComments } from "@/temporalData";
 import BlogsPerCategory, {
   type BlogsPerCategoryType,
 } from "@/components/BlogsPerCategory";
+import type { BlogFilters } from "@/components/BlogSiderBar";
 
 type BlogFormData = {
   title: string;
@@ -80,6 +81,8 @@ const AdminBlogs = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [blogToDelete, setBlogToDelete] = useState<string | null>(null);
   const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const [createFormData, setCreateFormData] = useState<BlogFormData>({
     title: "",
     content: "",
@@ -87,6 +90,13 @@ const AdminBlogs = () => {
     tags: "",
     published: false,
   });
+  const [selectedFilters, setSelectedFilters] = useState<BlogFilters>({
+      category: "",
+      tags: [],
+      latest: false,
+      sortBy: "createdAt", // Default sort by date
+      sortOrder: "desc", // Default sort order
+    });
   const [updateFormData, setUpdateFormData] = useState<BlogFormData>({
     title: "",
     content: "",
@@ -132,6 +142,23 @@ const AdminBlogs = () => {
     "Finance",
     "Education",
     "Entertainment",
+  ];
+
+  const availableTags = [
+    "fitness",
+    "mental-health",
+    "nutrition",
+    "yoga",
+    "personal-finance",
+    "entrepreneurship",
+    "economics",
+    "online-courses",
+    "productivity",
+    "productivity-tips",
+    "career-development",
+    "gaming",
+    "movies&TV",
+    "music",
   ];
 
   const handleCreateBlog = () => {
@@ -279,6 +306,14 @@ const AdminBlogs = () => {
     setSelectedBlog(blog);
     setIsPreviewDialogOpen(true);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  });
 
   return (
     <div className="p-6">
@@ -429,6 +464,85 @@ const AdminBlogs = () => {
           </Dialog>
         </div>
       </div>
+      <div className="flex flex-col md:flex-row items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <Input
+            type="search"
+            placeholder="Search blogs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-64"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Select
+            value={selectedFilters.category}
+            onValueChange={(value) =>
+              setSelectedFilters({ ...selectedFilters, category: value })
+            }
+          >
+            <SelectTrigger className="w-45">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={selectedFilters.tags.join(",")}
+            onValueChange={(value) =>
+              setSelectedFilters({ ...selectedFilters, tags: value.split(",") })
+            }
+          >
+            <SelectTrigger className="w-45">
+              <SelectValue placeholder="Select tags" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Tags</SelectItem>
+              {availableTags.map((tag) => (
+                <SelectItem key={tag} value={tag}>
+                  {tag}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={selectedFilters.sortBy}
+            onValueChange={(value) =>
+              setSelectedFilters({ ...selectedFilters, sortBy: value })
+            }
+          >
+            <SelectTrigger className="w-45">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="title">Title</SelectItem>
+              <SelectItem value="createdAt">Date Created</SelectItem>
+              <SelectItem value="updatedAt">Date Updated</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={selectedFilters.sortOrder}
+            onValueChange={(value: "asc" | "desc") =>
+              setSelectedFilters({ ...selectedFilters, sortOrder: value })
+            }
+          >
+            <SelectTrigger className="w-45">
+              <SelectValue placeholder="Sort order" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="asc">Ascending</SelectItem>
+              <SelectItem value="desc">Descending</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">

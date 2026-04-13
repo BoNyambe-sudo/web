@@ -12,7 +12,7 @@ const BlogsPerCategory = ({
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 mb-8">
       {blogsPerCategory.map((category) => (
-        <Card>
+        <Card key={category.category}>
           <CardHeader className="text-center pb-2">
             <CardTitle className="text-sm font-medium">
               {category.category}

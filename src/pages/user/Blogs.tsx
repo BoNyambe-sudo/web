@@ -29,8 +29,10 @@ export type BlogQueryParams = {
 const Blogs = () => {
   const [selectedFilters, setSelectedFilters] = useState<BlogFilters>({
     category: "",
-    tags: [],
-    latest: false,
+      tags: [],
+      latest: false,
+      sortBy: "createAt", // Default sort by date
+      sortOrder: "desc", // Default sort order
   });
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
@@ -198,6 +200,8 @@ const Blogs = () => {
                       category: "",
                       tags: [],
                       latest: false,
+                      sortBy: "createAt", // Default sort by date
+                      sortOrder: "desc", // Default sort order
                     })
                   }
                   className="text-xs"

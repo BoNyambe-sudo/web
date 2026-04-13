@@ -15,6 +15,8 @@ import { ArrowLeft } from "lucide-react";
 // Filter options interface
 export interface BlogFilters {
   category: string;
+  sortBy: string;
+  sortOrder: "asc" | "desc";
   tags: string[];
   latest: boolean;
 }
@@ -67,6 +69,8 @@ export function BlogSidebar({
       category: "",
       tags: [],
       latest: false,
+      sortBy: "createAt", // Default sort by date
+      sortOrder: "desc", // Default sort order
     });
   };
 
