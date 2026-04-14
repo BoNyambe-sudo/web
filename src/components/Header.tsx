@@ -42,7 +42,7 @@ const Header = ({
   });
 
   useEffect(() => {
-    setUser(sampleUsers[0]);
+    setUser(sampleUsers[2]);
   }, [setUser]);
 
   return (

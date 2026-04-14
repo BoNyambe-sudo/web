@@ -4,6 +4,13 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
@@ -29,17 +36,15 @@ export type BlogQueryParams = {
 const Blogs = () => {
   const [selectedFilters, setSelectedFilters] = useState<BlogFilters>({
     category: "",
-      tags: [],
-      latest: false,
-      sortBy: "createAt", // Default sort by date
-      sortOrder: "desc", // Default sort order
+    tags: [],
+    latest: false,
+    sortBy: "createdAt", // Default sort by date
+    sortOrder: "desc", // Default sort order
   });
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const blogs = useBlog((state) => state.blogs);
   const setBlogs = useBlog((state) => state.setBlogs);
-
-  
 
   useEffect(() => {
     setBlogs(sampleBlogs);
@@ -200,7 +205,7 @@ const Blogs = () => {
                       category: "",
                       tags: [],
                       latest: false,
-                      sortBy: "createAt", // Default sort by date
+                      sortBy: "createdAt", // Default sort by date
                       sortOrder: "desc", // Default sort order
                     })
                   }
@@ -215,18 +220,51 @@ const Blogs = () => {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-2 p-4">
-          <div className="relative w-full">
-            <Input
-              type="search"
-              placeholder="Search Blogs"
-              className="w-full pl-9"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Search
-              size={16}
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-muted-foreground"
-            />
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <div className="flex-1">
+              <div className="relative">
+                <Input
+                  type="search"
+                  placeholder="Search Blogs"
+                  className="w-full pl-9"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <Search
+                  size={16}
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-muted-foreground"
+                />
+              </div>
+            </div>
+            <Select
+              value={selectedFilters.sortBy}
+              onValueChange={(value) =>
+                setSelectedFilters({ ...selectedFilters, sortBy: value })
+              }
+            >
+              <SelectTrigger className="max-w-45">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="title">Title</SelectItem>
+                <SelectItem value="createdAt">Date Created</SelectItem>
+                <SelectItem value="updatedAt">Date Updated</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={selectedFilters.sortOrder}
+              onValueChange={(value: "asc" | "desc") =>
+                setSelectedFilters({ ...selectedFilters, sortOrder: value })
+              }
+            >
+              <SelectTrigger className="max-w-45">
+                <SelectValue placeholder="Sort order" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="asc">A to Z</SelectItem>
+                <SelectItem value="desc">Z to A</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="text-sm text-muted-foreground mb-4">
             Found {blogs.length} {blogs.length === 1 ? "blog" : "blogs"}

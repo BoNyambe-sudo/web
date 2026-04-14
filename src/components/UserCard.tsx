@@ -38,16 +38,20 @@ const UserCard = () => {
         </Avatar>
 
         <div>
-          <p>{user?.firstName} {user?.lastName}</p>
+          <p>
+            {user?.firstName} {user?.lastName}
+          </p>
           <p className="text-muted-foreground text-sm">{user?.email}</p>
         </div>
       </div>
       <Separator />
-      <div role="button" className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-primary transition-colors" onClick={() => navigate("/manage-account")}>
+      <div
+        role="button"
+        className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-primary transition-colors"
+        onClick={() => {navigate("/manage-account"); setIsUserOpen(false); }}
+      >
         <Settings />
-        <p>
-          Manage Account
-        </p>
+        <p>Manage Account</p>
       </div>
       <Separator />
       <Button onClick={clearToken} variant={"secondary"}>

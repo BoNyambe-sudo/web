@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className="flex items-center gap-6 border-t text-sm text-muted-foreground p-4">
       <p className="flex items-center gap-2">
         <Logo size={24} className="font-semibold" />
-        <span className="text-xs">© {currentYear}</span>
+        <span className="text-xs">© {currentYear} All rights reserved</span>
       </p>
       <div className="flex items-center gap-2 text-xs">
         <Link className="hover:text-primary" to="/">Home</Link>
