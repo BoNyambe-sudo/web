@@ -12,6 +12,7 @@ import {
   MessageSquare,
   ExternalLink,
   BookOpen,
+  Search,
 } from "lucide-react";
 import {
   Dialog,
@@ -91,12 +92,12 @@ const AdminBlogs = () => {
     published: false,
   });
   const [selectedFilters, setSelectedFilters] = useState<BlogFilters>({
-      category: "",
-      tags: [],
-      latest: false,
-      sortBy: "createdAt", // Default sort by date
-      sortOrder: "desc", // Default sort order
-    });
+    category: "",
+    tags: [],
+    latest: false,
+    sortBy: "createdAt", // Default sort by date
+    sortOrder: "desc", // Default sort order
+  });
   const [updateFormData, setUpdateFormData] = useState<BlogFormData>({
     title: "",
     content: "",
@@ -142,23 +143,6 @@ const AdminBlogs = () => {
     "Finance",
     "Education",
     "Entertainment",
-  ];
-
-  const availableTags = [
-    "fitness",
-    "mental-health",
-    "nutrition",
-    "yoga",
-    "personal-finance",
-    "entrepreneurship",
-    "economics",
-    "online-courses",
-    "productivity",
-    "productivity-tips",
-    "career-development",
-    "gaming",
-    "movies&TV",
-    "music",
   ];
 
   const handleCreateBlog = () => {
@@ -315,18 +299,23 @@ const AdminBlogs = () => {
     return () => clearTimeout(timer);
   });
 
+  function handleReset(): void {
+    setSearchQuery("");
+    setDebouncedSearchQuery("");
+    setSelectedFilters({
+      category: "",
+      tags: [],
+      latest: false,
+      sortBy: "createAt",
+      sortOrder: "desc",
+    });
+  }
+
   return (
     <div className="p-6">
-      <div className="mb-4">
-        <AdminBreadcrumb />
-      </div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Blogs</h1>
-        <p className="text-muted-foreground mt-2">
-          Manage your blog posts and view analytics
-        </p>
-
-        <div className="flex justify-end mb-6">
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Blogs</h1>
           <Dialog
             open={isCreateDialogOpen}
             onOpenChange={setIsCreateDialogOpen}
@@ -364,10 +353,13 @@ const AdminBlogs = () => {
                   <Select
                     value={createFormData.category}
                     onValueChange={(value) =>
-                      setCreateFormData({ ...createFormData, category: value })
+                      setCreateFormData({
+                        ...createFormData,
+                        category: value,
+                      })
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -463,25 +455,26 @@ const AdminBlogs = () => {
             </DialogContent>
           </Dialog>
         </div>
-      </div>
-      <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Input
-            type="search"
-            placeholder="Search blogs..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-64"
-          />
-        </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search for blogs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
           <Select
             value={selectedFilters.category}
             onValueChange={(value) =>
               setSelectedFilters({ ...selectedFilters, category: value })
             }
           >
-            <SelectTrigger className="w-45">
+            <SelectTrigger className="max-w-45">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
@@ -494,30 +487,12 @@ const AdminBlogs = () => {
             </SelectContent>
           </Select>
           <Select
-            value={selectedFilters.tags.join(",")}
-            onValueChange={(value) =>
-              setSelectedFilters({ ...selectedFilters, tags: value.split(",") })
-            }
-          >
-            <SelectTrigger className="w-45">
-              <SelectValue placeholder="Select tags" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Tags</SelectItem>
-              {availableTags.map((tag) => (
-                <SelectItem key={tag} value={tag}>
-                  {tag}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select
             value={selectedFilters.sortBy}
             onValueChange={(value) =>
               setSelectedFilters({ ...selectedFilters, sortBy: value })
             }
           >
-            <SelectTrigger className="w-45">
+            <SelectTrigger className="max-w-45">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
@@ -532,7 +507,7 @@ const AdminBlogs = () => {
               setSelectedFilters({ ...selectedFilters, sortOrder: value })
             }
           >
-            <SelectTrigger className="w-45">
+            <SelectTrigger className="max-w-45">
               <SelectValue placeholder="Sort order" />
             </SelectTrigger>
             <SelectContent>
@@ -540,10 +515,13 @@ const AdminBlogs = () => {
               <SelectItem value="desc">Descending</SelectItem>
             </SelectContent>
           </Select>
+          <Button variant="destructive" onClick={handleReset}>
+            Reset
+          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Blogs</CardTitle>
@@ -572,6 +550,18 @@ const AdminBlogs = () => {
               {blogMetrics.publishedBlogs > 0
                 ? "Published blogs"
                 : "No published blogs"}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Draft Blogs</CardTitle>
+            <EyeOff className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{blogMetrics.drafts}</div>
+            <p className="text-xs text-muted-foreground">
+              {blogMetrics.drafts > 0 ? "Draft blogs" : "No draft blogs"}
             </p>
           </CardContent>
         </Card>
@@ -799,7 +789,7 @@ const AdminBlogs = () => {
                   setUpdateFormData({ ...updateFormData, category: value })
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>

@@ -13,6 +13,7 @@ import AdminManage from "./AdminManage";
 import { useUser } from "@/hooks/clientState/useUser";
 import NoPermission from "./NoPermission";
 import AdminFooter from "@/components/AdminFooter";
+import { AdminBreadcrumb } from "@/components/AdminBreadCrumb";
 
 const AdminDashboard = () => {
   const user = useUser((state) => state.user);
@@ -24,6 +25,7 @@ const AdminDashboard = () => {
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <span className="text-muted-foreground">|</span>
+            <AdminBreadcrumb />
           </div>
         </header>
         <Routes>

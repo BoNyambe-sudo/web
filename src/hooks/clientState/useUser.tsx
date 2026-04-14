@@ -14,12 +14,17 @@ export interface UserType {
 
 type UserStore = {
   user: UserType | null;
+  users: UserType[];
+  setUsers: (newUsers: UserType[]) => void;
   setUser: (newUser: UserType) => void;
   clearUser: () => void;
 };
 
 export const useUser = create<UserStore>((set) => ({
   user: null,
+  users: [],
+
+  setUsers: (newUsers: UserType[]) => set({ users: newUsers }),
   setUser: (newUser: UserType) => set({ user: newUser }),
   clearUser: () => set({ user: null }),
 }));
