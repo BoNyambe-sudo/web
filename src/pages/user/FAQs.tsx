@@ -46,7 +46,7 @@ const FAQs = () => {
   ];
   return (
     <div className="min-h-screen flex flex-col">
-      <Header className="bg-background backdrop-blur-xl" />
+      <Header className="backdrop-blur-xl" />
       <div className="container py-10 flex-1">
         <h2 className="text-xl font-bold my-4">Frequently Asked Questions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

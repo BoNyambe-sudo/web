@@ -136,8 +136,8 @@ const ManageAccount = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen py-8 space-y-8">
-      <Header className="bg-background backdrop-blur-xl" />
+    <div className="min-h-screen">
+      <Header className="mb-8" />
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="flex flex-col gap-6">
           {/* Page Header */}

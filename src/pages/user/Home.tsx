@@ -319,7 +319,7 @@ const Home = () => {
                       >
                         Cancel
                       </Button>
-                      <Button type="submit">Book Appointment</Button>
+                      <Button type="submit">Book Call</Button>
                     </div>
                   </div>
                 </form>

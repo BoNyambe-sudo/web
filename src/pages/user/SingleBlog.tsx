@@ -96,7 +96,7 @@ const SingleBlog = () => {
   }
   return (
     <>
-      <Header className="bg-background backdrop-blur-xl" />
+      <Header />
       {/* <Separator /> */}
       <div className="container py-10">
         <div className="mb-8">

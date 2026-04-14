@@ -48,12 +48,15 @@ const Header = ({
   return (
     <div
       className={cn(
-        "container sticky z-50 top-0 w-full flex items-center justify-between py-3",
+        "container sticky z-50 top-0 w-full flex items-center justify-between py-3 backdrop-blur-xl",
         className,
       )}
     >
       <div className="flex items-center justify-between gap-4">
-        <Logo size={32} className={cn("text-foreground font-semibold", textClassName)} />
+        <Logo
+          size={32}
+          className={cn("text-foreground font-semibold", textClassName)}
+        />
 
         <div className="flex items-center font-semibold text-sm gap-3">
           <Link
