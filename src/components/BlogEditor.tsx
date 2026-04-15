@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useUploadBlogImage } from "@/hooks/serverState/userBlogServer";
+import { useUploadBlogImage } from "@/hooks/serverState/useBlogServer";
 import {
   Dialog,
   DialogContent,
