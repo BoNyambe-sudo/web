@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { AdminBreadcrumb } from "@/components/AdminBreadCrumb";
 import { Button } from "@/components/ui/button";
 import {
   Plus,
@@ -53,19 +52,25 @@ import {
 import BlogEditor from "@/components/BlogEditor";
 import { calculateReadTime } from "@/lib/readTime";
 import { formatDate } from "@/lib/formattedDate";
-import {
-  useBlog,
-  type BlogType,
-  type CommentType,
-} from "@/hooks/clientState/useBlog";
+import { type BlogType, type CommentType } from "@/hooks/clientState/useBlog";
 
-//import { Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import BlogRenderer from "@/components/BlogRenderer";
-import { blogMetrics, sampleComments } from "@/temporalData";
-import BlogsPerCategory, {
-  type BlogsPerCategoryType,
-} from "@/components/BlogsPerCategory";
+import BlogsPerCategory from "@/components/BlogsPerCategory";
 import type { BlogFilters } from "@/components/BlogSiderBar";
+import {
+  useBlogAnalytics,
+  useCreateBlog,
+  useDeleteBlog,
+  useDeleteComment,
+  useInfiniteBlogs,
+  useInfiniteComments,
+  useUpdateBlog,
+  useUpdateComment,
+  type CreateBlogType,
+} from "@/hooks/serverState/useBlogServer";
+import type { BlogQueryParams } from "../user/Blogs";
+import toast from "react-hot-toast";
 
 type BlogFormData = {
   title: string;
@@ -116,13 +121,46 @@ const AdminBlogs = () => {
   );
   const [editCommentText, setEditCommentText] = useState("");
 
-  const blogs = useBlog((state) => state.blogs);
-  const comments = useBlog((state) => state.comments);
-  const setComments = useBlog((state) => state.setComments);
+  const queryParams: BlogQueryParams = {
+    sortBy: selectedFilters.sortBy,
+    sortOrder: selectedFilters.sortOrder,
+  };
+  if (debouncedSearchQuery) {
+    queryParams.q = debouncedSearchQuery;
+  }
+  if (selectedFilters.tags) {
+    queryParams.tags = selectedFilters.tags.join(",");
+  }
+  if (selectedFilters.category) {
+    queryParams.category = selectedFilters.category;
+  }
+  if (selectedFilters.latest) {
+    queryParams.latest = selectedFilters.latest;
+  }
 
-  useEffect(() => {
-    setComments(sampleComments);
-  }, [setComments]);
+  const {
+    data,
+    isLoading: blogsLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteBlogs(queryParams);
+  const blogs = data?.pages.flatMap((page) => page.data) || [];
+  const { mutate: createBlog, isPending: creatingBlog } = useCreateBlog();
+  const { mutate: updateBlog, isPending: updatingBlog } = useUpdateBlog();
+  const { mutate: deleteBlog } = useDeleteBlog();
+  const { data: blogsMetrics } = useBlogAnalytics();
+  const { mutate: deleteComment } = useDeleteComment();
+  const { mutate: updateComment } = useUpdateComment();
+
+  const {
+    data: commentsData,
+    isLoading: commentsLoading,
+    isFetchingNextPage: isFetchingCommentsNextPage,
+    hasNextPage: hasCommentsNextPage,
+    fetchNextPage: fetchCommentsNextPage,
+  } = useInfiniteComments(selectedCommentsBlog as string);
+  const comments = commentsData?.pages.flatMap((page) => page.data) || [];
 
   const categories = [
     "Technology",
@@ -161,35 +199,72 @@ const AdminBlogs = () => {
       readTime: calculateReadTime(createFormData.content),
     };
 
-    setIsCreateDialogOpen(false);
-    resetCreateForm();
+    createBlog(newBlog, {
+      onSuccess: () => {
+        resetCreateForm();
+        setIsCreateDialogOpen(false);
+        resetCreateForm();
+        toast.success("Blog created successfully");
+      },
+    });
   };
 
   const handleUpdateBlog = () => {
     if (!selectedBlog || !updateFormData.title || !updateFormData.content)
       return;
 
-    const updatedBlog = {
-      ...selectedBlog,
-      title: updateFormData.title,
-      content: updateFormData.content,
-      category: updateFormData.category,
-      tags: updateFormData.tags
+    const updatedBlog: Partial<CreateBlogType> = {};
+    if (updateFormData.title && updateFormData.title !== selectedBlog.title) {
+      updatedBlog.title = updateFormData.title;
+    }
+    if (
+      updateFormData.content &&
+      updateFormData.content !== selectedBlog.content
+    ) {
+      updatedBlog.content = updateFormData.content;
+    }
+    if (
+      updateFormData.category &&
+      updateFormData.category !== selectedBlog.category
+    ) {
+      updatedBlog.category = updateFormData.category;
+    }
+    if (updateFormData.image) {
+      updatedBlog.image = updateFormData.image;
+    }
+    if (
+      updateFormData.tags &&
+      updateFormData.tags !== selectedBlog.tags.join(",")
+    ) {
+      updatedBlog.tags = updateFormData.tags
         .split(",")
         .map((tag) => tag.trim())
-        .filter((tag) => tag),
-      published: updateFormData.published,
-      image: updateFormData.image,
-      readTime: calculateReadTime(updateFormData.content),
-    };
+        .filter((tag) => tag);
+    }
+    if (
+      updateFormData.published &&
+      updateFormData.published !== selectedBlog.published
+    ) {
+      updatedBlog.published = updateFormData.published;
+    }
 
-    setIsEditDialogOpen(false);
-    setSelectedBlog(null);
-    resetUpdateForm();
+    updateBlog(
+      { id: selectedBlog?.id as string, blog: updatedBlog },
+      {
+        onSuccess: () => {
+          resetUpdateForm();
+          setIsEditDialogOpen(false);
+          setSelectedBlog(null);
+          resetUpdateForm();
+          toast.success("Blog updated successfully");
+        },
+      },
+    );
   };
 
   const handleDeleteBlog = () => {
     if (blogToDelete) {
+      deleteBlog(blogToDelete);
       setIsDeleteDialogOpen(false);
       setBlogToDelete(null);
     }
@@ -232,24 +307,15 @@ const AdminBlogs = () => {
     });
   };
 
-  const blogsPerCategory: BlogsPerCategoryType[] =
-    blogs?.reduce((acc: BlogsPerCategoryType[], blog) => {
-      const existingCategory = acc.find(
-        (item) => item.category === blog.category,
-      );
-      if (existingCategory) {
-        existingCategory.count++;
-      } else {
-        acc.push({ category: blog.category, count: 1 });
-      }
-      return acc;
-    }, []) || [];
-
   const toggleBlogVisibility = (blog: BlogType) => {
-    const updatedBlog: BlogType = {
-      ...blog,
-      published: !blog.published,
-    };
+    updateBlog(
+      { id: blog.id as string, blog: { published: !blog.published } },
+      {
+        onSuccess: () => {
+          toast.success("Toggled visibility");
+        },
+      },
+    );
   };
 
   // Comments handlers
@@ -264,7 +330,18 @@ const AdminBlogs = () => {
 
   const confirmDeleteComment = () => {
     if (commentToDelete) {
-      setCommentToDelete(null);
+      deleteComment(
+        {
+          blogId: selectedCommentsBlog as string,
+          commentId: commentToDelete,
+        },
+        {
+          onSuccess: () => {
+            setCommentToDelete(null);
+            toast.success("Comment deleted successfully");
+          },
+        },
+      );
     }
   };
 
@@ -275,8 +352,20 @@ const AdminBlogs = () => {
 
   const handleUpdateComment = () => {
     if (editingComment) {
-      setEditingComment(null);
-      setEditCommentText("");
+      updateComment(
+        {
+          blogId: selectedCommentsBlog as string,
+          commentId: editingComment.id as string,
+          comment: { content: editCommentText },
+        },
+        {
+          onSuccess: () => {
+            setEditingComment(null);
+            setEditCommentText("");
+            toast.success("Comment updated successfully");
+          },
+        },
+      );
     }
   };
 
@@ -447,7 +536,7 @@ const AdminBlogs = () => {
                 >
                   Cancel
                 </Button>
-                <Button onClick={handleCreateBlog}>
+                <Button disabled={creatingBlog} onClick={handleCreateBlog}>
                   <Save className="mr-2 h-4 w-4" />
                   Create Blog
                 </Button>
@@ -528,9 +617,11 @@ const AdminBlogs = () => {
             <BookOpen className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{blogMetrics.totalBlogs}</div>
+            <div className="text-2xl font-bold">{blogsMetrics?.totalBlogs}</div>
             <p className="text-xs text-muted-foreground">
-              {blogMetrics.totalBlogs > 0 ? "Total blogs" : "No blogs"}
+              {blogsMetrics && blogsMetrics.totalBlogs > 0
+                ? "Total blogs"
+                : "No blogs"}
             </p>
           </CardContent>
         </Card>
@@ -544,10 +635,10 @@ const AdminBlogs = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {blogMetrics.publishedBlogs}
+              {blogsMetrics?.publishedBlogs}
             </div>
             <p className="text-xs text-muted-foreground">
-              {blogMetrics.publishedBlogs > 0
+              {blogsMetrics && blogsMetrics.publishedBlogs > 0
                 ? "Published blogs"
                 : "No published blogs"}
             </p>
@@ -559,9 +650,11 @@ const AdminBlogs = () => {
             <EyeOff className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{blogMetrics.drafts}</div>
+            <div className="text-2xl font-bold">{blogsMetrics?.draftBlogs}</div>
             <p className="text-xs text-muted-foreground">
-              {blogMetrics.drafts > 0 ? "Draft blogs" : "No draft blogs"}
+              {blogsMetrics && blogsMetrics.draftBlogs > 0
+                ? "Draft blogs"
+                : "No draft blogs"}
             </p>
           </CardContent>
         </Card>
@@ -572,16 +665,20 @@ const AdminBlogs = () => {
             <Trash2 className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{blogMetrics.drafts}</div>
+            <div className="text-2xl font-bold">
+              {blogsMetrics?.deletedBlogs}
+            </div>
             <p className="text-xs text-muted-foreground">
-              {blogMetrics.drafts > 0 ? "Deleted blogs" : "No deleted blogs"}
+              {blogsMetrics && blogsMetrics.deletedBlogs > 0
+                ? "Deleted blogs"
+                : "No deleted blogs"}
             </p>
           </CardContent>
         </Card>
       </div>
       <div>
         {/* Blogs per category */}
-        <BlogsPerCategory blogsPerCategory={blogsPerCategory} />
+        <BlogsPerCategory />
       </div>
 
       <Card>
@@ -754,6 +851,42 @@ const AdminBlogs = () => {
                   </TableCell>
                 </TableRow>
               ))}
+              /*{" "}
+              {hasNextPage && (
+                <div className="mt-6 text-center">
+                  <Button
+                    variant="outline"
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                    className="h-10"
+                  >
+                    {isFetchingNextPage ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin mr-2 text-primary" />
+                        Loading...
+                      </>
+                    ) : (
+                      "Load More Blogs"
+                    )}
+                  </Button>
+                </div>
+              )}{" "}
+              */
+              {blogsLoading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center my-auto">
+                    <Loader2 className="size-4 animate-spin text-primary" />
+                  </TableCell>
+                </TableRow>
+              ) : (
+                blogs?.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center">
+                      No Blogs found
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
             </TableBody>
           </Table>
         </CardContent>
@@ -884,7 +1017,7 @@ const AdminBlogs = () => {
             >
               Cancel
             </Button>
-            <Button onClick={handleUpdateBlog}>
+            <Button disabled={updatingBlog} onClick={handleUpdateBlog}>
               <Save className="mr-2 h-4 w-4" />
               Update Blog
             </Button>
@@ -904,7 +1037,11 @@ const AdminBlogs = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            {comments.length === 0 ? (
+            {commentsLoading ? (
+              <div className="text-center my-auto">
+                <Loader2 className="size-4 animate-spin text-primary" />
+              </div>
+            ) : comments.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <p>No comments yet.</p>
               </div>
@@ -989,6 +1126,25 @@ const AdminBlogs = () => {
                 </Card>
               ))
             )}
+            {hasCommentsNextPage && (
+              <div className="mt-6 text-center">
+                <Button
+                  variant="outline"
+                  onClick={() => fetchCommentsNextPage()}
+                  disabled={isFetchingNextPage}
+                  className="h-10"
+                >
+                  {isFetchingCommentsNextPage ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2 text-primary" />
+                      Loading...
+                    </>
+                  ) : (
+                    "Load More Blogs"
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
@@ -1062,7 +1218,7 @@ const AdminBlogs = () => {
       </Dialog>
 
       {/* Load More Button */}
-      {/* {hasNextPage && (
+      {hasNextPage && (
         <div className="mt-6 text-center">
           <Button
             variant="outline"
@@ -1079,7 +1235,7 @@ const AdminBlogs = () => {
             )}
           </Button>
         </div>
-      )} */}
+      )}
     </div>
   );
 };

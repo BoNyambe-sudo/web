@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 type AppointmentStatus = "SCHEDULED" | "FAILED" | "CANCELLED" | "COMPLETED";
 
-type AppointmentResponse = {
+export type AppointmentResponse = {
   id: string;
   name: string;
   phoneNumber: string;
@@ -12,6 +12,7 @@ type AppointmentResponse = {
   scheduledTime: string;
   email?: string;
   description?: string;
+  retryCount: number;
   status: AppointmentStatus;
   notes?: string;
   createdAt: Date;
@@ -21,10 +22,11 @@ type AppointmentResponse = {
 type CreateAppointmentType = {
   name: string;
   phoneNumber: string;
-  scheduledDate: Date;
+  scheduledDate: Date | undefined;
   scheduledTime: string;
   email?: string;
   description?: string;
+  status?: AppointmentStatus;
 };
 
 type InquiryInput = {
@@ -32,6 +34,11 @@ type InquiryInput = {
   email: string;
   subject?: string;
   message: string;
+};
+
+type AppointmentAnalyticsType = {
+  totalAppointments: number;
+  appointmentsByStatus: { status: AppointmentStatus; count: number }[];
 };
 
 const create = async (app: CreateAppointmentType) => {
@@ -56,7 +63,14 @@ const getById = async (id: string) => {
   });
 };
 
-const update = async (id: string, app: CreateAppointmentType) => {
+const getAnalytics = async () => {
+  return await request<AppointmentAnalyticsType>({
+    url: "/appointments/analytics",
+    method: "GET",
+  });
+};
+
+const update = async (id: string, app: Partial<CreateAppointmentType>) => {
   return await request<AppointmentResponse>({
     url: `/appointments/${id}`,
     method: "PUT",
@@ -106,8 +120,13 @@ export const useUpdateAppointment = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, app }: { id: string; app: CreateAppointmentType }) =>
-      update(id, app),
+    mutationFn: ({
+      id,
+      app,
+    }: {
+      id: string;
+      app: Partial<CreateAppointmentType>;
+    }) => update(id, app),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
     },
@@ -131,5 +150,12 @@ export const useSendInqiury = () => {
     onSuccess: () => {
       toast.success("Message sent successfully");
     },
+  });
+};
+
+export const useAppointmentMetrics = () => {
+  return useQuery({
+    queryKey: ["appointment-metrics"],
+    queryFn: getAnalytics,
   });
 };

@@ -1,14 +1,15 @@
 import type { AppointmentStatus } from "@/hooks/clientState/useAppointment";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { appointmentMetrics } from "@/temporalData";
 import { Calendar } from "lucide-react";
+import { useAppointmentMetrics } from "@/hooks/serverState/userAppointmentServer";
 
 export type AppointmetsByStatus = {
   status: AppointmentStatus;
   count: number;
 };
 
-const AppointmentsByStatus = ({ app }: { app: AppointmetsByStatus[] }) => {
+const AppointmentsByStatus = () => {
+  const { data: appointmentsMetrics } = useAppointmentMetrics();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <Card>
@@ -20,16 +21,16 @@ const AppointmentsByStatus = ({ app }: { app: AppointmetsByStatus[] }) => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {appointmentMetrics.totalAppointments}
+            {appointmentsMetrics?.totalAppointments}
           </div>
           <p className="text-xs text-muted-foreground">
-            {appointmentMetrics.totalAppointments > 0
+            {appointmentsMetrics && appointmentsMetrics.totalAppointments > 0
               ? "Total Apppointments"
               : "No Appointments"}
           </p>
         </CardContent>
       </Card>
-      {app?.map((item) => (
+      {appointmentsMetrics?.appointmentsByStatus?.map((item) => (
         <Card key={item.status}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">{item.status}</CardTitle>

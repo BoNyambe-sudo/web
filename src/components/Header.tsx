@@ -46,7 +46,7 @@ const Header = ({
   const { mutate: login, isPending: isLoginPending } = useLogin();
   const { mutate: register, isPending: isRegisterPending } = useRegister();
 
-  const [formData, setFormDate] = useState<FormData>({
+  const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     email: "",
@@ -75,6 +75,13 @@ const Header = ({
 
       register(dataToSend, {
         onSuccess: () => {
+          setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          });
           setIsSignUpDialogOpen(false);
           setIsLoginDialogOpen(false);
         },
@@ -89,6 +96,13 @@ const Header = ({
         { email: formData.email, password: formData.password },
         {
           onSuccess: () => {
+            setFormData({
+              firstName: "",
+              lastName: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
+            });
             setIsLoginDialogOpen(false);
             toast.success("Logged in successfully");
           },
@@ -170,7 +184,7 @@ const Header = ({
                     placeholder="Enter your first name"
                     value={formData.firstName}
                     onChange={(e) =>
-                      setFormDate({ ...formData, firstName: e.target.value })
+                      setFormData({ ...formData, firstName: e.target.value })
                     }
                   />
                 </div>
@@ -184,7 +198,7 @@ const Header = ({
                     placeholder="Enter your last name"
                     value={formData.lastName}
                     onChange={(e) =>
-                      setFormDate({ ...formData, lastName: e.target.value })
+                      setFormData({ ...formData, lastName: e.target.value })
                     }
                   />
                 </div>
@@ -197,7 +211,7 @@ const Header = ({
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={(e) =>
-                    setFormDate({ ...formData, email: e.target.value })
+                    setFormData({ ...formData, email: e.target.value })
                   }
                 />
               </div>
@@ -209,7 +223,7 @@ const Header = ({
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={(e) =>
-                    setFormDate({ ...formData, password: e.target.value })
+                    setFormData({ ...formData, password: e.target.value })
                   }
                 />
               </div>
@@ -225,7 +239,7 @@ const Header = ({
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={(e) =>
-                      setFormDate({
+                      setFormData({
                         ...formData,
                         confirmPassword: e.target.value,
                       })

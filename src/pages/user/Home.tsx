@@ -1,4 +1,3 @@
-//import { Button } from "@/components/ui/button";
 import heroImg from "@/assets/hero.jpg";
 import { format } from "date-fns";
 import Header from "@/components/Header";
@@ -13,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, ArrowUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -22,6 +21,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
+import {
+  useCreateAppointment,
+  useSendInqiury,
+} from "@/hooks/serverState/userAppointmentServer";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0);
@@ -55,19 +59,56 @@ const Home = () => {
   const [appointmentFormData, setAppointmentFormData] = useState<{
     name: string;
     email: string;
-    phone: string;
-    date: undefined | Date;
-    time: string;
+    phoneNumber: string;
+    scheduledDate: undefined | Date;
+    scheduledTime: string;
     message: string;
   }>({
     name: "",
     email: "",
-    phone: "",
-    date: undefined,
-    time: "",
+    phoneNumber: "",
+    scheduledDate: undefined,
+    scheduledTime: "",
     message: "",
   });
 
+  const { mutate: sendMessage, isPending: messageLoading } = useSendInqiury();
+  const { mutate: createAppointment, isPending: appointmentLoading } =
+    useCreateAppointment();
+
+  const handleSendMessage = (e: React.SubmitEvent) => {
+    e.preventDefault();
+    sendMessage(messageFormData, {
+      onSuccess: () => {
+        toast.success("Message sent successfully");
+        setMessageFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+        setIsMessageDialogOpen(false);
+      },
+    });
+  };
+
+  const handleCreateAppointment = (e: React.SubmitEvent) => {
+    e.preventDefault();
+    createAppointment(appointmentFormData, {
+      onSuccess: () => {
+        toast.success("Appointment created successfully");
+        setAppointmentFormData({
+          name: "",
+          email: "",
+          phoneNumber: "",
+          scheduledDate: undefined,
+          scheduledTime: "",
+          message: "",
+        });
+        setIsAppointmentDialogOpen(false);
+      },
+    });
+  };
   useEffect(() => {
     if (placeholders.length === 0) return;
 
@@ -120,7 +161,7 @@ const Home = () => {
               </DialogTrigger>
               <DialogContent>
                 <DialogTitle></DialogTitle>
-                <form className="space-y-4">
+                <form onSubmit={handleSendMessage} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name</Label>
                     <Input
@@ -190,7 +231,9 @@ const Home = () => {
                       >
                         Cancel
                       </Button>
-                      <Button type="submit">Send Message</Button>
+                      <Button disabled={messageLoading} type="submit">
+                        Send Message
+                      </Button>
                     </div>
                   </div>
                 </form>
@@ -206,7 +249,7 @@ const Home = () => {
                 <Button variant={"default"}>Book a call</Button>
               </DialogTrigger>
               <DialogContent>
-                <form className="space-y-4">
+                <form onSubmit={handleCreateAppointment} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="phone-number">Name</Label>
                     <Input
@@ -228,11 +271,11 @@ const Home = () => {
                       type="tel"
                       required
                       placeholder="Enter phone number"
-                      value={appointmentFormData.phone}
+                      value={appointmentFormData.phoneNumber}
                       onChange={(e) =>
                         setAppointmentFormData({
                           ...appointmentFormData,
-                          phone: e.target.value,
+                          phoneNumber: e.target.value,
                         })
                       }
                     />
@@ -243,11 +286,11 @@ const Home = () => {
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          data-empty={!appointmentFormData.date}
+                          data-empty={!appointmentFormData.scheduledDate}
                           className="w-full justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
                         >
-                          {appointmentFormData.date ? (
-                            format(appointmentFormData.date, "PPP")
+                          {appointmentFormData.scheduledDate ? (
+                            format(appointmentFormData.scheduledDate, "PPP")
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -257,14 +300,14 @@ const Home = () => {
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
-                          selected={appointmentFormData.date}
+                          selected={appointmentFormData.scheduledDate}
                           onSelect={(date) =>
                             setAppointmentFormData({
                               ...appointmentFormData,
-                              date,
+                              scheduledDate: date,
                             })
                           }
-                          defaultMonth={appointmentFormData.date}
+                          defaultMonth={appointmentFormData.scheduledDate}
                         />
                       </PopoverContent>
                     </Popover>
@@ -274,11 +317,11 @@ const Home = () => {
                     <Input
                       type="time"
                       formTarget=""
-                      value={appointmentFormData.time}
+                      value={appointmentFormData.scheduledTime}
                       onChange={(e) =>
                         setAppointmentFormData({
                           ...appointmentFormData,
-                          time: e.target.value,
+                          scheduledTime: e.target.value,
                         })
                       }
                     />
@@ -319,7 +362,9 @@ const Home = () => {
                       >
                         Cancel
                       </Button>
-                      <Button type="submit">Book Call</Button>
+                      <Button disabled={appointmentLoading} type="submit">
+                        Book Call
+                      </Button>
                     </div>
                   </div>
                 </form>

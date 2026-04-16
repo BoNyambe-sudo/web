@@ -1,9 +1,5 @@
-import { useBlog, type BlogType } from "@/hooks/clientState/useBlog";
-import { sampleBlogs } from "@/temporalData";
-import { useEffect, useState } from "react";
-import { blogMetrics } from "@/temporalData";
-import { userMetrics } from "@/temporalData";
-import { appointmentMetrics } from "@/temporalData";
+import { type BlogType } from "@/hooks/clientState/useBlog";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   BookOpen,
@@ -12,6 +8,7 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
+  Loader2,
   Users,
 } from "lucide-react";
 import {
@@ -38,16 +35,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import BlogRenderer from "@/components/BlogRenderer";
+import { useBlogAnalytics, useBlogs } from "@/hooks/serverState/useBlogServer";
+import { useFetchUserAnalytics } from "@/hooks/serverState/useUserServer";
+import type { BlogQueryParams } from "../user/Blogs";
+import { useAppointmentMetrics } from "@/hooks/serverState/userAppointmentServer";
 
 const AdminHome = () => {
-  const setBlogs = useBlog((state) => state.setBlogs);
-  const blogs = useBlog((state) => state.blogs);
   const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
   const [isPreviewDialogOpen, setIsPreviewDialogOpen] = useState(false);
-
-  useEffect(() => {
-    setBlogs(sampleBlogs);
-  }, [setBlogs]);
+  const { data: blogsMetrics } = useBlogAnalytics();
+  const { data: usersMetrics } = useFetchUserAnalytics();
+  const { data: appointmentsMetrics } = useAppointmentMetrics();
+  const queryParams: BlogQueryParams = { latest: true, deleted: false };
+  const { data: blogsData, isLoading: blogsLoading } = useBlogs(queryParams);
+  const blogs = blogsData?.data || [];
 
   const handlePreviewBlog = (blog: BlogType) => {
     setSelectedBlog(blog);
@@ -69,9 +70,9 @@ const AdminHome = () => {
             <BookOpen className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{blogMetrics.totalBlogs}</div>
+            <div className="text-2xl font-bold">{blogsMetrics?.totalBlogs}</div>
             <p className="text-xs text-muted-foreground">
-              {blogMetrics.totalBlogs > 0
+              {blogsMetrics && blogsMetrics?.totalBlogs > 0
                 ? "Published blogs"
                 : "No blogs published"}
             </p>
@@ -84,9 +85,9 @@ const AdminHome = () => {
             <Users className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{userMetrics.totalUsers}</div>
+            <div className="text-2xl font-bold">{usersMetrics?.totalUsers}</div>
             <p className="text-xs text-muted-foreground">
-              {userMetrics.totalUsers > 0
+              {usersMetrics && usersMetrics?.totalUsers > 0
                 ? "Registered users"
                 : "No users registered"}
             </p>
@@ -102,10 +103,10 @@ const AdminHome = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {appointmentMetrics.upcoming}
+              {appointmentsMetrics?.totalAppointments}
             </div>
             <p className="text-xs text-muted-foreground">
-              {appointmentMetrics.upcoming > 0
+              {appointmentsMetrics && appointmentsMetrics?.totalAppointments > 0
                 ? "Upcoming appointments"
                 : "No upcoming appointments"}
             </p>
@@ -131,7 +132,7 @@ const AdminHome = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {blogs.map((blog) => (
+              {blogs?.map((blog) => (
                 <TableRow key={blog.id}>
                   <TableCell className="font-medium">{blog.title}</TableCell>
                   <TableCell>
@@ -181,6 +182,21 @@ const AdminHome = () => {
                   </TableCell>
                 </TableRow>
               ))}
+              {blogsLoading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center my-auto">
+                    <Loader2 className="size-4 animate-spin text-primary" />
+                  </TableCell>
+                </TableRow>
+              ) : (
+                blogs?.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center">
+                      No Blogs found
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
             </TableBody>
           </Table>
         </CardContent>

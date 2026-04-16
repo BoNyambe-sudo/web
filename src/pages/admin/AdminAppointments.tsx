@@ -7,18 +7,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  useAppointment,
-  type AppointmentType,
-} from "@/hooks/clientState/useAppointment";
-import React, { useEffect, useState } from "react";
-import { sampleAppointments } from "@/temporalData";
-import { AdminBreadcrumb } from "@/components/AdminBreadCrumb";
-import AppointmentsByStatus, {
-  type AppointmetsByStatus,
-} from "@/components/AppointmentsByStatus";
+import { useState } from "react";
+import AppointmentsByStatus from "@/components/AppointmentsByStatus";
 import { Button } from "@/components/ui/button";
-import { Edit, Save, Trash2 } from "lucide-react";
+import { Edit, Loader2, Save, Trash2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -41,48 +33,60 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  useDeleteAppointment,
+  useGetAppointments,
+  useUpdateAppointment,
+  type AppointmentResponse,
+} from "@/hooks/serverState/userAppointmentServer";
+import toast from "react-hot-toast";
+import type { AppointmentStatus } from "@/hooks/clientState/useAppointment";
 
 const AdminAppointments = () => {
-  const appointments = useAppointment((state) => state.appointments);
-  const setAppointments = useAppointment((state) => state.setAppointments);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [appointmentToDelete, setAppointmentToDelete] = useState<string | null>(
     null,
   );
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<AppointmentResponse | null>(null);
+  const { data: appointments, isLoading: appointmentsLoading } =
+    useGetAppointments();
+  const { mutate: deleteAppointment } = useDeleteAppointment();
+  const { mutate: updateAppointment } = useUpdateAppointment();
 
-  const appointmentsByStatus: AppointmetsByStatus[] = appointments.reduce(
-    (acc, appointment) => {
-      const status = appointment.status;
-      const existingStatus = acc.find((item) => item.status === status);
-      if (existingStatus) {
-        existingStatus.count += 1;
-      } else {
-        acc.push({ status, count: 1 });
-      }
-      return acc;
-    },
-    [] as AppointmetsByStatus[],
-  );
-
-  useEffect(() => {
-    setAppointments(sampleAppointments);
-  }, [setAppointments]);
-
-  function handleEditAppointment(appointment: AppointmentType): void {
+  function handleEditAppointment(appointment: AppointmentResponse): void {
+    setSelectedAppointment(appointment);
     setIsEditDialogOpen(true);
   }
 
-  function openDeleteDialog(arg0: string): void {
+  function openDeleteDialog(appointmentId: string): void {
+    setAppointmentToDelete(appointmentId);
     setIsDeleteDialogOpen(true);
   }
 
   function handleDeleteAppointment(): void {
-    throw new Error("Function not implemented.");
+    deleteAppointment(appointmentToDelete as string, {
+      onSuccess: () => {
+        toast.success("Appointment deleted successfully");
+      },
+    });
+    setIsDeleteDialogOpen(false);
   }
 
   function handleUpdateAppointment(): void {
-    throw new Error("Function not implemented.");
+    updateAppointment(
+      {
+        id: selectedAppointment?.id as string,
+        app: { status: selectedAppointment?.status as AppointmentStatus },
+      },
+      {
+        onSuccess: () => {
+          toast.success("Appointment updated successfully");
+        },
+      },
+    );
+    setIsEditDialogOpen(false);
   }
 
   return (
@@ -91,7 +95,7 @@ const AdminAppointments = () => {
         <div className="space-y-6">
           <h1 className="text-2xl font-bold">Appointments</h1>
           <div>
-            <AppointmentsByStatus app={appointmentsByStatus} />
+            <AppointmentsByStatus />
           </div>
           <Card>
             <CardHeader>
@@ -112,7 +116,7 @@ const AdminAppointments = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {appointments.map((appointment) => (
+                  {appointments?.map((appointment) => (
                     <TableRow key={appointment.id}>
                       <TableCell className="font-medium">
                         {appointment.name}
@@ -178,10 +182,13 @@ const AdminAppointments = () => {
                                   </DialogTrigger>
                                   <DialogContent>
                                     <DialogHeader>
-                                      <DialogTitle>Delete Appointment</DialogTitle>
+                                      <DialogTitle>
+                                        Delete Appointment
+                                      </DialogTitle>
                                       <DialogDescription>
                                         Are you sure you want to delete this
-                                        appointment? This action cannot be undone.
+                                        appointment? This action cannot be
+                                        undone.
                                       </DialogDescription>
                                     </DialogHeader>
                                     <DialogFooter>
@@ -212,12 +219,21 @@ const AdminAppointments = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {appointments.length === 0 && (
+
+                  {appointmentsLoading ? (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center">
-                        No appointments found
+                        <Loader2 className="size-6 animate-spin text-primary" />
                       </TableCell>
                     </TableRow>
+                  ) : (
+                    appointments?.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center">
+                          No appointments found
+                        </TableCell>
+                      </TableRow>
+                    )
                   )}
                 </TableBody>
               </Table>
@@ -229,7 +245,15 @@ const AdminAppointments = () => {
               <DialogDescription>
                 Update the appointment details.
               </DialogDescription>
-              <Select>
+              <Select
+                value={selectedAppointment?.status}
+                onValueChange={(value) =>
+                  setSelectedAppointment((prev) => ({
+                    ...prev!,
+                    status: value as AppointmentStatus,
+                  }))
+                }
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a status" />
                 </SelectTrigger>
@@ -249,7 +273,7 @@ const AdminAppointments = () => {
                 </Button>
                 <Button onClick={handleUpdateAppointment}>
                   <Save className="mr-2 h-4 w-4" />
-                  Update Blog
+                  Update Appointment
                 </Button>
               </div>
             </DialogContent>

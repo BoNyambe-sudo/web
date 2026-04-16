@@ -9,7 +9,7 @@ import type { BlogType, CommentType } from "../clientState/useBlog";
 import { type BlogQueryParams } from "@/pages/user/Blogs";
 import toast from "react-hot-toast";
 
-interface CreateBlogType {
+export interface CreateBlogType {
   title: string;
   content: string;
   category: string;
@@ -44,7 +44,7 @@ type BlogAnalytics = {
   publishedBlogs: number;
   draftBlogs: number;
   deletedBlogs: number;
-  blogsPerCategory: { category: string; count: number };
+  blogsPerCategory: { category: string; count: number }[];
 };
 
 const uploadImage = async (image: File): Promise<{ url: string }> => {

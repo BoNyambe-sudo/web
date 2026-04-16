@@ -15,13 +15,15 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { useBlog } from "@/hooks/clientState/useBlog";
-import { sampleBlogs } from "@/temporalData";
-import { Search, X } from "lucide-react";
+import {
+  useInfiniteBlogs,
+  useTopTags,
+} from "@/hooks/serverState/useBlogServer";
+import { Loader2, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export type BlogQueryParams = {
-  categories?: string;
+  category?: string;
   tags?: string;
   latest?: boolean;
   page?: number;
@@ -38,17 +40,36 @@ const Blogs = () => {
     category: "",
     tags: [],
     latest: false,
-    sortBy: "createdAt", // Default sort by date
-    sortOrder: "desc", // Default sort order
+    sortBy: "createdAt",
+    sortOrder: "desc",
   });
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
-  const blogs = useBlog((state) => state.blogs);
-  const setBlogs = useBlog((state) => state.setBlogs);
+  const { data: tagsResult } = useTopTags();
+  const availableTags = tagsResult?.tags || [];
 
-  useEffect(() => {
-    setBlogs(sampleBlogs);
-  }, [setBlogs]);
+  const queryParams: BlogQueryParams = {
+    sortBy: selectedFilters.sortBy,
+    sortOrder: selectedFilters.sortOrder,
+    deleted: false,
+    published: true,
+  };
+  if (debouncedSearchQuery) {
+    queryParams.q = debouncedSearchQuery;
+  }
+  if (selectedFilters.tags) {
+    queryParams.tags = selectedFilters.tags.join(",");
+  }
+  if (selectedFilters.category) {
+    queryParams.category = selectedFilters.category;
+  }
+  if (selectedFilters.latest) {
+    queryParams.latest = selectedFilters.latest;
+  }
+
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteBlogs(queryParams);
+  const blogs = data?.pages.flatMap((page) => page.data) || [];
 
   const availableCategories = [
     "Technology",
@@ -69,23 +90,6 @@ const Blogs = () => {
     "Finance",
     "Education",
     "Entertainment",
-  ];
-
-  const availableTags = [
-    "fitness",
-    "mental-health",
-    "nutrition",
-    "yoga",
-    "personal-finance",
-    "entrepreneurship",
-    "economics",
-    "online-courses",
-    "productivity",
-    "productivity-tips",
-    "career-development",
-    "gaming",
-    "movies&TV",
-    "music",
   ];
 
   // Handle filter changes
@@ -269,11 +273,59 @@ const Blogs = () => {
           <div className="text-sm text-muted-foreground mb-4">
             Found {blogs.length} {blogs.length === 1 ? "blog" : "blogs"}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {blogs?.map((blog) => (
-              <BlogCard key={blog.id} blog={blog} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="text-center h-full my-auto">
+              <Loader2 className="size-4 text-primary" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {blogs?.map((blog) => (
+                <BlogCard key={blog.id} blog={blog} />
+              ))}
+            </div>
+          )}
+          {hasNextPage && (
+            <div className="mt-6 text-center">
+              <Button
+                variant="outline"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="h-10"
+              >
+                {isFetchingNextPage ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Loading...
+                  </>
+                ) : (
+                  "Load More Blogs"
+                )}
+              </Button>
+            </div>
+          )}
+
+          {blogs.length === 0 && !isLoading && (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <h3 className="text-lg font-medium mb-2">No blogs found</h3>
+              <p className="text-muted-foreground mb-4">
+                Try adjusting your filters to find what you're looking for.
+              </p>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setSelectedFilters({
+                    category: "",
+                    tags: [],
+                    latest: false,
+                    sortBy: "createdAt",
+                    sortOrder: "desc",
+                  })
+                }
+              >
+                Clear All Filters
+              </Button>
+            </div>
+          )}
         </div>
         <Footer />
       </SidebarInset>
