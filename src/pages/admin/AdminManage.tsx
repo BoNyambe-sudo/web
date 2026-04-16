@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToken } from "@/hooks/clientState/useToken";
-import { useUser } from "@/hooks/clientState/useUser";
+import { useUserData } from "@/hooks/serverState/useUserServer";
 import {
   AlertTriangle,
   Edit,
@@ -38,7 +38,7 @@ type FormData = {
 };
 
 const AdminManage = () => {
-  const user = useUser((state) => state.user);
+  const { data: user } = useUserData();
   const clearToken = useToken((state) => state.clearToken);
   const [formData, setFormData] = useState<FormData>({
     firstName: "",

@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 import Logo from "./Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useUser } from "@/hooks/clientState/useUser";
 import { User } from "lucide-react";
 import {
   Dialog,
@@ -10,15 +9,28 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { PasswordStrengthIndicator } from "./PasswordStrengthIndicator";
 import { useToggleState } from "@/hooks/clientState/useToggles";
-import { sampleUsers } from "@/temporalData";
 import UserCard from "./UserCard";
 import { cn } from "@/lib/utils";
+import {
+  useLogin,
+  useRegister,
+  useUserData,
+} from "@/hooks/serverState/useUserServer";
+import toast from "react-hot-toast";
+
+type FormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword?: string;
+};
 
 const Header = ({
   className,
@@ -27,13 +39,14 @@ const Header = ({
   className?: string;
   textClassName?: string;
 }) => {
-  const user = useUser((state) => state.user);
-  const setUser = useUser((state) => state.setUser);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const [isSignUpDialogOpen, setIsSignUpDialogOpen] = useState(false);
   const setIsUserOpen = useToggleState((state) => state.toggleUserOpen);
+  const { data: user } = useUserData();
+  const { mutate: login, isPending: isLoginPending } = useLogin();
+  const { mutate: register, isPending: isRegisterPending } = useRegister();
 
-  const [formData, setFormDate] = useState({
+  const [formData, setFormDate] = useState<FormData>({
     firstName: "",
     lastName: "",
     email: "",
@@ -41,9 +54,48 @@ const Header = ({
     confirmPassword: "",
   });
 
-  useEffect(() => {
-    setUser(sampleUsers[2]);
-  }, [setUser]);
+  const handleSubmit = (e: React.SubmitEvent) => {
+    e.preventDefault();
+    if (isSignUpDialogOpen) {
+      const { confirmPassword, ...dataToSend } = formData;
+      if (
+        !formData.firstName ||
+        !formData.lastName ||
+        !formData.email ||
+        !formData.password ||
+        !confirmPassword
+      ) {
+        toast.error("Please fill all the fields");
+        return;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        toast.error("Passwords do not match");
+        return;
+      }
+
+      register(dataToSend, {
+        onSuccess: () => {
+          setIsSignUpDialogOpen(false);
+          setIsLoginDialogOpen(false);
+        },
+      });
+    } else {
+      if (!formData.email || !formData.password) {
+        toast.error("Please fill all the fields");
+        return;
+      }
+
+      login(
+        { email: formData.email, password: formData.password },
+        {
+          onSuccess: () => {
+            setIsLoginDialogOpen(false);
+            toast.success("Logged in successfully");
+          },
+        },
+      );
+    }
+  };
 
   return (
     <div
@@ -108,7 +160,7 @@ const Header = ({
                 {!isSignUpDialogOpen ? "Login" : "Sign Up"}
               </DialogTitle>
             </DialogHeader>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               {isSignUpDialogOpen && (
                 <div className="space-y-3">
                   <Label htmlFor="first-name">First Name</Label>
@@ -182,7 +234,11 @@ const Header = ({
                 </div>
               )}
               <div>
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isLoginPending || isRegisterPending}
+                >
                   {!isSignUpDialogOpen ? "Login" : "Sign Up"}
                 </Button>
                 <div className="text-center text-sm text-muted-foreground">

@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToken } from "@/hooks/clientState/useToken";
-import { useUser } from "@/hooks/clientState/useUser";
+import { useUserData } from "@/hooks/serverState/useUserServer";
 import {
   AlertTriangle,
   Edit,
@@ -40,7 +40,7 @@ type FormData = {
 };
 
 const ManageAccount = () => {
-  const user = useUser((state) => state.user);
+  const { data: user } = useUserData();
   const clearToken = useToken((state) => state.clearToken);
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -138,7 +138,7 @@ const ManageAccount = () => {
   return (
     <div className="min-h-screen">
       <Header className="mb-8" />
-      <div className="container mx-auto px-4 max-w-4xl">
+      <div className="container mx-auto px-4 max-w-4xl mb-8">
         <div className="flex flex-col gap-6">
           {/* Page Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

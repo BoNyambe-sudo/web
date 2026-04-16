@@ -22,8 +22,8 @@ export const useToken = create<TokenStore>((set) => ({
     localStorage.setItem("token", newToken);
   },
   clearToken: () => {
-    set({ token: "" });
     localStorage.removeItem("token");
+    set({ token: "" });
   }
 }));
 

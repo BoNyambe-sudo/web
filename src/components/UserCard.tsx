@@ -1,20 +1,18 @@
-import { useUser } from "@/hooks/clientState/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Card } from "./ui/card";
 import { Separator } from "./ui/separator";
 import { LogOut, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import { useOutsideClick } from "@/hooks/clickAway";
-//import { useState } from "react";
-import { useToken } from "@/hooks/clientState/useToken";
 import { useNavigate } from "react-router";
 import { useToggleState } from "@/hooks/clientState/useToggles";
+import { useLogout, useUserData } from "@/hooks/serverState/useUserServer";
 
 const UserCard = () => {
-  const user = useUser((state) => state.user);
-  const isUserOpen = useToggleState(state => state.isUserOpen);
-  const setIsUserOpen = useToggleState(state => state.toggleUserOpen);
-  const clearToken = useToken((state) => state.clearToken);
+  const { data: user } = useUserData();
+  const isUserOpen = useToggleState((state) => state.isUserOpen);
+  const setIsUserOpen = useToggleState((state) => state.toggleUserOpen);
+  const logout = useLogout();
   const navigate = useNavigate();
 
   const userCardRef = useOutsideClick<HTMLDivElement>(() =>
@@ -39,22 +37,33 @@ const UserCard = () => {
 
         <div>
           <p>
-            {user?.firstName} {user?.lastName}
+            {user?.firstName as string} {user?.lastName as string}
           </p>
-          <p className="text-muted-foreground text-sm">{user?.email}</p>
+          <p className="text-muted-foreground text-sm">
+            {user?.email as string}
+          </p>
         </div>
       </div>
       <Separator />
       <div
         role="button"
         className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-primary transition-colors"
-        onClick={() => {navigate("/manage-account"); setIsUserOpen(false); }}
+        onClick={() => {
+          navigate("/manage-account");
+          setIsUserOpen(false);
+        }}
       >
         <Settings />
         <p>Manage Account</p>
       </div>
       <Separator />
-      <Button onClick={clearToken} variant={"secondary"}>
+      <Button
+        onClick={() => {
+          logout();
+          setIsUserOpen(false);
+        }}
+        variant={"secondary"}
+      >
         <LogOut />
         Logout
       </Button>

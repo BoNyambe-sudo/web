@@ -13,8 +13,6 @@ import {
   Copy,
 } from "lucide-react";
 import Facebook from "@/components/icons/facebook";
-//import { Separator } from "@/components/ui/separator";
-//import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import BlogCard from "@/components/BlogCard";
 import Footer from "@/components/Footer";
@@ -97,7 +95,7 @@ const SingleBlog = () => {
   return (
     <>
       <Header />
-      {/* <Separator /> */}
+      
       <div className="container py-10">
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">

@@ -7,8 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState, useEffect } from "react";
-import { AdminBreadcrumb } from "@/components/AdminBreadCrumb";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,8 +28,6 @@ import {
   Unlock,
   Users,
 } from "lucide-react";
-import { sampleUsers, userMetrics } from "@/temporalData";
-import { useUser, type UserType } from "@/hooks/clientState/useUser";
 import UsersPerRoles from "@/components/UsersPerRoles";
 import {
   DropdownMenu,
@@ -47,6 +44,12 @@ import {
 } from "@/components/ui/select";
 import { PasswordStrengthIndicator } from "@/components/PasswordStrengthIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  useFetchUserAnalytics,
+  useFetchUsers,
+} from "@/hooks/serverState/useUserServer";
+import LoadingIndicator from "@/components/LoadingIndicator";
+import type { UserType } from "@/hooks/clientState/useUser";
 
 type UserFormData = {
   firstName: string;
@@ -64,8 +67,7 @@ export type UsersPerRole = {
 
 type UserRole = "ADMIN" | "CONTRIBUTOR" | "USER";
 const AdminUsers = () => {
-  const users = useUser((state) => state.users);
-  const setUsers = useUser((state) => state.setUsers);
+  const { data: users, isLoading } = useFetchUsers();
   const [formData, setFormData] = useState<UserFormData>({
     firstName: "",
     lastName: "",
@@ -77,25 +79,8 @@ const AdminUsers = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const { data: usersMetrcis } = useFetchUserAnalytics();
 
-  useEffect(() => {
-    setUsers(sampleUsers);
-  }, [setUsers]);
-
-  const usersPerRole: UsersPerRole[] = [
-    {
-      role: "ADMIN",
-      count: users?.filter((user) => user.role === "ADMIN").length,
-    },
-    {
-      role: "CONTRIBUTOR",
-      count: users?.filter((user) => user.role === "CONTRIBUTOR").length,
-    },
-    {
-      role: "USER",
-      count: users?.filter((user) => user.role === "USER").length,
-    },
-  ];
   function handleAddUser(event: React.SubmitEvent): void {
     throw new Error("Function not implemented.");
   }
@@ -128,6 +113,10 @@ const AdminUsers = () => {
     throw new Error("Functions not implemented");
   }
 
+  if (isLoading) {
+    return <LoadingIndicator />;
+  }
+
   return (
     <div className="p-6">
       <div className="space-y-6">
@@ -147,9 +136,11 @@ const AdminUsers = () => {
               <Users className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{userMetrics.totalUsers}</div>
+              <div className="text-2xl font-bold">
+                {usersMetrcis?.totalUsers}
+              </div>
               <p className="text-xs text-muted-foreground">
-                {userMetrics.totalUsers > 0 ? "Total users" : "No users"}
+                {usersMetrcis?.totalUsers > 0 ? "Total users" : "No users"}
               </p>
             </CardContent>
           </Card>
@@ -163,10 +154,10 @@ const AdminUsers = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {userMetrics.activeUsers}
+                {usersMetrcis?.activeUsers}
               </div>
               <p className="text-xs text-muted-foreground">
-                {userMetrics.activeUsers > 0
+                {usersMetrcis?.activeUsers > 0
                   ? "Active users"
                   : "No active users"}
               </p>
@@ -181,10 +172,10 @@ const AdminUsers = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {userMetrics.blockedUsers}
+                {usersMetrcis?.blockedUsers}
               </div>
               <p className="text-xs text-muted-foreground">
-                {userMetrics.blockedUsers > 0
+                {usersMetrcis?.blockedUsers > 0
                   ? "Blocked users"
                   : "No blocked users"}
               </p>
@@ -192,7 +183,9 @@ const AdminUsers = () => {
           </Card>
         </div>
         <div>
-          <UsersPerRoles usersPerRole={usersPerRole} />
+          <UsersPerRoles
+            usersPerRole={usersMetrcis?.usersPerRole as unknown as UsersPerRole}
+          />
         </div>
         <Card>
           <CardHeader>
@@ -213,14 +206,14 @@ const AdminUsers = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.length === 0 ? (
+                {users?.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center">
                       No users found
                     </TableCell>
                   </TableRow>
                 ) : (
-                  users?.map((user) => (
+                  users?.map((user: UserType) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">
                         <div className="flex items-center">

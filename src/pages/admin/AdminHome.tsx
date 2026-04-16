@@ -1,7 +1,6 @@
 import { useBlog, type BlogType } from "@/hooks/clientState/useBlog";
 import { sampleBlogs } from "@/temporalData";
 import { useEffect, useState } from "react";
-import { AdminBreadcrumb } from "@/components/AdminBreadCrumb";
 import { blogMetrics } from "@/temporalData";
 import { userMetrics } from "@/temporalData";
 import { appointmentMetrics } from "@/temporalData";

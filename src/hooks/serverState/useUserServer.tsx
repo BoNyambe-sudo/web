@@ -4,7 +4,7 @@ import { useToken } from "../clientState/useToken";
 import toast from "react-hot-toast";
 
 interface AuthResponse {
-  auth_token: string;
+  access_token: string;
 }
 
 interface UserDataResponse {
@@ -32,7 +32,7 @@ const login = async (user: { email: string; password: string }) => {
   return await request<AuthResponse>({
     url: "/users/login",
     method: "POST",
-    data: { identifier: user.email, password: user.password },
+    data: user,
   });
 };
 
@@ -55,7 +55,6 @@ const adminRegister = async (user: CreateUserType) => {
   });
 };
 
-
 const fetchUsers = async () => {
   return await request<UserDataResponse[]>({
     url: "/users",
@@ -63,9 +62,9 @@ const fetchUsers = async () => {
   });
 };
 
-const fetchUserData = async (id: string): Promise<UserDataResponse> => {
+const fetchUserData = async (): Promise<UserDataResponse> => {
   return await request<UserDataResponse>({
-    url: `/users/${id}`,
+    url: `/users/me`,
     method: "GET",
   });
 };
@@ -88,7 +87,7 @@ const fetchUserAnalytics = async () => {
     totalUsers: number;
     activeUsers: number;
     blockedUsers: number;
-    usersPerRole: { role: string; count: number };
+    usersPerRole: { role: string; count: number }[];
   }>({
     url: "/users/analytics",
     method: "GET",
@@ -135,9 +134,11 @@ export const useLogin = () => {
   const setToken = useToken((state) => state.setToken);
 
   return useMutation({
-    mutationFn: login,
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      login({ email, password }),
     onSuccess: (data) => {
-      setToken(data.auth_token);
+      setToken(data.access_token);
+      localStorage.setItem("token", data.access_token);
     },
   });
 };
@@ -173,7 +174,7 @@ export const useFetchUserAnalytics = () => {
     totalUsers: number;
     activeUsers: number;
     blockedUsers: number;
-    usersPerRole: { role: string; count: number };
+    usersPerRole: { role: string; count: number }[];
   }>({
     queryKey: ["user-analytics"],
     queryFn: () => fetchUserAnalytics(),
@@ -241,10 +242,30 @@ export const useUpdateUser = () => {
   });
 };
 
-export const useUserData = (id: string) => {
-  return useQuery({
-    queryKey: ["user", id],
-    queryFn: () => fetchUserData(id),
+export const useUserData = () => {
+  const token = useToken((state) => state.token);
+  return useQuery<UserDataResponse>({
+    queryKey: ["user"],
+    queryFn: fetchUserData,
     staleTime: 1000 * 60 * 5,
+    enabled: !!token,
   });
 };
+
+
+
+
+export const useLogout = () => {
+  const clearToken = useToken((state) => state.clearToken);
+  const queryClient = useQueryClient();
+
+  const logout = () => {
+    clearToken();
+    // 2. Wipe the React Query cache
+    queryClient.removeQueries({ queryKey: ['user'], exact: false });
+    toast.success("Logged out successfully");
+  };
+
+  return logout;
+};
+

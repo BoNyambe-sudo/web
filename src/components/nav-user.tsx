@@ -17,8 +17,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "react-router";
-//import { useUser } from "@/hooks/clientState/useUser";
-import { useToken } from "@/hooks/clientState/useToken";
+import { useLogout } from "@/hooks/serverState/useUserServer";
 
 export function NavUser({
   user,
@@ -32,7 +31,7 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
-  const clearToken = useToken((state) => state.clearToken);
+  const logout = useLogout()
 
 
   return (
@@ -87,7 +86,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={clearToken}>
+            <DropdownMenuItem onClick={logout}>
               <LogOut />
               Log out
             </DropdownMenuItem>
