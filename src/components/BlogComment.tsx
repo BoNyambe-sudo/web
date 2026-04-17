@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Loader2, MessageCircle, ThumbsDown, ThumbsUp } from "lucide-react";
 import type { CommentType } from "@/hooks/clientState/useBlog";
-import { useUser } from "@/hooks/clientState/useUser";
+import { useUserData } from "@/hooks/serverState/useUserServer";
+import {
+  useCreateComment,
+  useInfiniteReplies,
+} from "@/hooks/serverState/useBlogServer";
+import toast from "react-hot-toast";
 
 interface BlogCommentProps {
   comment: CommentType;
@@ -17,10 +22,27 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
-  const user = useUser((state) => state.user);
+  const { data: user } = useUserData();
+  const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useInfiniteReplies(blogId, comment.id as string);
+  const replies = data?.pages.flatMap((page) => page.data);
+  const { mutate: createReply } = useCreateComment();
 
   const handleReply = () => {
     if (replyText.trim() === "") return;
+    createReply(
+      {
+        blogId: blogId,
+        comment: { content: replyText },
+        parentId: comment.id,
+      },
+      {
+        onSuccess: () => {
+          setReplyText("");
+          toast.success("Reply successfully created.");
+        },
+      },
+    );
     onReply?.(comment);
     setReplyText("");
     setShowReplyForm(false);
@@ -71,7 +93,10 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
               />{" "}
               <span>{comment.dislikedBy.length}</span>
             </Button>
-            <Button variant={"ghost"} onClick={() => setShowReplies(!showReplies)}>
+            <Button
+              variant={"ghost"}
+              onClick={() => setShowReplies(!showReplies)}
+            >
               <MessageCircle className="h-4 w-4" />
               <span>{comment?.replies?.length || 0}</span>
             </Button>
@@ -91,7 +116,7 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
                     onChange={(e) => setReplyText(e.target.value)}
                     placeholder="Write a reply..."
                     className="text-sm"
-                    onKeyPress={(e) => e.key === "Enter" && handleReply()}
+                    onKeyDown={(e) => e.key === "Enter" && handleReply()}
                   />
                   <Button
                     size="sm"
@@ -107,9 +132,9 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
           </div>
         </div>
       </Card>
-      {showReplies && comment.replies && comment.replies.length > 0 && (
+      {showReplies && replies && replies.length > 0 && (
         <div className="ml-13 mt-3 space-y-3">
-          {comment.replies.map((reply) => (
+          {replies.map((reply) => (
             <BlogComment
               key={reply.id}
               comment={reply}
@@ -117,6 +142,25 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
               onReply={onReply}
             />
           ))}
+          {hasNextPage && (
+            <div className="mt-6 text-center">
+              <Button
+                variant="outline"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="h-10"
+              >
+                {isFetchingNextPage ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Loading...
+                  </>
+                ) : (
+                  "Load More Replies"
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

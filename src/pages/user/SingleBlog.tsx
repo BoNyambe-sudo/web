@@ -2,7 +2,7 @@ import BlogRenderer from "@/components/BlogRenderer";
 import CommentSection from "@/components/CommentSection";
 import Header from "@/components/Header";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useBlog } from "@/hooks/clientState/useBlog";
+import { useBlog, useBlogs } from "@/hooks/serverState/useBlogServer";
 import {
   AlertCircle,
   Clock,
@@ -11,6 +11,7 @@ import {
   User,
   MessageSquare,
   Copy,
+  Loader2,
 } from "lucide-react";
 import Facebook from "@/components/icons/facebook";
 import { Link, useParams } from "react-router";
@@ -29,16 +30,28 @@ import { Button } from "@/components/ui/button";
 import Instagram from "@/components/icons/instagram";
 import LinkedIn from "@/components/icons/linkedIn";
 import Twitter from "@/components/icons/twitter";
+import type { BlogQueryParams } from "./Blogs";
+import LoadingIndicator from "@/components/LoadingIndicator";
 
 const SingleBlog = () => {
   const { id } = useParams();
-  const blogs = useBlog((state) => state.blogs);
-  const blog = useBlog((state) => state.blogs.find((b) => b.id === id));
+
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const { data: blog, isLoading: blogLoading } = useBlog(id as string);
 
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
   const shareMessage = `Check out this amazing blog: ${blog?.title}!`;
-  const similarBlogs = blogs.filter((b) => b.id !== id);
+  const queryParams: BlogQueryParams = {
+    limit: 3,
+    deleted: false,
+    published: true,
+  };
+  if (blog) {
+    queryParams.category = blog.category;
+  }
+  const { data: similarBlogsData, isLoading: loadingSimilarBlogs } =
+    useBlogs(queryParams);
+  const similarBlogs = similarBlogsData?.data || [];
 
   const handleShare = (platform: string) => {
     const encodedUrl = encodeURIComponent(currentUrl);
@@ -79,6 +92,10 @@ const SingleBlog = () => {
     }
   };
 
+  if (blogLoading) {
+    return <LoadingIndicator />;
+  }
+
   if (!blog) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
@@ -95,7 +112,6 @@ const SingleBlog = () => {
   return (
     <>
       <Header />
-      
       <div className="container py-10">
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
@@ -217,11 +233,17 @@ const SingleBlog = () => {
             <Tag size={20} className="text-primary" />
             <h2 className="text-2xl font-bold">Similar Blogs</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {similarBlogs?.slice(0, 3)?.map((blog) => (
-              <BlogCard key={blog.id} blog={blog} />
-            ))}
-          </div>
+          {loadingSimilarBlogs ? (
+            <div className="text-center my-auto">
+              <Loader2 className="text-primary size-4 animate-spin" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {similarBlogs?.map((blog) => (
+                <BlogCard key={blog.id} blog={blog} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <Footer />

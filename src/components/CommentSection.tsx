@@ -1,47 +1,51 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import BlogComment from "./BlogComment";
-import { useBlog } from "@/hooks/clientState/useBlog";
-import { sampleComments } from "@/temporalData";
-import { useUser } from "@/hooks/clientState/useUser";
+import { useUserData } from "@/hooks/serverState/useUserServer";
+import {
+  useCreateComment,
+  useInfiniteComments,
+} from "@/hooks/serverState/useBlogServer";
+import { Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface CommentsSectionProps {
   blogId: string;
-  currentUserId?: string;
 }
 
 const CommentSection = ({ blogId }: CommentsSectionProps) => {
-  const setComments = useBlog((state) => state.setComments);
-  const user = useUser(state => state.user)
+  const { data: user } = useUserData();
   const [commentText, setCommentText] = useState("");
-  const comments = useBlog((state) => state.comments);
-  const topLevelComments = comments.filter(
-    (comment) => comment.parentComment === null,
-  );
-  const replyComments = comments.filter(
-    (comment) => comment.parentComment !== null,
-  );
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useInfiniteComments(blogId);
+  const comments = data?.pages.flatMap((page) => page.data);
+  const { mutate: createComment } = useCreateComment();
 
-  const commentsWithReplies = topLevelComments.map((comment) => ({
-    ...comment,
-    replies: replyComments.filter(
-      (reply) => reply.parentComment === comment.id,
-    ),
-  }));
+  const handleCreateComment = () => {
+    createComment(
+      {
+        blogId: blogId as string,
+        comment: { content: commentText },
+      },
+      {
+        onSuccess: () => {
+          setCommentText("");
+          toast.success("Comment created successfully");
+        },
+      },
+    );
+  };
 
   const getInitials = (firstName?: string, lastName?: string) => {
     if (!firstName && !lastName) return "U";
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
   };
 
-  useEffect(() => {
-    setComments(sampleComments)
-  }, [setComments])
   return (
     <div className="mt-12">
-      <h2 className="text-2xl font-bold mb-6">Comments ({comments.length})</h2>
+      <h2 className="text-2xl font-bold mb-6">Comments ({comments?.length})</h2>
 
       {/* Add new comment */}
       <div className="mb-8">
@@ -59,7 +63,12 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
                 placeholder="Write a comment..."
                 className="text-sm"
               />
-              <Button size="sm" disabled={!commentText.trim()} className="h-9">
+              <Button
+                size="sm"
+                onClick={handleCreateComment}
+                disabled={!commentText.trim()}
+                className="h-9"
+              >
                 Comment
               </Button>
             </div>
@@ -68,24 +77,24 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
       </div>
 
       {/* Comments list */}
-      {commentsWithReplies.length === 0 ? (
+      {comments?.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground">
           <p>No comments yet. Be the first to comment!</p>
         </div>
       ) : (
         <>
           <div className="space-y-4">
-            {commentsWithReplies.map((comment) => (
+            {comments?.map((comment) => (
               <BlogComment key={comment.id} comment={comment} blogId={blogId} />
             ))}
           </div>
 
           {/* Load more button */}
-          {/* {hasNextPage && (
+          {hasNextPage && (
             <div className="mt-6 text-center">
               <Button
                 variant="outline"
-                onClick={handleLoadMore}
+                onClick={() => fetchNextPage()}
                 disabled={isFetchingNextPage}
                 className="h-10"
               >
@@ -98,7 +107,8 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
                   "Load More Comments"
                 )}
               </Button>
-            </div> */}
+            </div>
+          )}
         </>
       )}
     </div>

@@ -499,6 +499,20 @@ export const useInfiniteComments = (
   });
 };
 
+export const useReplies = (
+  blogId: string,
+  commentId: string,
+  params: { limit?: number },
+) => {
+  return useQuery({
+    queryKey: ["replies", blogId, commentId, params],
+    queryFn: () => fetchReplies(blogId, commentId, params),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 60,
+    enabled: !!commentId,
+  });
+};
+
 // Use infinite query for replies
 export const useInfiniteReplies = (
   blogId: string,

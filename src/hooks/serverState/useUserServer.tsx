@@ -7,7 +7,7 @@ interface AuthResponse {
   access_token: string;
 }
 
-interface UserDataResponse {
+export interface UserDataResponse {
   id: string;
   firstName: string;
   lastName: string;
@@ -252,9 +252,6 @@ export const useUserData = () => {
   });
 };
 
-
-
-
 export const useLogout = () => {
   const clearToken = useToken((state) => state.clearToken);
   const queryClient = useQueryClient();
@@ -262,10 +259,9 @@ export const useLogout = () => {
   const logout = () => {
     clearToken();
     // 2. Wipe the React Query cache
-    queryClient.removeQueries({ queryKey: ['user'], exact: false });
+    queryClient.removeQueries({ queryKey: ["user"], exact: false });
     toast.success("Logged out successfully");
   };
 
   return logout;
 };
-
