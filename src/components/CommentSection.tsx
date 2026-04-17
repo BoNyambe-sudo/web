@@ -24,6 +24,10 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
   const { mutate: createComment } = useCreateComment();
 
   const handleCreateComment = () => {
+    if (!user) {
+      toast.error("You must login first");
+      return;
+    }
     createComment(
       {
         blogId: blogId as string,

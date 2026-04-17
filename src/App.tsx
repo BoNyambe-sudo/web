@@ -50,11 +50,11 @@ function AppWithQuery() {
         position="top-right"
         toastOptions={{
           className:
-            "bg-background text-foreground border border-border shadow-lg rounded-md",
+            "bg-popover text-popover-foreground border border-border shadow-lg rounded-md z-100",
           style: {
             background: "inherit",
             color: "inherit",
-            padding: "12px 16px",
+            padding: "8px 12px",
           },
         }}
       />

@@ -1,10 +1,8 @@
 import BlogRenderer from "@/components/BlogRenderer";
 import CommentSection from "@/components/CommentSection";
 import Header from "@/components/Header";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useBlog, useBlogs } from "@/hooks/serverState/useBlogServer";
 import {
-  AlertCircle,
   Clock,
   Share2,
   Tag,
@@ -14,7 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Facebook from "@/components/icons/facebook";
-import { Link, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import BlogCard from "@/components/BlogCard";
 import Footer from "@/components/Footer";
 import { useState } from "react";
@@ -35,6 +33,7 @@ import LoadingIndicator from "@/components/LoadingIndicator";
 
 const SingleBlog = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { data: blog, isLoading: blogLoading } = useBlog(id as string);
@@ -51,7 +50,8 @@ const SingleBlog = () => {
   }
   const { data: similarBlogsData, isLoading: loadingSimilarBlogs } =
     useBlogs(queryParams);
-  const similarBlogs = similarBlogsData?.data || [];
+  const similarBlogs =
+    similarBlogsData?.data.filter((blg) => blg?.id !== id) || [];
 
   const handleShare = (platform: string) => {
     const encodedUrl = encodeURIComponent(currentUrl);
@@ -98,14 +98,12 @@ const SingleBlog = () => {
 
   if (!blog) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <Card>
-          <AlertCircle />
-          <CardHeader>Blog not found!</CardHeader>
-          <CardContent>
-            Go back to the <Link to="/blogs">blogs page</Link>
-          </CardContent>
-        </Card>
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <h3 className="text-lg font-medium mb-2">No blogs found</h3>
+        <p className="text-muted-foreground mb-4">Try going back to blocks</p>
+        <Button variant="outline" onClick={() => navigate("/blogs")}>
+          Go back to blogs
+        </Button>
       </div>
     );
   }
@@ -201,7 +199,7 @@ const SingleBlog = () => {
                 {blog?.author?.firstName} {blog?.author?.lastName}
               </p>
               <p className="text-sm text-muted-foreground">
-                {blog?.createdAt?.toLocaleDateString("en-US", {
+                {new Date(blog?.createdAt).toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
                   year: "numeric",

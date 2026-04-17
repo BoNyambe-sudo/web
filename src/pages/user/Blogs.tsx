@@ -274,8 +274,8 @@ const Blogs = () => {
             Found {blogs.length} {blogs.length === 1 ? "blog" : "blogs"}
           </div>
           {isLoading ? (
-            <div className="text-center h-full my-auto">
-              <Loader2 className="size-4 text-primary" />
+            <div className=" flex items-center justify-center text-center h-full my-auto">
+              <Loader2 className="size-4 text-primary animate-spin" />
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -8,7 +8,9 @@ import type { CommentType } from "@/hooks/clientState/useBlog";
 import { useUserData } from "@/hooks/serverState/useUserServer";
 import {
   useCreateComment,
+  useDislikeComment,
   useInfiniteReplies,
+  useLikeComment,
 } from "@/hooks/serverState/useBlogServer";
 import toast from "react-hot-toast";
 
@@ -27,9 +29,14 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
     useInfiniteReplies(blogId, comment.id as string);
   const replies = data?.pages.flatMap((page) => page.data);
   const { mutate: createReply } = useCreateComment();
+  const { mutate: likeComment } = useLikeComment();
+  const { mutate: dislikeComment } = useDislikeComment();
 
   const handleReply = () => {
-    if (replyText.trim() === "") return;
+    if (!user || replyText.trim() === "") {
+      toast.error("You must login first")
+      return
+    }
     createReply(
       {
         blogId: blogId,
@@ -46,6 +53,22 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
     onReply?.(comment);
     setReplyText("");
     setShowReplyForm(false);
+  };
+
+  const handleLikeComment = () => {
+    if(!user){
+      toast.error("You must login first")
+      return
+    }
+    likeComment({ blogId, commentId: comment.id as string });
+  };
+
+  const handleDislikeComment = () => {
+    if (!user) {
+      toast.error("You must login first");
+      return;
+    }
+    dislikeComment({ blogId, commentId: comment.id as string });
   };
 
   const getInitials = (firstName?: string, lastName?: string) => {
@@ -81,13 +104,13 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
             <p className="text-sm text-muted-foreground mb-3">
               {comment.content}
             </p>
-            <Button variant="ghost">
+            <Button onClick={handleLikeComment} variant="ghost">
               <ThumbsUp
                 className={`${comment.likedBy.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
               />{" "}
               <span>{comment.likedBy.length}</span>
             </Button>
-            <Button variant={"ghost"}>
+            <Button onClick={handleDislikeComment} variant={"ghost"}>
               <ThumbsDown
                 className={`${comment.dislikedBy.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
               />{" "}

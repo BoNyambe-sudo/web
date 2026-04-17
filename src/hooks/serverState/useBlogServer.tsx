@@ -302,21 +302,9 @@ const flagComment = async (
 
 // Use query for blog by ID
 export const useBlog = (id: string) => {
-  const queryClient = useQueryClient();
   return useQuery({
     queryKey: ["blog", id],
     queryFn: () => fetchBlog(id),
-    initialData: () => {
-      const tempBlog = (queryClient.getQueryData(["blogs"]) as BlogType[]).find(
-        (blog) => blog.id === id,
-      );
-
-      if (tempBlog) {
-        return tempBlog;
-      } else {
-        return undefined;
-      }
-    },
     staleTime: 1000 * 60 * 15,
     gcTime: 1000 * 60 * 60,
     enabled: !!id,
