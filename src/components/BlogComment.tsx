@@ -33,13 +33,16 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
   const { mutate: dislikeComment } = useDislikeComment();
 
   const handleReply = () => {
-    if (!user || replyText.trim() === "") {
-      toast.error("You must login first")
-      return
+    if (!user) {
+      toast.error("You must login first");
+      return;
     }
-    if(user.status === "BLOCKED"){
-      toast.error("Your account is blocked.")
-      return
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
+    if (replyText.trim() === "") {
+      return;
     }
     createReply(
       {
@@ -50,25 +53,28 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
       {
         onSuccess: () => {
           setReplyText("");
+          setShowReplyForm(false);
+          onReply?.(comment);
           toast.success("Reply successfully created.");
         },
       },
     );
-    onReply?.(comment);
-    setReplyText("");
-    setShowReplyForm(false);
   };
 
   const handleLikeComment = () => {
-    if(!user){
-      toast.error("You must login first")
-      return
+    if (!user) {
+      toast.error("You must login first");
+      return;
     }
     if (user.status === "BLOCKED") {
       toast.error("Your account is blocked.");
       return;
     }
-    likeComment({ blogId, commentId: comment.id as string });
+    likeComment({
+      blogId,
+      commentId: comment.id as string,
+      parentId: comment.parentComment ?? undefined,
+    });
   };
 
   const handleDislikeComment = () => {
@@ -80,7 +86,11 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
       toast.error("Your account is blocked.");
       return;
     }
-    dislikeComment({ blogId, commentId: comment.id as string });
+    dislikeComment({
+      blogId,
+      commentId: comment.id as string,
+      parentId: comment.parentComment ?? undefined,
+    });
   };
 
   const getInitials = (firstName?: string, lastName?: string) => {

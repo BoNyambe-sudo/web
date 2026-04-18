@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { request } from "@/config/axios_config";
-import toast from "react-hot-toast";
 
 type AppointmentStatus = "SCHEDULED" | "FAILED" | "CANCELLED" | "COMPLETED";
 
@@ -96,9 +95,6 @@ const sendInqiury = async (inquiry: InquiryInput) => {
 export const useCreateAppointment = () => {
   return useMutation({
     mutationFn: create,
-    onSuccess: () => {
-      toast.success("Appointment created successfully");
-    },
   });
 };
 
@@ -147,9 +143,6 @@ export const useDeleteAppointment = () => {
 export const useSendInqiury = () => {
   return useMutation({
     mutationFn: sendInqiury,
-    onSuccess: () => {
-      toast.success("Message sent successfully");
-    },
   });
 };
 

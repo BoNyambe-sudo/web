@@ -62,14 +62,14 @@ const Home = () => {
     phoneNumber: string;
     scheduledDate: undefined | Date;
     scheduledTime: string;
-    message: string;
+    description: string;
   }>({
     name: "",
     email: "",
     phoneNumber: "",
     scheduledDate: undefined,
     scheduledTime: "",
-    message: "",
+    description: "",
   });
 
   const { mutate: sendMessage, isPending: messageLoading } = useSendInqiury();
@@ -96,16 +96,16 @@ const Home = () => {
     e.preventDefault();
     createAppointment(appointmentFormData, {
       onSuccess: () => {
-        toast.success("Appointment created successfully");
         setAppointmentFormData({
           name: "",
           email: "",
           phoneNumber: "",
           scheduledDate: undefined,
           scheduledTime: "",
-          message: "",
+          description: "",
         });
         setIsAppointmentDialogOpen(false);
+        toast.success("Appointment created successfully");
       },
     });
   };
@@ -343,11 +343,11 @@ const Home = () => {
                   <div className="space-y-2">
                     <Label>Description</Label>
                     <Textarea
-                      value={appointmentFormData.message}
+                      value={appointmentFormData.description}
                       onChange={(e) =>
                         setAppointmentFormData({
                           ...appointmentFormData,
-                          message: e.target.value,
+                          description: e.target.value,
                         })
                       }
                       placeholder="Description"

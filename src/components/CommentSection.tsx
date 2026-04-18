@@ -19,10 +19,10 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
   const { data: user } = useUserData();
   const [commentText, setCommentText] = useState("");
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteComments(blogId);
+    useInfiniteComments(blogId, { limit: 1});
   const comments = data?.pages.flatMap((page) => page.data);
   const topLevelComments = comments?.filter(
-    (cmm) => cmm.parentComment === null,
+    (cmm) => cmm.parentComment,
   );
   const { mutate: createComment } = useCreateComment();
 

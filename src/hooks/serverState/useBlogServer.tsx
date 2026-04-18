@@ -555,48 +555,17 @@ export const useCreateComment = () => {
       }
       return createComment(blogId, comment);
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
+      // Invalidate main comments list
+      queryClient.invalidateQueries({
+        queryKey: ["comments", variables.blogId],
+      });
+      // If it's a reply, also invalidate the parent's replies list
       if (variables.parentId) {
-        // Update replies for the parent comment
-        queryClient.setQueryData<CommentsResponse>(
-          ["replies", variables.parentId],
-          (oldData) => {
-            if (!oldData) return oldData;
-            return {
-              ...oldData,
-              data: [...oldData.data, data.comment],
-              pagination: {
-                ...oldData.pagination,
-                total: oldData.pagination.total + 1,
-                pages: Math.ceil(
-                  (oldData.pagination.total + 1) / oldData.pagination.limit,
-                ),
-              },
-            };
-          },
-        );
-      } else {
-        // Update comments list for the blog
-        queryClient.setQueryData<CommentsResponse>(
-          ["comments", variables.blogId],
-          (oldData) => {
-            if (!oldData) return oldData;
-            return {
-              ...oldData,
-              data: [...oldData.data, data.comment],
-              pagination: {
-                ...oldData.pagination,
-                total: oldData.pagination.total + 1,
-                pages: Math.ceil(
-                  (oldData.pagination.total + 1) / oldData.pagination.limit,
-                ),
-              },
-            };
-          },
-        );
+        queryClient.invalidateQueries({
+          queryKey: ["replies", variables.blogId, variables.parentId],
+        });
       }
-
-      toast.success("Comment created successfully");
     },
   });
 };
@@ -616,34 +585,16 @@ export const useUpdateComment = () => {
       comment: { content: string };
     }) => updateComment(blogId, commentId, comment),
     onSuccess: (data, variables) => {
-      // Update specific comment in comments list
-      queryClient.setQueryData<CommentsResponse>(
-        ["comments", variables.blogId],
-        (oldData) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            data: oldData.data.map((commentItem) =>
-              commentItem.id === data.comment.id ? data.comment : commentItem,
-            ),
-          };
-        },
-      );
-
-      // Update specific comment in replies list if it exists there too
-      queryClient.setQueryData<CommentsResponse>(
-        ["replies", variables.commentId],
-        (oldData) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            data: oldData.data.map((commentItem) =>
-              commentItem.id === data.comment.id ? data.comment : commentItem,
-            ),
-          };
-        },
-      );
-
+      // Invalidate main comments list (covers top-level updates)
+      queryClient.invalidateQueries({
+        queryKey: ["comments", variables.blogId],
+      });
+      // If comment is a reply, also invalidate its parent's replies list to update the comment there
+      if (data.comment.parentComment) {
+        queryClient.invalidateQueries({
+          queryKey: ["replies", variables.blogId, data.comment.parentComment],
+        });
+      }
       toast.success("Comment updated successfully");
     },
   });
@@ -665,7 +616,10 @@ export const useDeleteComment = () => {
       queryClient.invalidateQueries({
         queryKey: ["comments", variables.blogId],
       });
-
+      // Invalidate all replies for the blog to clear any cached threads
+      queryClient.invalidateQueries({
+        queryKey: ["replies", variables.blogId],
+      });
       toast.success("Comment deleted successfully");
     },
   });
@@ -682,11 +636,19 @@ export const useLikeComment = () => {
     }: {
       blogId: string;
       commentId: string;
+      parentId?: string;
     }) => likeComment(blogId, commentId),
     onSuccess: (_, variables) => {
+      const { blogId, parentId } = variables;
       queryClient.invalidateQueries({
-        queryKey: ["comments", variables.blogId],
+        queryKey: ["comments", blogId],
       });
+      // If comment is a reply, invalidate its parent's replies list
+      if (parentId) {
+        queryClient.invalidateQueries({
+          queryKey: ["replies", blogId, parentId],
+        });
+      }
     },
   });
 };
@@ -702,11 +664,18 @@ export const useDislikeComment = () => {
     }: {
       blogId: string;
       commentId: string;
+      parentId?: string;
     }) => dislikeComment(blogId, commentId),
     onSuccess: (_, variables) => {
+      const { blogId, parentId } = variables;
       queryClient.invalidateQueries({
-        queryKey: ["comments", variables.blogId],
+        queryKey: ["comments", blogId],
       });
+      if (parentId) {
+        queryClient.invalidateQueries({
+          queryKey: ["replies", blogId, parentId],
+        });
+      }
     },
   });
 };
@@ -721,11 +690,18 @@ export const useFlagComment = () => {
     }: {
       blogId: string;
       commentId: string;
+      parentId?: string;
     }) => flagComment(blogId, commentId),
     onSuccess: (_, variables) => {
+      const { blogId, parentId } = variables;
       queryClient.invalidateQueries({
-        queryKey: ["comments", variables.blogId],
+        queryKey: ["comments", blogId],
       });
+      if (parentId) {
+        queryClient.invalidateQueries({
+          queryKey: ["replies", blogId, parentId],
+        });
+      }
     },
   });
 };
@@ -759,6 +735,10 @@ export const useCommetRestore = () => {
       queryClient.invalidateQueries({
         queryKey: ["comments", variables.blogId],
       });
+      // Invalidate all replies for the blog to reflect restored comment
+      queryClient.invalidateQueries({
+        queryKey: ["replies", variables.blogId],
+      });
       toast.success("Comment restored successfully");
     },
   });
@@ -778,6 +758,10 @@ export const useCommentHardDelete = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["comments", variables.blogId],
+      });
+      // Invalidate all replies for the blog to clear any cached threads
+      queryClient.invalidateQueries({
+        queryKey: ["replies", variables.blogId],
       });
       toast.success("Comment deleted successfully");
     },
