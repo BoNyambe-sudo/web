@@ -72,6 +72,10 @@ const UserAccountForm = ({ user }: { user: UserDataResponse }) => {
 
   const handleSave = async () => {
     if (!user) return;
+    if(user.status === "BLOCKED"){
+      toast.error("Your account is blocked.")
+      return
+    }
 
     // Validate form
     if (formData.password && formData.password.length < 8) {
@@ -113,6 +117,11 @@ const UserAccountForm = ({ user }: { user: UserDataResponse }) => {
   };
 
   const handleDeleteAccount = async () => {
+    if(!user) return
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
     setIsDeleting(true);
     logout();
     deleteUser(user?.id as string, {
