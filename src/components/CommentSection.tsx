@@ -21,6 +21,9 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteComments(blogId);
   const comments = data?.pages.flatMap((page) => page.data);
+  const topLevelComments = comments?.filter(
+    (cmm) => cmm.parentComment === null,
+  );
   const { mutate: createComment } = useCreateComment();
 
   const handleCreateComment = () => {
@@ -85,14 +88,14 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
       </div>
 
       {/* Comments list */}
-      {comments?.length === 0 ? (
+      {topLevelComments?.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground">
           <p>No comments yet. Be the first to comment!</p>
         </div>
       ) : (
         <>
           <div className="space-y-4">
-            {comments?.map((comment) => (
+            {topLevelComments?.map((comment) => (
               <BlogComment key={comment.id} comment={comment} blogId={blogId} />
             ))}
           </div>

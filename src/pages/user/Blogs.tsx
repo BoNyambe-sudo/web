@@ -47,12 +47,14 @@ const Blogs = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const { data: tagsResult } = useTopTags();
   const availableTags = tagsResult?.tags || [];
+  
 
   const queryParams: BlogQueryParams = {
     sortBy: selectedFilters.sortBy,
     sortOrder: selectedFilters.sortOrder,
     deleted: false,
     published: true,
+    limit: 1,
   };
   if (debouncedSearchQuery) {
     queryParams.q = debouncedSearchQuery;

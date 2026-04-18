@@ -189,9 +189,9 @@ const SingleBlog = () => {
 
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Avatar>
+              <Avatar className="h-10 w-10">
                 <AvatarImage src={blog.author.profilePicture} />
-                <AvatarFallback>
+                <AvatarFallback className="bg-primary/10 text-primary">
                   {getInitials(blog.author.firstName, blog.author.lastName)}
                 </AvatarFallback>
               </Avatar>

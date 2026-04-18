@@ -112,171 +112,173 @@ const Header = ({
   };
 
   return (
-    <div
+    <header
       className={cn(
-        "container sticky z-50 top-0 w-full flex items-center justify-between py-3 backdrop-blur-xl",
+        " sticky z-50 top-0 w-full  py-3 backdrop-blur-xl",
         className,
       )}
     >
-      <div className="flex items-center justify-between gap-4">
-        <Logo
-          size={32}
-          className={cn("text-foreground font-semibold", textClassName)}
-        />
+      <div className="container flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
+          <Logo
+            size={32}
+            className={cn("text-foreground font-semibold", textClassName)}
+          />
 
-        <div className="flex items-center font-semibold text-sm gap-3">
-          <Link
-            to="/"
-            className={cn(
-              "ml-4 text-foreground hover:text-primary font-semibold transition-colors",
-              textClassName,
-            )}
-          >
-            Home
-          </Link>
-          <Link
-            to="/blogs"
-            className={cn(
-              "text-foreground font-semibold hover:text-primary transition-colors",
-              textClassName,
-            )}
-          >
-            Blogs
-          </Link>
+          <div className="flex items-center font-semibold text-sm gap-3">
+            <Link
+              to="/"
+              className={cn(
+                "ml-4 text-foreground hover:text-primary font-semibold transition-colors",
+                textClassName,
+              )}
+            >
+              Home
+            </Link>
+            <Link
+              to="/blogs"
+              className={cn(
+                "text-foreground font-semibold hover:text-primary transition-colors",
+                textClassName,
+              )}
+            >
+              Blogs
+            </Link>
+          </div>
         </div>
-      </div>
-      {user ? (
-        <>
-          {" "}
-          <Avatar
-            className="cursor-pointer"
-            onClick={() => setIsUserOpen(true)}
-          >
-            <AvatarImage src={user.profilePicture} />
-            <AvatarFallback>
-              {user.firstName.charAt(0) + user.lastName.charAt(0)}
-            </AvatarFallback>
-          </Avatar>{" "}
-          <UserCard />{" "}
-        </>
-      ) : (
-        <Dialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}>
-          <DialogTrigger asChild>
-            <Avatar className="cursor-pointer">
+        {user ? (
+          <>
+            {" "}
+            <Avatar
+              className="cursor-pointer"
+              onClick={() => setIsUserOpen(true)}
+            >
+              <AvatarImage src={user.profilePicture} />
               <AvatarFallback>
-                <User />
+                {user.firstName.charAt(0) + user.lastName.charAt(0)}
               </AvatarFallback>
-            </Avatar>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {!isSignUpDialogOpen ? "Login" : "Sign Up"}
-              </DialogTitle>
-            </DialogHeader>
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              {isSignUpDialogOpen && (
-                <div className="space-y-3">
-                  <Label htmlFor="first-name">First Name</Label>
-                  <Input
-                    id="first-name"
-                    type="text"
-                    placeholder="Enter your first name"
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, firstName: e.target.value })
-                    }
-                  />
-                </div>
-              )}
-              {isSignUpDialogOpen && (
-                <div className="space-y-2">
-                  <Label htmlFor="last-name">Last Name</Label>
-                  <Input
-                    id="last-name"
-                    type="text"
-                    placeholder="Enter your last name"
-                    value={formData.lastName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, lastName: e.target.value })
-                    }
-                  />
-                </div>
-              )}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2 ">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                />
-              </div>
-              {isSignUpDialogOpen && (
-                <PasswordStrengthIndicator password={formData.password} />
-              )}
-              {isSignUpDialogOpen && (
-                <div className="space-y-2">
-                  <Label htmlFor="confirm-password">Confirm Password</Label>
-                  <Input
-                    id="confirm-password"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        confirmPassword: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-              )}
-              <div>
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isLoginPending || isRegisterPending}
-                >
+            </Avatar>{" "}
+            <UserCard />{" "}
+          </>
+        ) : (
+          <Dialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}>
+            <DialogTrigger asChild>
+              <Avatar className="cursor-pointer">
+                <AvatarFallback>
+                  <User />
+                </AvatarFallback>
+              </Avatar>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
                   {!isSignUpDialogOpen ? "Login" : "Sign Up"}
-                </Button>
-                <div className="text-center text-sm text-muted-foreground">
-                  <span>
-                    {!isSignUpDialogOpen
-                      ? "Don't have an account?"
-                      : "Already have an account?"}
-                  </span>
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      setIsSignUpDialogOpen(!isSignUpDialogOpen);
-                    }}
-                    variant={"link"}
-                  >
-                    {!isSignUpDialogOpen ? "Sign up" : "Login"}
-                  </Button>
+                </DialogTitle>
+              </DialogHeader>
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                {isSignUpDialogOpen && (
+                  <div className="space-y-3">
+                    <Label htmlFor="first-name">First Name</Label>
+                    <Input
+                      id="first-name"
+                      type="text"
+                      placeholder="Enter your first name"
+                      value={formData.firstName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, firstName: e.target.value })
+                      }
+                    />
+                  </div>
+                )}
+                {isSignUpDialogOpen && (
+                  <div className="space-y-2">
+                    <Label htmlFor="last-name">Last Name</Label>
+                    <Input
+                      id="last-name"
+                      type="text"
+                      placeholder="Enter your last name"
+                      value={formData.lastName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, lastName: e.target.value })
+                      }
+                    />
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                  />
                 </div>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
-    </div>
+                <div className="space-y-2 ">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                  />
+                </div>
+                {isSignUpDialogOpen && (
+                  <PasswordStrengthIndicator password={formData.password} />
+                )}
+                {isSignUpDialogOpen && (
+                  <div className="space-y-2">
+                    <Label htmlFor="confirm-password">Confirm Password</Label>
+                    <Input
+                      id="confirm-password"
+                      type="password"
+                      placeholder="Confirm your password"
+                      value={formData.confirmPassword}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          confirmPassword: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                )}
+                <div>
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isLoginPending || isRegisterPending}
+                  >
+                    {!isSignUpDialogOpen ? "Login" : "Sign Up"}
+                  </Button>
+                  <div className="text-center text-sm text-muted-foreground">
+                    <span>
+                      {!isSignUpDialogOpen
+                        ? "Don't have an account?"
+                        : "Already have an account?"}
+                    </span>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setIsSignUpDialogOpen(!isSignUpDialogOpen);
+                      }}
+                      variant={"link"}
+                    >
+                      {!isSignUpDialogOpen ? "Sign up" : "Login"}
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+    </header>
   );
 };
 

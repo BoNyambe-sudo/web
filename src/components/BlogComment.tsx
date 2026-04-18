@@ -134,7 +134,7 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
               onClick={() => setShowReplies(!showReplies)}
             >
               <MessageCircle className="h-4 w-4" />
-              <span>{comment?.replies?.length || 0}</span>
+              <span>{replies?.length || 0}</span>
             </Button>
             <Button
               variant="ghost"
@@ -160,7 +160,7 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
                     disabled={!replyText.trim()}
                     className="h-9"
                   >
-                    {"Reply"}
+                    Reply
                   </Button>
                 </div>
               </div>
