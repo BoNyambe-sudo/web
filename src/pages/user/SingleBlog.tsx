@@ -2,15 +2,7 @@ import BlogRenderer from "@/components/BlogRenderer";
 import CommentSection from "@/components/CommentSection";
 import Header from "@/components/Header";
 import { useBlog, useBlogs } from "@/hooks/serverState/useBlogServer";
-import {
-  Clock,
-  Share2,
-  Tag,
-  User,
-  MessageSquare,
-  Copy,
-  Loader2,
-} from "lucide-react";
+import { Clock, Share2, Tag, MessageSquare, Copy, Loader2 } from "lucide-react";
 import Facebook from "@/components/icons/facebook";
 import { useNavigate, useParams } from "react-router";
 import BlogCard from "@/components/BlogCard";
@@ -30,6 +22,7 @@ import LinkedIn from "@/components/icons/linkedIn";
 import Twitter from "@/components/icons/twitter";
 import type { BlogQueryParams } from "./Blogs";
 import LoadingIndicator from "@/components/LoadingIndicator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const SingleBlog = () => {
   const { id } = useParams();
@@ -91,6 +84,10 @@ const SingleBlog = () => {
       console.error("Failed to copy link:", error);
     }
   };
+  const getInitials = (firstName?: string, lastName?: string) => {
+    if (!firstName && !lastName) return "U";
+    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
+  };
 
   if (blogLoading) {
     return <LoadingIndicator />;
@@ -114,11 +111,11 @@ const SingleBlog = () => {
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
             <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-              {blog?.category}
+              {blog.category}
             </span>
             <div className="flex items-center gap-1 text-muted-foreground">
               <Clock size={16} />
-              <span>{blog?.readTime} min read</span>
+              <span>{blog.readTime} min read</span>
             </div>
             <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
               <DialogTrigger asChild>
@@ -192,14 +189,19 @@ const SingleBlog = () => {
 
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <User size={20} className="text-primary" />
+              <Avatar>
+                <AvatarImage src={blog.author.profilePicture} />
+                <AvatarFallback>
+                  {getInitials(blog.author.firstName, blog.author.lastName)}
+                </AvatarFallback>
+              </Avatar>
             </div>
             <div>
               <p className="font-medium">
                 {blog?.author?.firstName} {blog?.author?.lastName}
               </p>
               <p className="text-sm text-muted-foreground">
-                {new Date(blog?.createdAt).toLocaleDateString("en-US", {
+                {new Date(blog.createdAt).toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
                   year: "numeric",
@@ -215,7 +217,7 @@ const SingleBlog = () => {
             <span className="font-medium">Tags</span>
           </div>
           <div className="flex flex-wrap gap-2">
-            {blog?.tags?.map((tag) => (
+            {blog.tags?.map((tag) => (
               <span
                 key={tag}
                 className="px-3 py-1 bg-muted rounded-full text-sm text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer"

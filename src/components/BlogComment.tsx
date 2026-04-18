@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, MessageCircle, ThumbsDown, ThumbsUp } from "lucide-react";
 import type { CommentType } from "@/hooks/clientState/useBlog";
 import { useUserData } from "@/hooks/serverState/useUserServer";
@@ -37,6 +37,10 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
       toast.error("You must login first")
       return
     }
+    if(user.status === "BLOCKED"){
+      toast.error("Your account is blocked.")
+      return
+    }
     createReply(
       {
         blogId: blogId,
@@ -60,12 +64,20 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
       toast.error("You must login first")
       return
     }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
     likeComment({ blogId, commentId: comment.id as string });
   };
 
   const handleDislikeComment = () => {
     if (!user) {
       toast.error("You must login first");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
       return;
     }
     dislikeComment({ blogId, commentId: comment.id as string });
@@ -81,6 +93,7 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
       <Card className="p-4">
         <div className="flex gap-3">
           <Avatar className="h-10 w-10">
+          <AvatarImage src={comment.author.profilePicture} />
             <AvatarFallback className="bg-primary/10 text-primary">
               {getInitials(comment.author.firstName, comment.author.lastName)}
             </AvatarFallback>

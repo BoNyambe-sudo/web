@@ -4,6 +4,7 @@ type Author = {
   firstName: string;
   lastName: string;
   email: string;
+  profilePicture: string;
 };
 export interface BlogType {
   id?: string;

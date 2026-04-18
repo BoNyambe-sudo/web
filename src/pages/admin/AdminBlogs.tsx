@@ -71,6 +71,7 @@ import {
 } from "@/hooks/serverState/useBlogServer";
 import type { BlogQueryParams } from "../user/Blogs";
 import toast from "react-hot-toast";
+import { useUserData } from "@/hooks/serverState/useUserServer";
 
 type BlogFormData = {
   title: string;
@@ -138,6 +139,7 @@ const AdminBlogs = () => {
     queryParams.latest = selectedFilters.latest;
   }
 
+  const { data: user } = useUserData();
   const {
     data,
     isLoading: blogsLoading,
@@ -184,7 +186,18 @@ const AdminBlogs = () => {
   ];
 
   const handleCreateBlog = () => {
-    if (!createFormData.title || !createFormData.content) return;
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
+    if (!createFormData.title || !createFormData.content) {
+      toast.error("Title and content must be provided.");
+      return;
+    }
 
     const newBlog = {
       title: createFormData.title,
@@ -210,6 +223,14 @@ const AdminBlogs = () => {
   };
 
   const handleUpdateBlog = () => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
     if (!selectedBlog || !updateFormData.title || !updateFormData.content)
       return;
 
@@ -263,6 +284,14 @@ const AdminBlogs = () => {
   };
 
   const handleDeleteBlog = () => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
     if (blogToDelete) {
       deleteBlog(blogToDelete);
       setIsDeleteDialogOpen(false);
@@ -308,6 +337,14 @@ const AdminBlogs = () => {
   };
 
   const toggleBlogVisibility = (blog: BlogType) => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
     updateBlog(
       { id: blog.id as string, blog: { published: !blog.published } },
       {
@@ -329,6 +366,14 @@ const AdminBlogs = () => {
   };
 
   const confirmDeleteComment = () => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
     if (commentToDelete) {
       deleteComment(
         {
@@ -351,6 +396,14 @@ const AdminBlogs = () => {
   };
 
   const handleUpdateComment = () => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
     if (editingComment) {
       updateComment(
         {

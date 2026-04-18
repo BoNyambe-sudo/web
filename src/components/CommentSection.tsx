@@ -28,6 +28,10 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
       toast.error("You must login first");
       return;
     }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
     createComment(
       {
         blogId: blogId as string,
