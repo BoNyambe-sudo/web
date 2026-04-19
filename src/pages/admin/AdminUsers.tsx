@@ -27,6 +27,7 @@ import {
   Lock,
   Unlock,
   Users,
+  Loader2,
 } from "lucide-react";
 import UsersPerRoles from "@/components/UsersPerRoles";
 import {
@@ -48,7 +49,6 @@ import {
   useFetchUserAnalytics,
   useFetchUsers,
 } from "@/hooks/serverState/useUserServer";
-import LoadingIndicator from "@/components/LoadingIndicator";
 import type { UserType } from "@/hooks/clientState/useUser";
 
 type UserFormData = {
@@ -111,10 +111,6 @@ const AdminUsers = () => {
 
   function handleSaveUserChanges(event: React.SubmitEvent) {
     throw new Error("Functions not implemented");
-  }
-
-  if (isLoading) {
-    return <LoadingIndicator />;
   }
 
   return (
@@ -206,7 +202,15 @@ const AdminUsers = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users?.length === 0 ? (
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center">
+                      <div className="flex justify-center">
+                        <Loader2 className="size-6 animate-spin text-primary" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : users?.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center">
                       No users found

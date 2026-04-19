@@ -72,7 +72,7 @@ const getAnalytics = async () => {
 const update = async (id: string, app: Partial<CreateAppointmentType>) => {
   return await request<AppointmentResponse>({
     url: `/appointments/${id}`,
-    method: "PUT",
+    method: "PATCH",
     data: app,
   });
 };
@@ -125,6 +125,7 @@ export const useUpdateAppointment = () => {
     }) => update(id, app),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["appointment-metrics"] });
     },
   });
 };
@@ -136,6 +137,7 @@ export const useDeleteAppointment = () => {
     mutationFn: remove,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({queryKey: ["appointment-metrics"]})
     },
   });
 };

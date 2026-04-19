@@ -1072,8 +1072,10 @@ const AdminBlogs = () => {
               )}
               {blogsLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center my-auto">
-                    <Loader2 className="size-4 animate-spin text-primary" />
+                  <TableCell colSpan={6} className="text-center">
+                    <div className="flex justify-center">
+                      <Loader2 className="size-4 animate-spin text-primary" />
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : (

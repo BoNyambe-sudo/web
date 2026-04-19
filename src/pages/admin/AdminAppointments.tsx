@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import AppointmentsByStatus from "@/components/AppointmentsByStatus";
 import { Button } from "@/components/ui/button";
-import { Edit, Loader2, Save, Trash2 } from "lucide-react";
+import { ChevronDownIcon, Edit, Loader2, Save, Trash2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -41,12 +41,43 @@ import {
 } from "@/hooks/serverState/userAppointmentServer";
 import toast from "react-hot-toast";
 import type { AppointmentStatus } from "@/hooks/clientState/useAppointment";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+
+type AppointmentFormType = {
+  name: string;
+  email?: string;
+  phoneNumber: string;
+  scheduledDate: undefined | Date;
+  scheduledTime: string;
+  description?: string;
+  status: AppointmentStatus;
+};
 
 const AdminAppointments = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [appointmentToDelete, setAppointmentToDelete] = useState<string | null>(
     null,
   );
+
+  const [appointmentFormData, setAppointmentFormData] =
+    useState<AppointmentFormType>({
+      name: "",
+      email: "",
+      phoneNumber: "",
+      scheduledDate: undefined,
+      scheduledTime: "",
+      description: "",
+      status: "SCHEDULED",
+    });
+
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
     useState<AppointmentResponse | null>(null);
@@ -57,6 +88,15 @@ const AdminAppointments = () => {
 
   function handleEditAppointment(appointment: AppointmentResponse): void {
     setSelectedAppointment(appointment);
+    setAppointmentFormData({
+      name: appointment.name,
+      scheduledDate: appointment.scheduledDate,
+      scheduledTime: appointment.scheduledTime,
+      status: appointment.status,
+      phoneNumber: appointment.phoneNumber,
+      description: appointment?.description,
+      email: appointment?.email,
+    });
     setIsEditDialogOpen(true);
   }
 
@@ -75,10 +115,42 @@ const AdminAppointments = () => {
   }
 
   function handleUpdateAppointment(): void {
+    const updatedAppointment: Partial<AppointmentFormType> = {};
+    console.log({
+      updatedAppointment,
+      appointmentFormData,
+      selectedAppointment,
+    });
+    if (
+      appointmentFormData.status &&
+      appointmentFormData.status !== selectedAppointment?.status
+    ) {
+      updatedAppointment.status = appointmentFormData.status;
+    }
+    if (
+      appointmentFormData.scheduledDate &&
+      appointmentFormData.scheduledDate !== selectedAppointment?.scheduledDate
+    ) {
+      updatedAppointment.scheduledDate = appointmentFormData.scheduledDate;
+    }
+    if (
+      appointmentFormData.scheduledTime &&
+      appointmentFormData.scheduledTime !== selectedAppointment?.scheduledTime
+    ) {
+      updatedAppointment.scheduledTime = appointmentFormData.scheduledTime;
+    }
+    if (
+      !updatedAppointment.status &&
+      !updatedAppointment.scheduledDate &&
+      !updatedAppointment.scheduledTime
+    ) {
+      toast.error("Some fields are missing");
+      return;
+    }
     updateAppointment(
       {
         id: selectedAppointment?.id as string,
-        app: { status: selectedAppointment?.status as AppointmentStatus },
+        app: updatedAppointment,
       },
       {
         onSuccess: () => {
@@ -223,7 +295,9 @@ const AdminAppointments = () => {
                   {appointmentsLoading ? (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center">
-                        <Loader2 className="size-6 animate-spin text-primary" />
+                        <div className="flex justify-center">
+                          <Loader2 className="size-6 animate-spin text-primary" />
+                        </div>
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -245,13 +319,60 @@ const AdminAppointments = () => {
               <DialogDescription>
                 Update the appointment details.
               </DialogDescription>
+              <div className="space-y-2">
+                <Label>Date *</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      data-empty={!appointmentFormData.scheduledDate}
+                      className="w-full justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
+                    >
+                      {appointmentFormData?.scheduledDate ? (
+                        format(appointmentFormData.scheduledDate, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <ChevronDownIcon />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={appointmentFormData.scheduledDate}
+                      onSelect={(date) =>
+                        setAppointmentFormData({
+                          ...appointmentFormData,
+                          scheduledDate: date,
+                        })
+                      }
+                      defaultMonth={appointmentFormData.scheduledDate}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="space-y-2">
+                <Label>Time *</Label>
+                <Input
+                  required
+                  type="time"
+                  formTarget=""
+                  value={appointmentFormData.scheduledTime}
+                  onChange={(e) =>
+                    setAppointmentFormData({
+                      ...appointmentFormData,
+                      scheduledTime: e.target.value,
+                    })
+                  }
+                />
+              </div>
               <Select
-                value={selectedAppointment?.status}
-                onValueChange={(value) =>
-                  setSelectedAppointment((prev) => ({
-                    ...prev!,
-                    status: value as AppointmentStatus,
-                  }))
+                value={appointmentFormData.status}
+                onValueChange={(value: AppointmentStatus) =>
+                  setAppointmentFormData({
+                    ...appointmentFormData,
+                    status: value,
+                  })
                 }
               >
                 <SelectTrigger className="w-full">
