@@ -83,7 +83,6 @@ const Header = ({
             confirmPassword: "",
           });
           setIsSignUpDialogOpen(false);
-          setIsLoginDialogOpen(false);
         },
       });
     } else {
@@ -178,7 +177,7 @@ const Header = ({
               <form className="space-y-4" onSubmit={handleSubmit}>
                 {isSignUpDialogOpen && (
                   <div className="space-y-3">
-                    <Label htmlFor="first-name">First Name</Label>
+                    <Label htmlFor="first-name">First Name *</Label>
                     <Input
                       id="first-name"
                       type="text"
@@ -192,7 +191,7 @@ const Header = ({
                 )}
                 {isSignUpDialogOpen && (
                   <div className="space-y-2">
-                    <Label htmlFor="last-name">Last Name</Label>
+                    <Label htmlFor="last-name">Last Name *</Label>
                     <Input
                       id="last-name"
                       type="text"
@@ -205,7 +204,7 @@ const Header = ({
                   </div>
                 )}
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">Email *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -217,7 +216,7 @@ const Header = ({
                   />
                 </div>
                 <div className="space-y-2 ">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Password *</Label>
                   <Input
                     id="password"
                     type="password"
@@ -233,7 +232,7 @@ const Header = ({
                 )}
                 {isSignUpDialogOpen && (
                   <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirm Password</Label>
+                    <Label htmlFor="confirm-password">Confirm Password *</Label>
                     <Input
                       id="confirm-password"
                       type="password"

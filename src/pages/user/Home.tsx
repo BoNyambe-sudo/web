@@ -160,10 +160,10 @@ const Home = () => {
                 </Button>
               </DialogTrigger>
               <DialogContent>
-                <DialogTitle></DialogTitle>
+                <DialogTitle>Send a message</DialogTitle>
                 <form onSubmit={handleSendMessage} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name">Name *</Label>
                     <Input
                       required
                       id="name"
@@ -178,7 +178,7 @@ const Home = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">Email *</Label>
                     <Input
                       required
                       id="email"
@@ -194,7 +194,7 @@ const Home = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="subject">Subject (optional)</Label>
+                    <Label htmlFor="subject">Subject </Label>
                     <Input
                       id="subject"
                       placeholder="Subject"
@@ -208,7 +208,7 @@ const Home = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
+                    <Label htmlFor="message">Message *</Label>
                     <Textarea
                       required
                       id="message"
@@ -249,9 +249,10 @@ const Home = () => {
                 <Button variant={"default"}>Book a call</Button>
               </DialogTrigger>
               <DialogContent>
+                <DialogTitle>Book a call now</DialogTitle>
                 <form onSubmit={handleCreateAppointment} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="phone-number">Name</Label>
+                    <Label htmlFor="phone-number">Name *</Label>
                     <Input
                       type="text"
                       required
@@ -266,7 +267,7 @@ const Home = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone-number">Phone Number</Label>
+                    <Label htmlFor="phone-number">Phone Number *</Label>
                     <Input
                       type="tel"
                       required
@@ -281,7 +282,7 @@ const Home = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Date</Label>
+                    <Label>Date *</Label>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
@@ -313,8 +314,9 @@ const Home = () => {
                     </Popover>
                   </div>
                   <div className="space-y-2">
-                    <Label>Time</Label>
+                    <Label>Time *</Label>
                     <Input
+                      required
                       type="time"
                       formTarget=""
                       value={appointmentFormData.scheduledTime}
@@ -327,7 +329,7 @@ const Home = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Email (optional)</Label>
+                    <Label>Email</Label>
                     <Input
                       type="email"
                       placeholder="Enter your email"
@@ -341,8 +343,9 @@ const Home = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Description</Label>
+                    <Label>Description *</Label>
                     <Textarea
+                      required
                       value={appointmentFormData.description}
                       onChange={(e) =>
                         setAppointmentFormData({

@@ -47,14 +47,12 @@ const Blogs = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const { data: tagsResult } = useTopTags();
   const availableTags = tagsResult?.tags || [];
-  
 
   const queryParams: BlogQueryParams = {
     sortBy: selectedFilters.sortBy,
     sortOrder: selectedFilters.sortOrder,
     deleted: false,
     published: true,
-    limit: 1,
   };
   if (debouncedSearchQuery) {
     queryParams.q = debouncedSearchQuery;
@@ -206,15 +204,16 @@ const Blogs = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() =>
+                  onClick={() => {
                     setSelectedFilters({
                       category: "",
                       tags: [],
                       latest: false,
                       sortBy: "createdAt", // Default sort by date
                       sortOrder: "desc", // Default sort order
-                    })
-                  }
+                    });
+                    setSearchQuery("");
+                  }}
                   className="text-xs"
                 >
                   Reset All
@@ -314,15 +313,16 @@ const Blogs = () => {
               </p>
               <Button
                 variant="outline"
-                onClick={() =>
+                onClick={() => {
                   setSelectedFilters({
                     category: "",
                     tags: [],
                     latest: false,
                     sortBy: "createdAt",
                     sortOrder: "desc",
-                  })
-                }
+                  });
+                  setSearchQuery("");
+                }}
               >
                 Clear All Filters
               </Button>

@@ -218,8 +218,6 @@ export const useDeleteUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["user-analytics"] });
-
-      toast.success("User deleted successfully");
     },
   });
 };
@@ -236,8 +234,6 @@ export const useUpdateUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["user-analytics"] });
-
-      toast.success("User updated successfully");
     },
   });
 };

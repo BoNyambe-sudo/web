@@ -28,7 +28,6 @@ export interface CommentType {
   parentComment: string | null;
   likedBy: string[];
   dislikedBy: string[];
-  replies?: CommentType[];
   flagged?: boolean;
   createdAt?: Date;
   updatedAt?: Date;

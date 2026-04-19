@@ -87,12 +87,17 @@ const AdminAccountForm = ({ user }: { user: UserDataResponse }) => {
 
     setIsSaving(true);
 
-    const updateData: FormData = {
-      id: user.id,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-    };
+    const updateData: Partial<FormData> = {};
+
+    if (formData.firstName !== user.firstName) {
+      updateData.firstName = formData.firstName;
+    }
+    if (formData.lastName !== user.lastName) {
+      updateData.lastName = formData.lastName;
+    }
+    if (formData.email !== user.email) {
+      updateData.email = formData.email;
+    }
 
     if (formData.password) {
       updateData.password = formData.password;
@@ -120,12 +125,12 @@ const AdminAccountForm = ({ user }: { user: UserDataResponse }) => {
       return;
     }
     setIsDeleting(true);
-    logout();
     deleteUser(user?.id as string, {
       onSuccess: () => {
         setIsDeleting(false);
         setIsDeleteDialogOpen(false);
         toast.success("Account deleted successfully");
+        logout();
       },
     });
   };

@@ -72,9 +72,9 @@ const UserAccountForm = ({ user }: { user: UserDataResponse }) => {
 
   const handleSave = async () => {
     if (!user) return;
-    if(user.status === "BLOCKED"){
-      toast.error("Your account is blocked.")
-      return
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
     }
 
     // Validate form
@@ -90,12 +90,17 @@ const UserAccountForm = ({ user }: { user: UserDataResponse }) => {
 
     setIsSaving(true);
 
-    const updateData: FormData = {
-      id: user.id,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-    };
+    const updateData: Partial<FormData> = {};
+
+    if (formData.firstName !== user.firstName) {
+      updateData.firstName = formData.firstName;
+    }
+    if (formData.lastName !== user.lastName) {
+      updateData.lastName = formData.lastName;
+    }
+    if (formData.email !== user.email) {
+      updateData.email = formData.email;
+    }
 
     if (formData.password) {
       updateData.password = formData.password;
@@ -117,18 +122,18 @@ const UserAccountForm = ({ user }: { user: UserDataResponse }) => {
   };
 
   const handleDeleteAccount = async () => {
-    if(!user) return
+    if (!user) return;
     if (user.status === "BLOCKED") {
       toast.error("Your account is blocked.");
       return;
     }
     setIsDeleting(true);
-    logout();
     deleteUser(user?.id as string, {
       onSuccess: () => {
         setIsDeleting(false);
         setIsDeleteDialogOpen(false);
         toast.success("Account deleted successfully");
+        logout();
       },
     });
   };
