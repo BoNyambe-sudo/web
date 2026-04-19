@@ -3,7 +3,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, MessageCircle, ThumbsDown, ThumbsUp } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Edit,
+  Loader2,
+  Save,
+  ThumbsDown,
+  ThumbsUp,
+  X,
+} from "lucide-react";
 import type { CommentType } from "@/hooks/clientState/useBlog";
 import { useUserData } from "@/hooks/serverState/useUserServer";
 import {
@@ -11,8 +20,15 @@ import {
   useDislikeComment,
   useInfiniteReplies,
   useLikeComment,
+  useUpdateComment,
 } from "@/hooks/serverState/useBlogServer";
 import toast from "react-hot-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 interface BlogCommentProps {
   comment: CommentType;
@@ -24,6 +40,8 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(comment.content);
   const { data: user } = useUserData();
   const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteReplies(blogId, comment.id as string);
@@ -31,6 +49,9 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
   const { mutate: createReply } = useCreateComment();
   const { mutate: likeComment } = useLikeComment();
   const { mutate: dislikeComment } = useDislikeComment();
+  const { mutate: updateComment, isPending: isUpdating } = useUpdateComment();
+
+  const canEdit = user && comment.author && user.email === comment.author.email;
 
   const handleReply = () => {
     if (!user) {
@@ -98,12 +119,46 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
   };
 
+  const handleStartEdit = () => {
+    if (!user) {
+      toast.error("You must login first");
+      return;
+    }
+    setEditText(comment.content);
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditText(comment.content);
+    setIsEditing(false);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editText.trim()) return;
+    updateComment(
+      {
+        blogId,
+        commentId: comment.id as string,
+        comment: { content: editText },
+      },
+      {
+        onSuccess: () => {
+          setIsEditing(false);
+          toast.success("Comment updated successfully");
+        },
+        onError: () => {
+          toast.error("Failed to update comment");
+        },
+      },
+    );
+  };
+
   return (
     <div className="mb-6">
       <Card className="p-4">
         <div className="flex gap-3">
           <Avatar className="h-10 w-10">
-          <AvatarImage src={comment.author.profilePicture} />
+            <AvatarImage src={comment.author.profilePicture} />
             <AvatarFallback className="bg-primary/10 text-primary">
               {getInitials(comment.author.firstName, comment.author.lastName)}
             </AvatarFallback>
@@ -124,9 +179,44 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
                 )}
               </span>
             </div>
-            <p className="text-sm text-muted-foreground mb-3">
-              {comment.content}
-            </p>
+            {isEditing ? (
+              <div className="space-y-2 mt-2">
+                <Input
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  placeholder="Edit comment..."
+                  className="text-sm"
+                  onKeyDown={(e) => e.key === "Enter" && handleSaveEdit()}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleCancelEdit}
+                    disabled={isUpdating}
+                  >
+                    <X className="h-3 w-3 mr-1" />
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleSaveEdit}
+                    disabled={!editText.trim() || isUpdating}
+                  >
+                    {isUpdating ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Save className="h-3 w-3 mr-1" />
+                    )}
+                    Save
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground mb-3">
+                {comment.content}
+              </p>
+            )}
             <Button onClick={handleLikeComment} variant="ghost">
               <ThumbsUp
                 className={`${comment.likedBy.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
@@ -139,13 +229,32 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
               />{" "}
               <span>{comment.dislikedBy.length}</span>
             </Button>
-            <Button
-              variant={"ghost"}
-              onClick={() => setShowReplies(!showReplies)}
-            >
-              <MessageCircle className="h-4 w-4" />
-              <span>{replies?.length || 0}</span>
-            </Button>
+            <TooltipProvider>
+              {replies && replies.length > 0 && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowReplies(!showReplies)}
+                      className="h-8 w-8"
+                    >
+                      {showReplies ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {showReplies ? "Hide" : "Show"} Replies ({replies?.length}
+                      )
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </TooltipProvider>
             <Button
               variant="ghost"
               size="sm"
@@ -154,6 +263,17 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
             >
               Reply
             </Button>
+            {canEdit && !isEditing && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleStartEdit}
+                className="h-8 text-xs"
+              >
+                <Edit className="h-3 w-3 mr-1" />
+                Edit
+              </Button>
+            )}
             {showReplyForm && (
               <div className="mt-3">
                 <div className="flex gap-2">

@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Plus,
-  Edit,
   Trash2,
   Eye,
   EyeOff,
   Clock,
   Save,
   MessageSquare,
+  MessageCircle,
   ExternalLink,
   BookOpen,
   Search,
+  Send,
+  X,
+  Edit,
 } from "lucide-react";
 import {
   Dialog,
@@ -61,6 +64,7 @@ import type { BlogFilters } from "@/components/BlogSiderBar";
 import {
   useBlogAnalytics,
   useCreateBlog,
+  useCreateComment,
   useDeleteBlog,
   useDeleteComment,
   useInfiniteBlogs,
@@ -69,6 +73,7 @@ import {
   useUpdateComment,
   type CreateBlogType,
 } from "@/hooks/serverState/useBlogServer";
+import { AdminCommentCard, AdminRepliesList } from "@/components/AdminComment";
 import type { BlogQueryParams } from "../user/Blogs";
 import toast from "react-hot-toast";
 import { useUserData } from "@/hooks/serverState/useUserServer";
@@ -121,6 +126,15 @@ const AdminBlogs = () => {
     null,
   );
   const [editCommentText, setEditCommentText] = useState("");
+  const [isUpdatingComment, setIsUpdatingComment] = useState(false);
+  const [newCommentText, setNewCommentText] = useState("");
+  const [replyingToComment, setReplyingToComment] =
+    useState<CommentType | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [isCreatingComment, setIsCreatingComment] = useState(false);
+  const [expandedReplies, setExpandedReplies] = useState<Set<string>>(
+    new Set(),
+  );
 
   const queryParams: BlogQueryParams = {
     sortBy: selectedFilters.sortBy,
@@ -132,7 +146,7 @@ const AdminBlogs = () => {
   if (selectedFilters.tags) {
     queryParams.tags = selectedFilters.tags.join(",");
   }
-  if (selectedFilters.category) {
+  if (selectedFilters.category && selectedFilters.category !== "all") {
     queryParams.category = selectedFilters.category;
   }
   if (selectedFilters.latest) {
@@ -154,6 +168,8 @@ const AdminBlogs = () => {
   const { data: blogsMetrics } = useBlogAnalytics();
   const { mutate: deleteComment } = useDeleteComment();
   const { mutate: updateComment } = useUpdateComment();
+  const { mutate: createComment, isPending: creatingComment } =
+    useCreateComment();
 
   const {
     data: commentsData,
@@ -262,10 +278,7 @@ const AdminBlogs = () => {
         .map((tag) => tag.trim())
         .filter((tag) => tag);
     }
-    if (
-      updateFormData.published &&
-      updateFormData.published !== selectedBlog.published
-    ) {
+    if (updateFormData.published !== selectedBlog.published) {
       updatedBlog.published = updateFormData.published;
     }
 
@@ -290,6 +303,10 @@ const AdminBlogs = () => {
     }
     if (user.status === "BLOCKED") {
       toast.error("Your account is blocked.");
+      return;
+    }
+    if (user.role !== "ADMIN") {
+      toast.error("You don't have enough permissions to delete");
       return;
     }
     if (blogToDelete) {
@@ -374,6 +391,10 @@ const AdminBlogs = () => {
       toast.error("Your account is blocked.");
       return;
     }
+    if (user.role !== "ADMIN") {
+      toast.error("You don't have enough permissions to delete");
+      return;
+    }
     if (commentToDelete) {
       deleteComment(
         {
@@ -404,28 +425,154 @@ const AdminBlogs = () => {
       toast.error("Your account is blocked.");
       return;
     }
-    if (editingComment) {
-      updateComment(
-        {
-          blogId: selectedCommentsBlog as string,
-          commentId: editingComment.id as string,
-          comment: { content: editCommentText },
+    if (!editingComment || !editCommentText.trim()) return;
+
+    setIsUpdatingComment(true);
+    updateComment(
+      {
+        blogId: selectedCommentsBlog as string,
+        commentId: editingComment.id as string,
+        comment: { content: editCommentText },
+      },
+      {
+        onSuccess: () => {
+          setEditingComment(null);
+          setEditCommentText("");
+          setIsUpdatingComment(false);
+          toast.success("Comment updated successfully");
         },
-        {
-          onSuccess: () => {
-            setEditingComment(null);
-            setEditCommentText("");
-            toast.success("Comment updated successfully");
-          },
+        onError: () => {
+          setIsUpdatingComment(false);
+          toast.error("Failed to update comment");
         },
-      );
-    }
+      },
+    );
   };
 
-  const handleCancelEditComment = () => {
+  const handleCancelEdit = () => {
     setEditingComment(null);
     setEditCommentText("");
   };
+
+  const handleEditCommentSubmit = (comment: CommentType, newText: string) => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
+    if (!newText.trim()) return;
+
+    setIsUpdatingComment(true);
+    setEditingComment(comment);
+    setEditCommentText(newText);
+    
+    updateComment(
+      {
+        blogId: selectedCommentsBlog as string,
+        commentId: comment.id as string,
+        comment: { content: newText },
+      },
+      {
+        onSuccess: () => {
+          setEditingComment(null);
+          setEditCommentText("");
+          setIsUpdatingComment(false);
+          toast.success("Comment updated successfully");
+        },
+        onError: () => {
+          setIsUpdatingComment(false);
+          toast.error("Failed to update comment");
+        },
+      },
+    );
+  };
+
+  const isCommentFromAdmin = (comment: CommentType): boolean => {
+    if (!user || !comment.author) return false;
+    return comment.author.email === user.email;
+  };
+
+  const handleCreateComment = () => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
+    if (!newCommentText.trim() || !selectedCommentsBlog) return;
+
+    createComment(
+      { blogId: selectedCommentsBlog, comment: { content: newCommentText } },
+      {
+        onSuccess: () => {
+          setNewCommentText("");
+          setIsCreatingComment(false);
+          toast.success("Comment created successfully");
+        },
+      },
+    );
+  };
+
+  const handleCancelNewComment = () => {
+    setNewCommentText("");
+    setIsCreatingComment(false);
+  };
+
+  const handleCancelReply = () => {
+    setReplyText("");
+    setReplyingToComment(null);
+  };
+
+  const handleStartReply = (comment: CommentType) => {
+    setReplyingToComment(comment);
+    setReplyText("");
+  };
+
+  const handleReplySubmit = (comment: CommentType, replyText: string) => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
+    if (!replyText.trim() || !selectedCommentsBlog || !comment.id) return;
+
+    createComment(
+      {
+        blogId: selectedCommentsBlog,
+        comment: { content: replyText },
+        parentId: comment.id,
+      },
+      {
+        onSuccess: () => {
+          setReplyText("");
+          setReplyingToComment(null);
+          toast.success("Reply added successfully");
+        },
+      },
+    );
+  };
+
+  const toggleReplies = (commentId: string) => {
+    setExpandedReplies((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(commentId)) {
+        newSet.delete(commentId);
+      } else {
+        newSet.add(commentId);
+      }
+      return newSet;
+    });
+  };
+
+  const topLevelComments = comments.filter((c) => !c.parentComment);
 
   // Preview handler
   const handlePreviewBlog = (blog: BlogType) => {
@@ -904,7 +1051,6 @@ const AdminBlogs = () => {
                   </TableCell>
                 </TableRow>
               ))}
-              /*{" "}
               {hasNextPage && (
                 <div className="mt-6 text-center">
                   <Button
@@ -923,8 +1069,7 @@ const AdminBlogs = () => {
                     )}
                   </Button>
                 </div>
-              )}{" "}
-              */
+              )}
               {blogsLoading ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center my-auto">
@@ -979,7 +1124,7 @@ const AdminBlogs = () => {
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category) => (
+                  {categories?.map((category) => (
                     <SelectItem key={category} value={category}>
                       {category}
                     </SelectItem>
@@ -1026,7 +1171,7 @@ const AdminBlogs = () => {
                   />
                 </div>
               )}
-              {/* Show existing thumbnail if no new file is selected */}
+
               {selectedBlog?.thumbnail && !updateFormData.image && (
                 <div className="mt-2">
                   <img
@@ -1090,93 +1235,105 @@ const AdminBlogs = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Create Comment Form */}
+            {!isCreatingComment ? (
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => setIsCreatingComment(true)}
+              >
+                <MessageCircle className="mr-2 h-4 w-4" />
+                Add Comment
+              </Button>
+            ) : (
+              <Card className="p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <Label>New Comment</Label>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleCancelNewComment}
+                    className="h-6 w-6"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+                <Input
+                  value={newCommentText}
+                  onChange={(e) => setNewCommentText(e.target.value)}
+                  placeholder="Write a comment..."
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && !e.shiftKey && handleCreateComment()
+                  }
+                />
+                <div className="flex justify-end gap-2 mt-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleCancelNewComment}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleCreateComment}
+                    disabled={!newCommentText.trim() || creatingComment}
+                  >
+                    {creatingComment ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
+                    Post
+                  </Button>
+                </div>
+              </Card>
+            )}
+
             {commentsLoading ? (
               <div className="text-center my-auto">
                 <Loader2 className="size-4 animate-spin text-primary" />
               </div>
-            ) : comments.length === 0 ? (
+            ) : topLevelComments.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <p>No comments yet.</p>
               </div>
             ) : (
-              comments?.map((comment) => (
-                <Card key={comment.id} className="p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-2">
-                      <div className="font-medium">
-                        {comment.author.firstName} {comment.author.lastName}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {formatDate(comment?.createdAt as Date)}
-                      </div>
-                    </div>
-                    <div className="flex gap-1">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleEditComment(comment)}
-                              className="h-8 w-8"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Edit</p>
-                          </TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() =>
-                                handleDeleteComment(comment.id as string)
-                              }
-                              className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Delete</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </div>
-                  {editingComment?.id === comment.id ? (
-                    <div className="space-y-2">
-                      <Input
-                        value={editCommentText}
-                        onChange={(e) => setEditCommentText(e.target.value)}
-                        placeholder="Edit comment..."
-                      />
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={handleCancelEditComment}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={handleUpdateComment}
-                          disabled={!editCommentText.trim()}
-                        >
-                          Save
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      {comment?.content}
-                    </p>
+              topLevelComments?.map((comment) => (
+                <div key={comment?.id}>
+                  <AdminCommentCard
+                    comment={comment}
+                    blogId={selectedCommentsBlog as string}
+                    allComments={comments}
+                    expandedReplies={expandedReplies}
+                    onToggleReplies={toggleReplies}
+                    onEdit={handleEditComment}
+                    onEditSubmit={handleEditCommentSubmit}
+                    onCancelEdit={handleCancelEdit}
+                    onDelete={handleDeleteComment}
+                    onReply={handleStartReply}
+                    onReplySubmit={handleReplySubmit}
+                    isReplyingTo={replyingToComment}
+                    isEditing={editingComment}
+                    replyText={replyText}
+                    onReplyTextChange={setReplyText}
+                    onCancelReply={handleCancelReply}
+                    isPendingReply={creatingComment}
+                    isPendingEdit={isUpdatingComment}
+                  />
+                  {expandedReplies.has(comment.id as string) && (
+                    <AdminRepliesList
+                      commentId={comment.id as string}
+                      blogId={selectedCommentsBlog as string}
+                      onEdit={handleEditComment}
+                      onEditSubmit={handleEditCommentSubmit}
+                      onCancelEdit={handleCancelEdit}
+                      onDelete={handleDeleteComment}
+                      isEditing={editingComment}
+                      isPendingEdit={isUpdatingComment}
+                    />
                   )}
-                </Card>
+                </div>
               ))
             )}
             {hasCommentsNextPage && (

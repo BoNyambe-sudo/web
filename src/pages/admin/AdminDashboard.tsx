@@ -10,13 +10,13 @@ import AdminBlogs from "./AdminBlogs";
 import AdminAppointments from "./AdminAppointments";
 import AdminUsers from "./AdminUsers";
 import AdminManage from "./AdminManage";
-import { useUser } from "@/hooks/clientState/useUser";
 import NoPermission from "./NoPermission";
 import AdminFooter from "@/components/AdminFooter";
 import { AdminBreadcrumb } from "@/components/AdminBreadCrumb";
+import { useUserData } from "@/hooks/serverState/useUserServer";
 
 const AdminDashboard = () => {
-  const user = useUser((state) => state.user);
+  const { data: user } = useUserData();
   return (
     <SidebarProvider>
       <AdminSidebar />

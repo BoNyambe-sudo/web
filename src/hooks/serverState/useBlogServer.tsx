@@ -83,28 +83,38 @@ const fetchBlogs = async (
 const createBlog = async (
   blog: CreateBlogType,
 ): Promise<{ blog: BlogType }> => {
-  // Create FormData to handle file uploads
-  const formData = new FormData();
-
-  // Append all non-file fields
-  Object.entries(blog).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && !(value instanceof File)) {
-      formData.append(key, JSON.stringify(value));
-    }
-  });
-
-  // Append file separately if thumbnail is a File
+  // If image is present, use FormData for multipart upload
   if (blog.image && blog.image instanceof File) {
-    formData.append("image", blog.image as File);
+    const formData = new FormData();
+
+    // Append all non-file fields
+    Object.entries(blog).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && !(value instanceof File)) {
+        if (key === "content" || key === "title" || key === "category" || typeof value === "boolean") {
+          formData.append(key, value as string);
+        } else {
+          formData.append(key, JSON.stringify(value));
+        }
+      }
+    });
+
+    formData.append("image", blog.image);
+
+    return await request<{ blog: BlogType }>({
+      url: "/blogs",
+      method: "POST",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   }
 
+  // No image, send as JSON
   return await request<{ blog: BlogType }>({
     url: "/blogs",
     method: "POST",
-    data: formData,
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+    data: blog,
   });
 };
 
@@ -113,28 +123,38 @@ const updateBlog = async (
   id: string,
   blog: Partial<CreateBlogType>,
 ): Promise<BlogType> => {
-  // Create FormData to handle file uploads
-  const formData = new FormData();
-
-  // Append all non-file fields
-  Object.entries(blog).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && !(value instanceof File)) {
-      formData.append(key, JSON.stringify(value));
-    }
-  });
-
-  // Append file separately if thumbnail is a File
+  // If image is present, use FormData for multipart upload
   if (blog.image && blog.image instanceof File) {
-    formData.append("imamge", blog.image as File);
+    const formData = new FormData();
+
+    // Append all non-file fields
+    Object.entries(blog).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && !(value instanceof File)) {
+        if (key === "content" || key === "title" || key === "category" || typeof value === "boolean") {
+          formData.append(key, value as string);
+        } else {
+          formData.append(key, JSON.stringify(value));
+        }
+      }
+    });
+
+    formData.append("image", blog.image);
+
+    return await request<BlogType>({
+      url: `/blogs/${id}`,
+      method: "PATCH",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   }
 
+  // No image, send as JSON
   return await request<BlogType>({
     url: `/blogs/${id}`,
     method: "PATCH",
-    data: formData,
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+    data: blog,
   });
 };
 
@@ -348,43 +368,8 @@ export const useCreateBlog = () => {
   return useMutation({
     mutationFn: createBlog,
 
-    onSuccess: (data) => {
-      // Update blogs list queries
-      queryClient.setQueryData<BlogsResponse>(["blogs"], (oldData) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          data: [...oldData.data, data.blog],
-          pagination: {
-            ...oldData.pagination,
-            total: oldData.pagination.total + 1,
-            pages: Math.ceil(
-              (oldData.pagination.total + 1) / oldData.pagination.limit,
-            ),
-          },
-        };
-      });
-
-      // Also update infinite queries
-      queryClient.setQueryData<BlogsResponse>(
-        ["blogs", undefined],
-        (oldData) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            data: [...oldData.data, data.blog],
-            pagination: {
-              ...oldData.pagination,
-              total: oldData.pagination.total + 1,
-              pages: Math.ceil(
-                (oldData.pagination.total + 1) / oldData.pagination.limit,
-              ),
-            },
-          };
-        },
-      );
-
-      toast.success("Blog created successfully");
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"], exact: false });
     },
   });
 };
@@ -396,36 +381,9 @@ export const useUpdateBlog = () => {
   return useMutation({
     mutationFn: ({ id, blog }: { id: string; blog: Partial<CreateBlogType> }) =>
       updateBlog(id, blog),
-    onSuccess: (data, variables) => {
-      // Update specific blog query
-      queryClient.setQueryData<BlogType>(["blog", variables.id], data);
-
-      // Update blogs list queries
-      queryClient.setQueryData<BlogsResponse>(["blogs"], (oldData) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          data: oldData.data.map((blogItem) =>
-            blogItem.id === data.id ? data : blogItem,
-          ),
-        };
-      });
-
-      // Also update infinite queries
-      queryClient.setQueryData<BlogsResponse>(
-        ["blogs", undefined],
-        (oldData) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            data: oldData.data.map((blogItem) =>
-              blogItem.id === data.id ? data : blogItem,
-            ),
-          };
-        },
-      );
-
-      toast.success("Blog updated successfully");
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["blog", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["blogs"], exact: false });
     },
   });
 };
@@ -446,7 +404,7 @@ export const useDeleteBlog = () => {
   return useMutation({
     mutationFn: deleteBlog,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["blogs"], exact: false });
       queryClient.invalidateQueries({ queryKey: ["blog-analytics"] });
 
       toast.success("Blog deleted successfully");
@@ -460,7 +418,7 @@ export const useHardDeleteBlog = () => {
   return useMutation({
     mutationFn: hardDeleteBlog,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["blogs"], exact: false });
       queryClient.invalidateQueries({ queryKey: ["blog-analytics"] });
       toast.success("Blog deleted successfully");
     },
@@ -620,7 +578,6 @@ export const useDeleteComment = () => {
       queryClient.invalidateQueries({
         queryKey: ["replies", variables.blogId],
       });
-      toast.success("Comment deleted successfully");
     },
   });
 };
@@ -714,6 +671,7 @@ export const useBlogRestore = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["blogs"],
+        exact: false,
       });
       toast.success("Blog restored successfully");
     },
@@ -779,4 +737,16 @@ export const useTopTags = () => {
 
 export const useUploadBlogImage = () => {
   return useMutation({ mutationFn: uploadImage });
+};
+
+const deleteImage = async (imageUrl: string): Promise<{ deleted: boolean }> => {
+  return await request<{ deleted: boolean }>({
+    url: "/blogs/upload",
+    method: "DELETE",
+    data: { imageUrl },
+  });
+};
+
+export const useDeleteBlogImage = () => {
+  return useMutation({ mutationFn: deleteImage });
 };

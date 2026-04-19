@@ -1,4 +1,4 @@
-import {  ChevronsUpDown, LogOut, Settings } from "lucide-react";
+import { ChevronsUpDown, LogOut, Settings } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -17,22 +17,18 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "react-router";
-import { useLogout } from "@/hooks/serverState/useUserServer";
+import { useLogout, useUserData } from "@/hooks/serverState/useUserServer";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    avatar?: string;
-  };
-}) {
+export function NavUser() {
+  const { data: user } = useUserData();
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
-  const logout = useLogout()
+  const logout = useLogout();
 
+  const getInitials = (firstName?: string, lastName?: string) => {
+    if (!firstName && !lastName) return "U";
+    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
+  };
 
   return (
     <SidebarMenu>
@@ -44,15 +40,14 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.firstName} />
+                <AvatarImage src={user?.profilePicture} alt={user?.firstName} />
                 <AvatarFallback className="rounded-lg">
-                  {user.firstName.charAt(0).toUpperCase() +
-                    user.lastName.charAt(0).toUpperCase()}
+                  {getInitials(user?.firstName, user?.lastName)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.firstName}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">{user?.firstName}</span>
+                <span className="truncate text-xs">{user?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -66,15 +61,19 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.firstName} />
+                  <AvatarImage
+                    src={user?.profilePicture}
+                    alt={user?.firstName}
+                  />
                   <AvatarFallback className="rounded-lg">
-                    {user.firstName.charAt(0).toUpperCase() +
-                      user.lastName.charAt(0).toUpperCase()}
+                    {getInitials(user?.firstName, user?.lastName)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.firstName}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">
+                    {user?.firstName}
+                  </span>
+                  <span className="truncate text-xs">{user?.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

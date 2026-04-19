@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -16,10 +16,11 @@ import {
   Code,
   Link,
   Image as ImageIcon,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useUploadBlogImage } from "@/hooks/serverState/useBlogServer";
+import { useUploadBlogImage, useDeleteBlogImage } from "@/hooks/serverState/useBlogServer";
 import {
   Dialog,
   DialogContent,
@@ -40,11 +41,35 @@ const BlogEditor = ({
   placeholder = "Start writing your blog...",
 }: BlogEditorProps) => {
   const [imageUrl, setImageUrl] = useState<File>();
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [showImageInput, setShowImageInput] = useState(false);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+  const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
 
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const { mutate: uploadImage } = useUploadBlogImage();
+  const { mutate: deleteImage } = useDeleteBlogImage();
+
+  const handleOnChange = useCallback((html: string) => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    debounceTimer.current = setTimeout(() => {
+      if (onChange) {
+        onChange(html);
+      }
+    }, 150);
+  }, [onChange]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
 
   const editor = useEditor({
     extensions: [
@@ -60,7 +85,13 @@ const BlogEditor = ({
           },
         },
       }),
-      Image,
+      Image.configure({
+        inline: false,
+        allowBase64: true,
+        HTMLAttributes: {
+          class: "max-w-full h-auto cursor-pointer",
+        },
+      }),
       FileHandler.configure({
         onPaste: (currentEditor, files, htmlContent) => {
           files.forEach((file) => {
@@ -72,31 +103,21 @@ const BlogEditor = ({
               onSuccess: (data) => {
                 currentEditor
                   .chain()
-                  .insertContentAt(currentEditor.state.selection.anchor, {
-                    type: "image",
-                    attrs: {
-                      src: data.url,
-                    },
-                  })
                   .focus()
+                  .setImage({ src: data.url })
                   .run();
               },
             });
           });
         },
-        onDrop: (currentEditor, files, pos) => {
+        onDrop: (currentEditor, files) => {
           files.forEach((file) => {
             uploadImage(file, {
               onSuccess: (data) => {
                 currentEditor
                   .chain()
-                  .insertContentAt(pos, {
-                    type: "image",
-                    attrs: {
-                      src: data.url,
-                    },
-                  })
                   .focus()
+                  .setImage({ src: data.url })
                   .run();
               },
             });
@@ -106,15 +127,23 @@ const BlogEditor = ({
       }),
     ],
     content: initialContent,
+    immediatelyRender: true,
     onUpdate: ({ editor }) => {
-      if (onChange) {
-        onChange(editor.getHTML());
-      }
+      handleOnChange(editor.getHTML());
     },
     editorProps: {
       attributes: {
         class:
           "prose prose-neutral dark:prose-invert max-w-none focus:outline-none",
+      },
+      handleClickOn: (view, pos, _event, _node) => {
+        if (!editor) return false;
+        const { state } = view;
+        const attrs = state.doc.nodeAt(pos)?.attrs;
+        if (attrs?.src) {
+          setSelectedImageSrc(attrs.src);
+        }
+        return false;
       },
     },
   });
@@ -130,9 +159,36 @@ const BlogEditor = ({
         },
       });
       setImageUrl(undefined);
+      setImagePreview("");
       setShowImageInput(false);
     }
   }, [imageUrl, editor, uploadImage]);
+
+  const handleRemoveImage = useCallback(() => {
+    if (editor && selectedImageSrc) {
+      const { state } = editor;
+      const { doc } = state;
+      
+      let found = false;
+      doc.descendants((node, pos) => {
+        if (found) return;
+        if (node.type.name === "image" && node.attrs.src === selectedImageSrc) {
+          editor.chain().focus().deleteRange({ from: pos, to: pos + node.nodeSize }).run();
+          deleteImage(selectedImageSrc, {
+            onError: (error) => {
+              console.error("Error deleting image from Cloudinary:", error);
+            },
+          });
+          setSelectedImageSrc(null);
+          found = true;
+        }
+      });
+    }
+  }, [editor, selectedImageSrc, deleteImage]);
+
+  const handleCancelImageSelection = useCallback(() => {
+    setSelectedImageSrc(null);
+  }, []);
 
   const handleLinkSubmit = useCallback(() => {
     if (!editor || !linkUrl) return;
@@ -315,22 +371,73 @@ const BlogEditor = ({
           variant="ghost"
           size="sm"
           onClick={() => setShowImageInput(!showImageInput)}
+          className={showImageInput ? "bg-primary/20 text-primary" : ""}
         >
           <ImageIcon size={16} />
         </Button>
+        {selectedImageSrc && (
+          <>
+            <div className="w-px bg-accent text-accent-foreground mx-1" />
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleRemoveImage}
+              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 size={16} />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleCancelImageSelection}
+              className="text-muted-foreground"
+            >
+              Cancel
+            </Button>
+          </>
+        )}
       </div>
 
       {/* Image Input */}
       {showImageInput && (
         <div className="border-b p-3 bg-accent text-accent-foreground flex gap-2">
-          <Input
-            type="file"
-            placeholder="Image"
-            value=""
-            onChange={(e) => setImageUrl(e.target.files?.[0])}
-            onKeyDown={(e) => e.key === "Enter" && handleImageSubmit()}
-          />
-          <Button size="sm" onClick={handleImageSubmit}>
+          <div className="flex-1 relative">
+            <Input
+              type="file"
+              placeholder="Image"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setImageUrl(file);
+                  setImagePreview(URL.createObjectURL(file));
+                }
+              }}
+              onKeyDown={(e) => e.key === "Enter" && handleImageSubmit()}
+            />
+            {imagePreview && (
+              <div className="mt-2">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="h-20 w-auto rounded border"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setImageUrl(undefined);
+                    setImagePreview("");
+                  }}
+                  className="text-xs text-red-500 hover:text-red-700 mt-1"
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+          </div>
+          <Button size="sm" onClick={handleImageSubmit} disabled={!imageUrl}>
             Add Image
           </Button>
         </div>
@@ -364,7 +471,31 @@ const BlogEditor = ({
       </Dialog>
 
       {/* Editor Content */}
-      <div className="p-6 min-h-100 relative">
+      <div
+        className={`p-6 min-h-100 relative ${isDragging ? "bg-blue-50 dark:bg-blue-900/20 border-2 border-dashed border-blue-500" : ""}`}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+          const files = Array.from(e.dataTransfer.files);
+          files.forEach((file) => {
+            if (file.type.startsWith("image/")) {
+              uploadImage(file, {
+                onSuccess: (data) => {
+                  editor.chain().focus().setImage({ src: data.url }).run();
+                },
+              });
+            }
+          });
+        }}
+      >
         <EditorContent editor={editor} />
         {!editor.getText().length && (
           <div className="absolute top-6.5 left-6 text-muted-foreground pointer-events-none">
