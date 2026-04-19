@@ -1,12 +1,14 @@
 import { Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import type { UsersPerRole } from "@/pages/admin/AdminUsers";
+import { useFetchUserAnalytics } from "@/hooks/serverState/useUserServer";
 
 
-const UsersPerRoles = ({ usersPerRole }: { usersPerRole: UsersPerRole[] }) => {
+const UsersPerRoles = () => {
+  const {data: usersMetrics} = useFetchUserAnalytics()
+  const usersPerRole = usersMetrics?.usersPerRole || []
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {usersPerRole.map((userPerRole) => (
+      {usersPerRole?.map((userPerRole) => (
         <Card key={userPerRole.role}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">

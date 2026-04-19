@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { request } from "@/config/axios_config";
 import { useToken } from "../clientState/useToken";
 import toast from "react-hot-toast";
@@ -112,7 +117,11 @@ const updateUser = async ({
 
   Object.entries(user).forEach(([key, value]) => {
     if (value !== undefined && value !== null && !(value instanceof File)) {
-      formData.append(key, JSON.stringify(value));
+      if (typeof value === "string") {
+        formData.append(key, value as string);
+      } else {
+        formData.append(key, JSON.stringify(value));
+      }
     }
   });
 
@@ -153,10 +162,12 @@ export const useRegister = () => {
 };
 
 export const useAdminRegister = () => {
+  const queryClient = new QueryClient();
   return useMutation({
     mutationFn: adminRegister,
     onSuccess: () => {
-      toast.success("User registered successfully. Go ahead and login");
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-analytics"] });
     },
   });
 };
@@ -191,7 +202,6 @@ export const useBlockUser = () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["user-analytics"] });
 
-      toast.success("User blocked successfully");
     },
   });
 };
@@ -204,8 +214,6 @@ export const useUnblockUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["user-analytics"] });
-
-      toast.success("User unblocked successfully");
     },
   });
 };

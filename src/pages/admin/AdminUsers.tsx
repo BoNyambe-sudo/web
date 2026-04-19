@@ -46,10 +46,16 @@ import {
 import { PasswordStrengthIndicator } from "@/components/PasswordStrengthIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
+  useAdminRegister,
+  useBlockUser,
+  useDeleteUser,
   useFetchUserAnalytics,
   useFetchUsers,
+  useUnblockUser,
+  useUpdateUser,
 } from "@/hooks/serverState/useUserServer";
 import type { UserType } from "@/hooks/clientState/useUser";
+import toast from "react-hot-toast";
 
 type UserFormData = {
   firstName: string;
@@ -58,6 +64,7 @@ type UserFormData = {
   password: string;
   confirmPassword: string;
   role: UserRole;
+  id?: string;
 };
 
 export type UsersPerRole = {
@@ -79,38 +86,107 @@ const AdminUsers = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const { data: usersMetrcis } = useFetchUserAnalytics();
+  const [userToDelete, setUserToDelete] = useState<undefined | string>(
+    undefined,
+  );
+  const { data: usersMetrics } = useFetchUserAnalytics();
+  const { mutate: updateUser, isPending: updatingUser } = useUpdateUser();
+  const { mutate: blockUser } = useBlockUser();
+  const { mutate: unblockUser } = useUnblockUser();
+  const { mutate: deleteUser } = useDeleteUser();
+  const { mutate: createUser, isPending: creatingUser } = useAdminRegister();
 
   function handleAddUser(event: React.SubmitEvent): void {
-    throw new Error("Function not implemented.");
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passord and comfirm passoword do not match");
+      return;
+    }
+    event.preventDefault();
+    const newUser = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+    };
+
+    createUser(newUser, {
+      onSuccess: () => {
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          role: "USER",
+        });
+        setIsAddDialogOpen(false);
+        toast.success("Account created successfully.");
+      },
+    });
   }
 
   function handleEditUser(user: UserType): void {
-    throw new Error("Function not implemented.");
+    setFormData({
+      ...formData,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      id: user.id,
+    });
   }
 
-  function handleBlockUser(id: string | undefined): void {
-    throw new Error("Function not implemented.");
+  function handleBlockUser(id: string): void {
+    blockUser(id, {
+      onSuccess: () => {
+        toast.success("User blocked successfully.");
+      },
+    });
   }
 
-  function handleUnblockUser(id: string | undefined): void {
-    throw new Error("Function not implemented.");
+  function handleUnblockUser(id: string): void {
+    unblockUser(id, {
+      onSuccess: () => {
+        toast.success("User unblocked successfully.");
+      },
+    });
   }
 
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   };
 
-  function setUserToDelete(id: string | undefined) {
-    throw new Error("Function not implemented.");
-  }
-
   function handleDeleteUser() {
-    throw new Error("Function not implemented.");
+    deleteUser(userToDelete as string, {
+      onSuccess: () => {
+        setUserToDelete(undefined);
+        setIsDeleteDialogOpen(false);
+        toast.success("User account deleted successfully.");
+      },
+    });
   }
 
   function handleSaveUserChanges(event: React.SubmitEvent) {
-    throw new Error("Functions not implemented");
+    event.preventDefault();
+    console.log("role: ", formData.role, "id: ", formData.id);
+    updateUser(
+      { id: formData?.id as string, user: { role: formData.role } },
+      {
+        onSuccess: () => {
+          setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            role: "USER",
+          });
+          setIsEditDialogOpen(false);
+          toast.success("User account updated successfully.");
+        },
+      },
+    );
   }
 
   return (
@@ -133,10 +209,12 @@ const AdminUsers = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {usersMetrcis?.totalUsers}
+                {usersMetrics?.totalUsers}
               </div>
               <p className="text-xs text-muted-foreground">
-                {usersMetrcis?.totalUsers > 0 ? "Total users" : "No users"}
+                {usersMetrics && usersMetrics?.totalUsers > 0
+                  ? "Total users"
+                  : "No users"}
               </p>
             </CardContent>
           </Card>
@@ -150,10 +228,10 @@ const AdminUsers = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {usersMetrcis?.activeUsers}
+                {usersMetrics?.activeUsers}
               </div>
               <p className="text-xs text-muted-foreground">
-                {usersMetrcis?.activeUsers > 0
+                {usersMetrics && usersMetrics?.activeUsers > 0
                   ? "Active users"
                   : "No active users"}
               </p>
@@ -168,10 +246,10 @@ const AdminUsers = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {usersMetrcis?.blockedUsers}
+                {usersMetrics?.blockedUsers}
               </div>
               <p className="text-xs text-muted-foreground">
-                {usersMetrcis?.blockedUsers > 0
+                {usersMetrics && usersMetrics?.blockedUsers > 0
                   ? "Blocked users"
                   : "No blocked users"}
               </p>
@@ -179,9 +257,7 @@ const AdminUsers = () => {
           </Card>
         </div>
         <div>
-          <UsersPerRoles
-            usersPerRole={usersMetrcis?.usersPerRole as unknown as UsersPerRole}
-          />
+          <UsersPerRoles />
         </div>
         <Card>
           <CardHeader>
@@ -273,9 +349,8 @@ const AdminUsers = () => {
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
                               onClick={() => {
-                                /* handleEditUser(user); */ setIsEditDialogOpen(
-                                  true,
-                                );
+                                handleEditUser(user);
+                                setIsEditDialogOpen(true);
                               }}
                             >
                               <Edit className="mr-2 h-4 w-4" />
@@ -283,14 +358,18 @@ const AdminUsers = () => {
                             </DropdownMenuItem>
                             {user.status === "ACTIVE" ? (
                               <DropdownMenuItem
-                                onClick={() => handleBlockUser(user.id)}
+                                onClick={() =>
+                                  handleBlockUser(user?.id as string)
+                                }
                               >
                                 <Lock className="mr-2 h-4 w-4" />
                                 Block
                               </DropdownMenuItem>
                             ) : (
                               <DropdownMenuItem
-                                onClick={() => handleUnblockUser(user.id)}
+                                onClick={() =>
+                                  handleUnblockUser(user?.id as string)
+                                }
                               >
                                 <Unlock className="mr-2 h-4 w-4" />
                                 Unblock
@@ -298,7 +377,7 @@ const AdminUsers = () => {
                             )}
                             <DropdownMenuItem
                               onClick={() => {
-                                /* setUserToDelete(user.id); */
+                                setUserToDelete(user.id);
                                 setIsDeleteDialogOpen(true);
                               }}
                               className="text-red-600"
@@ -328,7 +407,7 @@ const AdminUsers = () => {
             <form onSubmit={handleAddUser} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+                  <Label htmlFor="firstName">First Name *</Label>
                   <Input
                     id="firstName"
                     value={formData.firstName}
@@ -339,7 +418,7 @@ const AdminUsers = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                  <Label htmlFor="lastName">Last Name *</Label>
                   <Input
                     id="lastName"
                     value={formData.lastName}
@@ -351,7 +430,7 @@ const AdminUsers = () => {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email *</Label>
                 <Input
                   id="email"
                   type="email"
@@ -381,7 +460,7 @@ const AdminUsers = () => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Password *</Label>
                 <Input
                   id="password"
                   type="password"
@@ -394,7 +473,7 @@ const AdminUsers = () => {
                 <PasswordStrengthIndicator password={formData.password} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Label htmlFor="confirmPassword">Confirm Password *</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -410,12 +489,15 @@ const AdminUsers = () => {
               </div>
               <div className="flex justify-end gap-2">
                 <Button
+                  type="button"
                   variant="outline"
                   onClick={() => setIsAddDialogOpen(false)}
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Create User</Button>
+                <Button disabled={creatingUser} type="submit">
+                  Create User
+                </Button>
               </div>
             </form>
           </DialogContent>
@@ -452,7 +534,9 @@ const AdminUsers = () => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Save Changes</Button>
+                <Button disabled={updatingUser} type="submit">
+                  Save Changes
+                </Button>
               </div>
             </form>
           </DialogContent>
