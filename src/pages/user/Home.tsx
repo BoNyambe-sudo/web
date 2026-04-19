@@ -78,6 +78,14 @@ const Home = () => {
 
   const handleSendMessage = (e: React.SubmitEvent) => {
     e.preventDefault();
+    if (
+      !messageFormData.name ||
+      !messageFormData.email ||
+      !messageFormData.message
+    ) {
+      toast.error("Some fields are missing");
+      return;
+    }
     sendMessage(messageFormData, {
       onSuccess: () => {
         toast.success("Message sent successfully");
@@ -94,6 +102,15 @@ const Home = () => {
 
   const handleCreateAppointment = (e: React.SubmitEvent) => {
     e.preventDefault();
+    if (
+      !appointmentFormData.name ||
+      appointmentFormData.phoneNumber ||
+      appointmentFormData.scheduledDate ||
+      appointmentFormData.scheduledTime
+    ) {
+      toast.error("Some fields are missing");
+      return;
+    }
     createAppointment(appointmentFormData, {
       onSuccess: () => {
         setAppointmentFormData({
