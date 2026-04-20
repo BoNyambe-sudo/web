@@ -21,7 +21,7 @@ function App() {
   useToken();
 
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <QueryClientProvider client={queryClient}>
         <AppWithQuery />
       </QueryClientProvider>
