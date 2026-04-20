@@ -61,7 +61,14 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
   const { mutate: updateComment, isPending: isUpdating } = useUpdateComment();
   const { mutate: deleteComment } = useCommentHardDelete();
 
-  const canEdit = user && reply.author && user.email === reply.author.email;
+  const canEdit =
+    user &&
+    (user.role === "ADMIN" ||
+      (reply.author &&
+        user.email &&
+        reply.author.email &&
+        user.email.toLowerCase() === reply.author.email.toLowerCase()));
+  const canDelete = user && user.role === "ADMIN";
 
   const handleLike = () => {
     if (!user) {
@@ -145,19 +152,12 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
       return;
     }
     if (!editText.trim()) return;
-    updateComment(
-      {
-        blogId,
-        commentId: reply.id as string,
-        comment: { content: editText },
-      },
-      {
-        onSuccess: () => {
-          setIsEditing(false);
-          toast.success("Comment updated successfully");
-        },
-      },
-    );
+    updateComment({
+      blogId,
+      commentId: reply.id as string,
+      comment: { content: editText },
+    });
+    setIsEditing(false);
   };
 
   return (
@@ -213,7 +213,7 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
                   <p>Reply</p>
                 </TooltipContent>
               </Tooltip>
-              {canEdit &&  (
+              {canEdit && (
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
@@ -230,7 +230,7 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
                   </TooltipContent>
                 </Tooltip>
               )}
-              <Tooltip>
+             {canDelete && <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
@@ -244,7 +244,7 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
                 <TooltipContent>
                   <p>Delete</p>
                 </TooltipContent>
-              </Tooltip>
+              </Tooltip>}
             </TooltipProvider>
           </div>
         </div>

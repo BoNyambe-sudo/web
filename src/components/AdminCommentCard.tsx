@@ -65,8 +65,15 @@ export const AdminCommentCard = ({
   const { mutate: updateComment, isPending: isUpdating } = useUpdateComment();
   const { mutate: deleteComment } = useCommentHardDelete();
 
-  const canEdit = user && comment.author && user.email === comment.author.email;
+  const canEdit =
+    user &&
+    (user.role === "ADMIN" ||
+      (comment.author &&
+        user.email &&
+        comment.author.email &&
+        user.email.toLowerCase() === comment.author.email.toLowerCase()));
 
+  const canDelete = user && user.role === "ADMIN";
   const handleLike = () => {
     if (!user) {
       toast.error("You must login first.");
@@ -115,6 +122,18 @@ export const AdminCommentCard = ({
   };
 
   const handleDelete = () => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
+    if (user.role !== "ADMIN") {
+      toast.error("You do not have enough permissions to delete");
+      return;
+    }
     deleteComment(
       { blogId, commentId: comment.id as string },
       {
@@ -126,6 +145,10 @@ export const AdminCommentCard = ({
   };
 
   const handleStartEdit = () => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
     setEditText(comment.content);
     setIsEditing(true);
   };
@@ -141,25 +164,26 @@ export const AdminCommentCard = ({
       return;
     }
 
-    if (user.email !== comment.author.email) {
+    const isAdminOrContributor =
+      user.role === "ADMIN" || user.role === "CONTRIBUTOR";
+    const isAuthor =
+      comment.author &&
+      user.email &&
+      comment.author.email &&
+      user.email.toLowerCase() === comment.author.email.toLowerCase();
+
+    if (!isAdminOrContributor && !isAuthor) {
       toast.error("You can only edit your own comment!");
       return;
     }
 
     if (!editText.trim() || editText === comment.content) return;
-    updateComment(
-      {
-        blogId,
-        commentId: comment.id as string,
-        comment: { content: editText },
-      },
-      {
-        onSuccess: () => {
-          setIsEditing(false);
-          toast.success("Comment updated successfully");
-        },
-      },
-    );
+    updateComment({
+      blogId,
+      commentId: comment.id as string,
+      comment: { content: editText },
+    });
+    setIsEditing(false);
   };
 
   return (
@@ -231,21 +255,23 @@ export const AdminCommentCard = ({
                   </TooltipContent>
                 </Tooltip>
               )}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleDelete}
-                    className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Delete</p>
-                </TooltipContent>
-              </Tooltip>
+              {canDelete && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleDelete}
+                      className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Delete</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </TooltipProvider>
           </div>
         </div>

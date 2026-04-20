@@ -6,7 +6,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ChevronDown,
   ChevronRight,
-  Edit,
   Loader2,
   Save,
   ThumbsDown,
@@ -51,7 +50,13 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
   const { mutate: dislikeComment } = useDislikeComment();
   const { mutate: updateComment, isPending: isUpdating } = useUpdateComment();
 
-  const canEdit = user && comment.author && user.email === comment.author.email;
+  const canEdit =
+    user &&
+    (user.role === "ADMIN" ||
+      (comment.author &&
+        user.email &&
+        comment.author.email &&
+        user.email.toLowerCase() === comment.author.email.toLowerCase()));
 
   const handleReply = () => {
     if (!user) {
@@ -120,10 +125,6 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
   };
 
   const handleStartEdit = () => {
-    if (!user) {
-      toast.error("You must login first");
-      return;
-    }
     setEditText(comment.content);
     setIsEditing(true);
   };
@@ -134,23 +135,17 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
   };
 
   const handleSaveEdit = () => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
     if (!editText.trim()) return;
-    updateComment(
-      {
-        blogId,
-        commentId: comment.id as string,
-        comment: { content: editText },
-      },
-      {
-        onSuccess: () => {
-          setIsEditing(false);
-          toast.success("Comment updated successfully");
-        },
-        onError: () => {
-          toast.error("Failed to update comment");
-        },
-      },
-    );
+    updateComment({
+      blogId,
+      commentId: comment.id as string,
+      comment: { content: editText },
+    });
+    setIsEditing(false);
   };
 
   return (
@@ -270,7 +265,6 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
                 onClick={handleStartEdit}
                 className="h-8 text-xs"
               >
-                <Edit className="h-3 w-3 mr-1" />
                 Edit
               </Button>
             )}

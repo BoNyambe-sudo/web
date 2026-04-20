@@ -18,6 +18,7 @@ export interface BlogType {
   readTime: number;
   createdAt: Date;
   updatedAt: Date;
+  deleted?: boolean;
 }
 
 export interface CommentType {

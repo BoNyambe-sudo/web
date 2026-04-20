@@ -251,8 +251,8 @@ const updateComment = async (
   blogId: string,
   commentId: string,
   comment: { content: string },
-): Promise<{ comment: CommentType }> => {
-  return await request<{ comment: CommentType }>({
+): Promise<CommentType> => {
+  return await request<CommentType>({
     url: `/blogs/${blogId}/comments/${commentId}`,
     method: "PATCH",
     data: comment,
@@ -388,12 +388,13 @@ export const useUpdateBlog = () => {
   });
 };
 
-export const useBlogAnalytics = () => {
+export const useBlogAnalytics = ({ enabled = true }: { enabled?: boolean } = {}) => {
   return useQuery({
     queryKey: ["blog-analytics"],
     queryFn: fetchBlogAnalytics,
     staleTime: 1000 * 60 * 15,
     gcTime: 1000 * 60 * 60,
+    enabled,
   });
 };
 
@@ -543,18 +544,56 @@ export const useUpdateComment = () => {
       comment: { content: string };
     }) => updateComment(blogId, commentId, comment),
     onSuccess: (data, variables) => {
-      // Invalidate main comments list (covers top-level updates)
-      queryClient.invalidateQueries({
-        queryKey: ["comments", variables.blogId],
-        exact: false,
-      });
-      // If comment is a reply, also invalidate its parent's replies list to update the comment there
-      if (data.comment.parentComment) {
-        queryClient.invalidateQueries({
-          queryKey: ["replies", variables.blogId, data.comment.parentComment],
-          exact: false,
-        });
-      }
+      const updatedComment = data;
+      if (!updatedComment) return;
+
+      const updateCache = (oldData: unknown): unknown => {
+        if (!oldData || typeof oldData !== "object") return undefined;
+        
+        const obj = oldData as Record<string, unknown>;
+        
+        // Handle infinite query structure (has pages)
+        if (obj.pages && Array.isArray(obj.pages)) {
+          return {
+            ...obj,
+            pages: (obj.pages as Array<{ data: CommentType[] }>).map((page) => ({
+              ...page,
+              data: page.data.map((c) =>
+                c.id === variables.commentId ? { ...c, content: updatedComment.content } : c
+              ),
+            })),
+          };
+        }
+        
+        // Handle regular query structure (has data)
+        if (obj.data && Array.isArray(obj.data)) {
+          return {
+            ...obj,
+            data: (obj.data as CommentType[]).map((c) =>
+              c.id === variables.commentId ? { ...c, content: updatedComment.content } : c
+            ),
+          };
+        }
+        
+        return undefined;
+      };
+
+      // Update comments cache
+      queryClient.setQueriesData(
+        { queryKey: ["comments", variables.blogId], exact: false },
+        updateCache
+      );
+
+      // Update replies cache
+      queryClient.setQueriesData(
+        { queryKey: ["replies", variables.blogId], exact: false },
+        updateCache
+      );
+
+      // Also invalidate to trigger background refetch
+      queryClient.invalidateQueries({ queryKey: ["comments", variables.blogId], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["replies", variables.blogId], exact: false });
+      
       toast.success("Comment updated successfully");
     },
   });
@@ -677,6 +716,7 @@ export const useBlogRestore = () => {
         queryKey: ["blogs"],
         exact: false,
       });
+      queryClient.invalidateQueries({ queryKey: ["blog-analytics"] });
       toast.success("Blog restored successfully");
     },
   });
@@ -725,7 +765,6 @@ export const useCommentHardDelete = () => {
       queryClient.invalidateQueries({
         queryKey: ["replies", variables.blogId],
       });
-      toast.success("Comment deleted successfully");
     },
   });
 };

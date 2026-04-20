@@ -15,15 +15,15 @@ const FAQs = () => {
   const faqs: FAQ[] = [
     {
       question: `What exactly is your Full Stack + UI/UX hybrid role?`,
-      answer: `I manage the entire product lifecycle from research to deployment. By combining UI/UX design (focusing on user behavior and visual hierarchy) with Full Stack development (handling the server-side logic and database), I act as a single point of contact for your project. This "unicorn" approach reduces communication silos and ensures that the final technical build is 100% aligned with the original design vision`,
+      answer: `I manage the entire product lifecycle from research to deployment. By combining UI/UX design (focusing on user behavior and visual hierarchy) with Full Stack development (handling the server-side logic and database), I act as a single point of contact for your project. This "unicorn" approach reduces communication silos and ensures that the final technical build is 100% aligned with the original design vision.`,
     },
     {
       question: `How do I know I can trust you with only 2 years of experience?`,
-      answer: `I focus on quality over quantity. In my two years of professional practice, I have maintained a Top Rated status on global platforms by delivering results-oriented solutions. I don't just "make websites"; I solve business problems. You can view my curated case studies which detail the specific challenges I've overcome, the modern tech stacks I use (like React and Django), and the measurable business impact I've delivered`,
+      answer: `I focus on quality over quantity. In my two years of professional practice, I have maintained a Top Rated status on global platforms by delivering results-oriented solutions. I don't just "make websites"; I solve business problems. You can view my curated case studies which detail the specific challenges I've overcome, the modern tech stacks I use (like React and Django), and the measurable business impact I've delivered.`,
     },
     {
       question: `You’re based in Zambia. How will we handle the time difference?`,
-      answer: `I operate on Central African Time (CAT). For European clients, our hours are almost perfectly aligned. For North American clients (EST/PST), I utilize a "Follow-the-Sun" workflow. We have a significant overlap during your morning for real-time meetings via Zoom or Slack, and I perform the bulk of the development while you sleep, ensuring you have updates waiting for you the next morning`,
+      answer: `I operate on Central African Time (CAT). For European clients, our hours are almost perfectly aligned. For North American clients (EST/PST), I utilize a "Follow-the-Sun" workflow. We have a significant overlap during your morning for real-time meetings via Zoom or Slack, and I perform the bulk of the development while you sleep, ensuring you have updates waiting for you the next morning.`,
     },
     {
       question: `What is your step-by-step design and development process?`,
@@ -35,11 +35,11 @@ const FAQs = () => {
     },
     {
       question: `How do you handle payments and what are your terms?`,
-      answer: `I accept international payments via PayPal (integrated through FNB Zambia), Wise, Payoneer, or direct Bank Wire. For standard projects, I require a 50% deposit to secure your slot, with the remaining 50% due upon project completion or milestone approval. This ensures mutual commitment and a clear delivery schedule`,
+      answer: `I accept international payments via PayPal (integrated through FNB Zambia), Wise, Payoneer, or direct Bank Wire. For standard projects, I require a 50% deposit to secure your slot, with the remaining 50% due upon project completion or milestone approval. This ensures mutual commitment and a clear delivery schedule.`,
     },
     {
       question: `Do you provide hosting, or do I need to buy it myself?`,
-      answer: `I recommend that clients own their hosting and domain accounts for security and long-term control. However, I will fully manage the setup process for you. I recommend industry-standard providers like Vercel, SiteGround, or Bluehost, and I handle all the technical configurations to get your site live`,
+      answer: `I recommend that clients own their hosting and domain accounts for security and long-term control. However, I will fully manage the setup process for you. I recommend industry-standard providers like Vercel, SiteGround, or Bluehost, and I handle all the technical configurations to get your site live.`,
     },
     {
       question: `What happens if my site breaks after it launches?`,

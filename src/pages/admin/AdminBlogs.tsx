@@ -15,6 +15,7 @@ import {
   Send,
   X,
   Edit,
+  RotateCcw,
 } from "lucide-react";
 import {
   Dialog,
@@ -44,6 +45,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Toggle } from "@/components/ui/toggle";
 
 //import { Check, ChevronsUpDown } from "lucide-react";
 import {
@@ -63,6 +65,7 @@ import BlogsPerCategory from "@/components/BlogsPerCategory";
 import type { BlogFilters } from "@/components/BlogSiderBar";
 import {
   useBlogAnalytics,
+  useBlogRestore,
   useCommentHardDelete,
   useCreateBlog,
   useCreateComment,
@@ -91,6 +94,8 @@ const AdminBlogs = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [blogToDelete, setBlogToDelete] = useState<string | null>(null);
+  const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
+  const [blogToRestore, setBlogToRestore] = useState<string | null>(null);
   const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
@@ -123,10 +128,12 @@ const AdminBlogs = () => {
   const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
   const [newCommentText, setNewCommentText] = useState("");
   const [isCreatingComment, setIsCreatingComment] = useState(false);
+  const [showDeleted, setShowDeleted] = useState<boolean>(false);
 
   const queryParams: BlogQueryParams = {
     sortBy: selectedFilters.sortBy,
     sortOrder: selectedFilters.sortOrder,
+    deleted: showDeleted,
   };
   if (debouncedSearchQuery) {
     queryParams.q = debouncedSearchQuery;
@@ -153,6 +160,7 @@ const AdminBlogs = () => {
   const { mutate: createBlog, isPending: creatingBlog } = useCreateBlog();
   const { mutate: updateBlog, isPending: updatingBlog } = useUpdateBlog();
   const { mutate: deleteBlog } = useDeleteBlog();
+  const { mutate: restoreBlog } = useBlogRestore();
   const { data: blogsMetrics } = useBlogAnalytics();
   const { mutate: deleteComment } = useCommentHardDelete();
   const { mutate: createComment, isPending: creatingComment } =
@@ -164,7 +172,7 @@ const AdminBlogs = () => {
     isFetchingNextPage: isFetchingCommentsNextPage,
     hasNextPage: hasCommentsNextPage,
     fetchNextPage: fetchCommentsNextPage,
-  } = useInfiniteComments(selectedCommentsBlog as string);
+  } = useInfiniteComments(selectedCommentsBlog || "");
   const comments = commentsData?.pages.flatMap((page) => page.data) || [];
 
   const categories = [
@@ -187,6 +195,17 @@ const AdminBlogs = () => {
     "Education",
     "Entertainment",
   ];
+
+  const canDelete = user && user.role === "ADMIN";
+
+  const canEdit = (blog: BlogType) =>
+    user &&
+    (user.role === "ADMIN" ||
+      (user.role === "CONTRIBUTOR" && blog.author.email === user.email));
+  const canToggle = (blog: BlogType) =>
+    user &&
+    (user.role === "ADMIN" ||
+      (user.role === "CONTRIBUTOR" && blog.author.email === user.email));
 
   const handleCreateBlog = () => {
     if (!user) {
@@ -306,6 +325,37 @@ const AdminBlogs = () => {
   const openDeleteDialog = (blogId: string) => {
     setBlogToDelete(blogId);
     setIsDeleteDialogOpen(true);
+  };
+
+  const openRestoreDialog = (blogId: string) => {
+    setBlogToRestore(blogId);
+    setIsRestoreDialogOpen(true);
+  };
+
+  const confirmRestoreBlog = () => {
+    if (!user) {
+      toast.error("You must login first.");
+      return;
+    }
+    if (user.status === "BLOCKED") {
+      toast.error("Your account is blocked.");
+      return;
+    }
+    if (user.role !== "ADMIN") {
+      toast.error("You don't have enough permissions to restore");
+      return;
+    }
+    if (blogToRestore) {
+      restoreBlog(
+        { blogId: blogToRestore },
+        {
+          onSuccess: () => {
+            setIsRestoreDialogOpen(false);
+            setBlogToRestore(null);
+          },
+        },
+      );
+    }
   };
 
   const handleEditBlog = (blog: BlogType) => {
@@ -441,6 +491,7 @@ const AdminBlogs = () => {
   function handleReset(): void {
     setSearchQuery("");
     setDebouncedSearchQuery("");
+    setShowDeleted(false);
     setSelectedFilters({
       category: "",
       tags: [],
@@ -607,6 +658,27 @@ const AdminBlogs = () => {
               />
             </div>
           </div>
+          {user && user.role === "ADMIN" && (
+            <div className="flex items-center gap-2">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Toggle
+                      pressed={showDeleted}
+                      onPressedChange={setShowDeleted}
+                      variant="outline"
+                      aria-label="Toggle deleted blogs"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Toggle>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{showDeleted ? "Hide Deleted" : "Show Deleted"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          )}
           <Select
             value={selectedFilters.category}
             onValueChange={(value) =>
@@ -781,20 +853,22 @@ const AdminBlogs = () => {
                   <TableCell>
                     <TooltipProvider>
                       <div className="flex gap-1">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleEditBlog(blog)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Edit</p>
-                          </TooltipContent>
-                        </Tooltip>
+                        {canEdit(blog) && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleEditBlog(blog)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Edit</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
 
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -828,74 +902,135 @@ const AdminBlogs = () => {
                           </TooltipContent>
                         </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => toggleBlogVisibility(blog)}
-                            >
-                              {blog.published ? (
-                                <EyeOff className="h-4 w-4" />
-                              ) : (
-                                <Eye className="h-4 w-4" />
-                              )}
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{blog.published ? "Unpublish" : "Publish"}</p>
-                          </TooltipContent>
-                        </Tooltip>
+                        {canToggle(blog) && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => toggleBlogVisibility(blog)}
+                              >
+                                {blog.published ? (
+                                  <EyeOff className="h-4 w-4" />
+                                ) : (
+                                  <Eye className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{blog.published ? "Unpublish" : "Publish"}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Dialog
-                              open={
-                                isDeleteDialogOpen && blogToDelete === blog.id
-                              }
-                              onOpenChange={setIsDeleteDialogOpen}
-                            >
-                              <DialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() =>
-                                    openDeleteDialog(blog.id as string)
+                        {/* Delete or Restore Button */}
+                        {canDelete &&
+                          (blog.deleted && showDeleted ? (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Dialog
+                                  open={
+                                    isRestoreDialogOpen &&
+                                    blogToRestore === blog.id
                                   }
-                                  className="text-red-600 hover:text-red-700"
+                                  onOpenChange={setIsRestoreDialogOpen}
                                 >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>Delete Blog</DialogTitle>
-                                  <DialogDescription>
-                                    Are you sure you want to delete this blog?
-                                    This action cannot be undone.
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <DialogFooter>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => setBlogToDelete(null)}
-                                  >
-                                    Cancel
-                                  </Button>
-                                  <Button
-                                    variant="destructive"
-                                    onClick={handleDeleteBlog}
-                                  >
-                                    Delete
-                                  </Button>
-                                </DialogFooter>
-                              </DialogContent>
-                            </Dialog>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Delete</p>
-                          </TooltipContent>
-                        </Tooltip>
+                                  <DialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() =>
+                                        openRestoreDialog(blog.id as string)
+                                      }
+                                      className="text-green-600 hover:text-green-700"
+                                    >
+                                      <RotateCcw className="h-4 w-4" />
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent>
+                                    <DialogHeader>
+                                      <DialogTitle>Restore Blog</DialogTitle>
+                                      <DialogDescription>
+                                        Are you sure you want to restore this
+                                        blog? It will become visible to readers
+                                        again.
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                      <Button
+                                        variant="outline"
+                                        onClick={() => setBlogToRestore(null)}
+                                      >
+                                        Cancel
+                                      </Button>
+                                      <Button
+                                        variant="default"
+                                        onClick={confirmRestoreBlog}
+                                      >
+                                        Restore
+                                      </Button>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Restore</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          ) : (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Dialog
+                                  open={
+                                    isDeleteDialogOpen &&
+                                    blogToDelete === blog.id
+                                  }
+                                  onOpenChange={setIsDeleteDialogOpen}
+                                >
+                                  <DialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() =>
+                                        openDeleteDialog(blog.id as string)
+                                      }
+                                      className="text-red-600 hover:text-red-700"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent>
+                                    <DialogHeader>
+                                      <DialogTitle>Delete Blog</DialogTitle>
+                                      <DialogDescription>
+                                        Are you sure you want to delete this
+                                        blog? This will mark it as deleted. You
+                                        can restore it later from the deleted
+                                        view.
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                      <Button
+                                        variant="outline"
+                                        onClick={() => setBlogToDelete(null)}
+                                      >
+                                        Cancel
+                                      </Button>
+                                      <Button
+                                        variant="destructive"
+                                        onClick={handleDeleteBlog}
+                                      >
+                                        Delete
+                                      </Button>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Delete</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          ))}
                       </div>
                     </TooltipProvider>
                   </TableCell>
