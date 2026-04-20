@@ -125,7 +125,6 @@ const AdminBlogs = () => {
   const [editingComment, setEditingComment] = useState<CommentType | null>(
     null,
   );
-  const [editCommentText, setEditCommentText] = useState("");
   const [isUpdatingComment, setIsUpdatingComment] = useState(false);
   const [newCommentText, setNewCommentText] = useState("");
   const [replyingToComment, setReplyingToComment] =
@@ -406,6 +405,9 @@ const AdminBlogs = () => {
             setCommentToDelete(null);
             toast.success("Comment deleted successfully");
           },
+          onError: () => {
+            toast.error("Failed to delete comment");
+          },
         },
       );
     }
@@ -413,45 +415,10 @@ const AdminBlogs = () => {
 
   const handleEditComment = (comment: CommentType) => {
     setEditingComment(comment);
-    setEditCommentText(comment.content);
-  };
-
-  const handleUpdateComment = () => {
-    if (!user) {
-      toast.error("You must login first.");
-      return;
-    }
-    if (user.status === "BLOCKED") {
-      toast.error("Your account is blocked.");
-      return;
-    }
-    if (!editingComment || !editCommentText.trim()) return;
-
-    setIsUpdatingComment(true);
-    updateComment(
-      {
-        blogId: selectedCommentsBlog as string,
-        commentId: editingComment.id as string,
-        comment: { content: editCommentText },
-      },
-      {
-        onSuccess: () => {
-          setEditingComment(null);
-          setEditCommentText("");
-          setIsUpdatingComment(false);
-          toast.success("Comment updated successfully");
-        },
-        onError: () => {
-          setIsUpdatingComment(false);
-          toast.error("Failed to update comment");
-        },
-      },
-    );
   };
 
   const handleCancelEdit = () => {
     setEditingComment(null);
-    setEditCommentText("");
   };
 
   const handleEditCommentSubmit = (comment: CommentType, newText: string) => {
@@ -466,8 +433,6 @@ const AdminBlogs = () => {
     if (!newText.trim()) return;
 
     setIsUpdatingComment(true);
-    setEditingComment(comment);
-    setEditCommentText(newText);
     
     updateComment(
       {
@@ -478,7 +443,6 @@ const AdminBlogs = () => {
       {
         onSuccess: () => {
           setEditingComment(null);
-          setEditCommentText("");
           setIsUpdatingComment(false);
           toast.success("Comment updated successfully");
         },
@@ -488,11 +452,6 @@ const AdminBlogs = () => {
         },
       },
     );
-  };
-
-  const isCommentFromAdmin = (comment: CommentType): boolean => {
-    if (!user || !comment.author) return false;
-    return comment.author.email === user.email;
   };
 
   const handleCreateComment = () => {
@@ -1293,7 +1252,7 @@ const AdminBlogs = () => {
             )}
 
             {commentsLoading ? (
-              <div className="text-center my-auto">
+              <div className="flex justify-center">
                 <Loader2 className="size-4 animate-spin text-primary" />
               </div>
             ) : topLevelComments.length === 0 ? (
@@ -1331,8 +1290,18 @@ const AdminBlogs = () => {
                       onEditSubmit={handleEditCommentSubmit}
                       onCancelEdit={handleCancelEdit}
                       onDelete={handleDeleteComment}
+                      onReply={handleStartReply}
+                      onReplySubmit={handleReplySubmit}
+                      isReplyingTo={replyingToComment}
                       isEditing={editingComment}
                       isPendingEdit={isUpdatingComment}
+                      replyText={replyText}
+                      onReplyTextChange={setReplyText}
+                      onCancelReply={handleCancelReply}
+                      isPendingReply={creatingComment}
+                      allComments={comments}
+                      onToggleReplies={toggleReplies}
+                      expandedReplies={expandedReplies}
                     />
                   )}
                 </div>
@@ -1343,7 +1312,7 @@ const AdminBlogs = () => {
                 <Button
                   variant="outline"
                   onClick={() => fetchCommentsNextPage()}
-                  disabled={isFetchingNextPage}
+                  disabled={isFetchingCommentsNextPage}
                   className="h-10"
                 >
                   {isFetchingCommentsNextPage ? (
@@ -1352,7 +1321,7 @@ const AdminBlogs = () => {
                       Loading...
                     </>
                   ) : (
-                    "Load More Blogs"
+                    "Load More Comments"
                   )}
                 </Button>
               </div>

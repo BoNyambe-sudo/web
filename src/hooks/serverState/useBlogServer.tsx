@@ -546,11 +546,13 @@ export const useUpdateComment = () => {
       // Invalidate main comments list (covers top-level updates)
       queryClient.invalidateQueries({
         queryKey: ["comments", variables.blogId],
+        exact: false,
       });
       // If comment is a reply, also invalidate its parent's replies list to update the comment there
       if (data.comment.parentComment) {
         queryClient.invalidateQueries({
           queryKey: ["replies", variables.blogId, data.comment.parentComment],
+          exact: false,
         });
       }
       toast.success("Comment updated successfully");
@@ -571,12 +573,14 @@ export const useDeleteComment = () => {
       commentId: string;
     }) => deleteComment(blogId, commentId),
     onSuccess: (_, variables) => {
+      // Invalidate all comments and replies for the blog
       queryClient.invalidateQueries({
         queryKey: ["comments", variables.blogId],
+        exact: false,
       });
-      // Invalidate all replies for the blog to clear any cached threads
       queryClient.invalidateQueries({
         queryKey: ["replies", variables.blogId],
+        exact: false,
       });
     },
   });
