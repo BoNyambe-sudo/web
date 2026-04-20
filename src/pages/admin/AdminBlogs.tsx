@@ -55,7 +55,7 @@ import {
 import BlogEditor from "@/components/BlogEditor";
 import { calculateReadTime } from "@/lib/readTime";
 import { formatDate } from "@/lib/formattedDate";
-import { type BlogType, type CommentType } from "@/hooks/clientState/useBlog";
+import { type BlogType } from "@/hooks/clientState/useBlog";
 
 import { Loader2 } from "lucide-react";
 import BlogRenderer from "@/components/BlogRenderer";
@@ -63,17 +63,16 @@ import BlogsPerCategory from "@/components/BlogsPerCategory";
 import type { BlogFilters } from "@/components/BlogSiderBar";
 import {
   useBlogAnalytics,
+  useCommentHardDelete,
   useCreateBlog,
   useCreateComment,
   useDeleteBlog,
-  useDeleteComment,
   useInfiniteBlogs,
   useInfiniteComments,
   useUpdateBlog,
-  useUpdateComment,
   type CreateBlogType,
 } from "@/hooks/serverState/useBlogServer";
-import { AdminCommentCard, AdminRepliesList } from "@/components/AdminComment";
+import { AdminCommentCard } from "@/components/AdminCommentCard";
 import type { BlogQueryParams } from "../user/Blogs";
 import toast from "react-hot-toast";
 import { useUserData } from "@/hooks/serverState/useUserServer";
@@ -106,8 +105,8 @@ const AdminBlogs = () => {
     category: "",
     tags: [],
     latest: false,
-    sortBy: "createdAt", // Default sort by date
-    sortOrder: "desc", // Default sort order
+    sortBy: "createdAt",
+    sortOrder: "desc",
   });
   const [updateFormData, setUpdateFormData] = useState<BlogFormData>({
     title: "",
@@ -122,18 +121,8 @@ const AdminBlogs = () => {
   const [isCommentsDialogOpen, setIsCommentsDialogOpen] = useState(false);
   const [isPreviewDialogOpen, setIsPreviewDialogOpen] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
-  const [editingComment, setEditingComment] = useState<CommentType | null>(
-    null,
-  );
-  const [isUpdatingComment, setIsUpdatingComment] = useState(false);
   const [newCommentText, setNewCommentText] = useState("");
-  const [replyingToComment, setReplyingToComment] =
-    useState<CommentType | null>(null);
-  const [replyText, setReplyText] = useState("");
   const [isCreatingComment, setIsCreatingComment] = useState(false);
-  const [expandedReplies, setExpandedReplies] = useState<Set<string>>(
-    new Set(),
-  );
 
   const queryParams: BlogQueryParams = {
     sortBy: selectedFilters.sortBy,
@@ -165,8 +154,7 @@ const AdminBlogs = () => {
   const { mutate: updateBlog, isPending: updatingBlog } = useUpdateBlog();
   const { mutate: deleteBlog } = useDeleteBlog();
   const { data: blogsMetrics } = useBlogAnalytics();
-  const { mutate: deleteComment } = useDeleteComment();
-  const { mutate: updateComment } = useUpdateComment();
+  const { mutate: deleteComment } = useCommentHardDelete();
   const { mutate: createComment, isPending: creatingComment } =
     useCreateComment();
 
@@ -377,10 +365,6 @@ const AdminBlogs = () => {
     setIsCommentsDialogOpen(true);
   };
 
-  const handleDeleteComment = (commentId: string) => {
-    setCommentToDelete(commentId);
-  };
-
   const confirmDeleteComment = () => {
     if (!user) {
       toast.error("You must login first.");
@@ -405,53 +389,9 @@ const AdminBlogs = () => {
             setCommentToDelete(null);
             toast.success("Comment deleted successfully");
           },
-          onError: () => {
-            toast.error("Failed to delete comment");
-          },
         },
       );
     }
-  };
-
-  const handleEditComment = (comment: CommentType) => {
-    setEditingComment(comment);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingComment(null);
-  };
-
-  const handleEditCommentSubmit = (comment: CommentType, newText: string) => {
-    if (!user) {
-      toast.error("You must login first.");
-      return;
-    }
-    if (user.status === "BLOCKED") {
-      toast.error("Your account is blocked.");
-      return;
-    }
-    if (!newText.trim()) return;
-
-    setIsUpdatingComment(true);
-    
-    updateComment(
-      {
-        blogId: selectedCommentsBlog as string,
-        commentId: comment.id as string,
-        comment: { content: newText },
-      },
-      {
-        onSuccess: () => {
-          setEditingComment(null);
-          setIsUpdatingComment(false);
-          toast.success("Comment updated successfully");
-        },
-        onError: () => {
-          setIsUpdatingComment(false);
-          toast.error("Failed to update comment");
-        },
-      },
-    );
   };
 
   const handleCreateComment = () => {
@@ -480,55 +420,6 @@ const AdminBlogs = () => {
   const handleCancelNewComment = () => {
     setNewCommentText("");
     setIsCreatingComment(false);
-  };
-
-  const handleCancelReply = () => {
-    setReplyText("");
-    setReplyingToComment(null);
-  };
-
-  const handleStartReply = (comment: CommentType) => {
-    setReplyingToComment(comment);
-    setReplyText("");
-  };
-
-  const handleReplySubmit = (comment: CommentType, replyText: string) => {
-    if (!user) {
-      toast.error("You must login first.");
-      return;
-    }
-    if (user.status === "BLOCKED") {
-      toast.error("Your account is blocked.");
-      return;
-    }
-    if (!replyText.trim() || !selectedCommentsBlog || !comment.id) return;
-
-    createComment(
-      {
-        blogId: selectedCommentsBlog,
-        comment: { content: replyText },
-        parentId: comment.id,
-      },
-      {
-        onSuccess: () => {
-          setReplyText("");
-          setReplyingToComment(null);
-          toast.success("Reply added successfully");
-        },
-      },
-    );
-  };
-
-  const toggleReplies = (commentId: string) => {
-    setExpandedReplies((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(commentId)) {
-        newSet.delete(commentId);
-      } else {
-        newSet.add(commentId);
-      }
-      return newSet;
-    });
   };
 
   const topLevelComments = comments.filter((c) => !c.parentComment);
@@ -1265,45 +1156,7 @@ const AdminBlogs = () => {
                   <AdminCommentCard
                     comment={comment}
                     blogId={selectedCommentsBlog as string}
-                    allComments={comments}
-                    expandedReplies={expandedReplies}
-                    onToggleReplies={toggleReplies}
-                    onEdit={handleEditComment}
-                    onEditSubmit={handleEditCommentSubmit}
-                    onCancelEdit={handleCancelEdit}
-                    onDelete={handleDeleteComment}
-                    onReply={handleStartReply}
-                    onReplySubmit={handleReplySubmit}
-                    isReplyingTo={replyingToComment}
-                    isEditing={editingComment}
-                    replyText={replyText}
-                    onReplyTextChange={setReplyText}
-                    onCancelReply={handleCancelReply}
-                    isPendingReply={creatingComment}
-                    isPendingEdit={isUpdatingComment}
                   />
-                  {expandedReplies.has(comment.id as string) && (
-                    <AdminRepliesList
-                      commentId={comment.id as string}
-                      blogId={selectedCommentsBlog as string}
-                      onEdit={handleEditComment}
-                      onEditSubmit={handleEditCommentSubmit}
-                      onCancelEdit={handleCancelEdit}
-                      onDelete={handleDeleteComment}
-                      onReply={handleStartReply}
-                      onReplySubmit={handleReplySubmit}
-                      isReplyingTo={replyingToComment}
-                      isEditing={editingComment}
-                      isPendingEdit={isUpdatingComment}
-                      replyText={replyText}
-                      onReplyTextChange={setReplyText}
-                      onCancelReply={handleCancelReply}
-                      isPendingReply={creatingComment}
-                      allComments={comments}
-                      onToggleReplies={toggleReplies}
-                      expandedReplies={expandedReplies}
-                    />
-                  )}
                 </div>
               ))
             )}

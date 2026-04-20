@@ -18,8 +18,8 @@ import {
 import type { CommentType } from "@/hooks/clientState/useBlog";
 import { formatDate } from "@/lib/formattedDate";
 import {
+  useCommentHardDelete,
   useCreateComment,
-  useDeleteComment,
   useDislikeComment,
   useInfiniteReplies,
   useLikeComment,
@@ -59,39 +59,39 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
   const { mutate: likeComment } = useLikeComment();
   const { mutate: dislikeComment } = useDislikeComment();
   const { mutate: updateComment, isPending: isUpdating } = useUpdateComment();
-  const { mutate: deleteComment } = useDeleteComment();
+  const { mutate: deleteComment } = useCommentHardDelete();
+
+  const canEdit = user && reply.author && user.email === reply.author.email;
 
   const handleLike = () => {
-    likeComment(
-      {
-        blogId,
-        commentId: reply.id as string,
-        parentId: reply.parentComment ?? undefined,
-      },
-      {
-        onError: () => {
-          toast.error("Failed to like comment");
-        },
-      },
-    );
+    if (!user) {
+      toast.error("You must login first");
+      return;
+    }
+    likeComment({
+      blogId,
+      commentId: reply.id as string,
+      parentId: reply.parentComment ?? undefined,
+    });
   };
 
   const handleDislike = () => {
-    dislikeComment(
-      {
-        blogId,
-        commentId: reply.id as string,
-        parentId: reply.parentComment ?? undefined,
-      },
-      {
-        onError: () => {
-          toast.error("Failed to dislike comment");
-        },
-      },
-    );
+    if (!user) {
+      toast.error("You must login first");
+      return;
+    }
+    dislikeComment({
+      blogId,
+      commentId: reply.id as string,
+      parentId: reply.parentComment ?? undefined,
+    });
   };
 
   const handleReply = () => {
+    if (!user) {
+      toast.error("You must login first");
+      return;
+    }
     if (replyText.trim() === "") return;
     createReply(
       {
@@ -106,22 +106,24 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
           setShowReplies(true);
           toast.success("Reply successfully created.");
         },
-        onError: () => {
-          toast.error("Failed to create reply");
-        },
       },
     );
   };
 
   const handleDelete = () => {
+    if (!user) {
+      toast.error("You must login first");
+      return;
+    }
+    if (user.role !== "ADMIN") {
+      toast.error("You do not have enough permissions to delete");
+      return;
+    }
     deleteComment(
       { blogId, commentId: reply.id as string },
       {
         onSuccess: () => {
           toast.success("Comment deleted successfully");
-        },
-        onError: () => {
-          toast.error("Failed to delete comment");
         },
       },
     );
@@ -138,6 +140,10 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
   };
 
   const handleSaveEdit = () => {
+    if (!user) {
+      toast.error("You must login first");
+      return;
+    }
     if (!editText.trim()) return;
     updateComment(
       {
@@ -149,9 +155,6 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
         onSuccess: () => {
           setIsEditing(false);
           toast.success("Comment updated successfully");
-        },
-        onError: () => {
-          toast.error("Failed to update comment");
         },
       },
     );
@@ -189,7 +192,8 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>
-                      {showReplies ? "Hide" : "Show"} Replies ({nestedReplies.length})
+                      {showReplies ? "Hide" : "Show"} Replies (
+                      {nestedReplies.length})
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -209,21 +213,23 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
                   <p>Reply</p>
                 </TooltipContent>
               </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleStartEdit}
-                    className="h-7 w-7"
-                  >
-                    <Edit className="h-3 w-3" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Edit</p>
-                </TooltipContent>
-              </Tooltip>
+              {canEdit &&  (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleStartEdit}
+                      className="h-7 w-7"
+                    >
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Edit</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -310,7 +316,9 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
               onChange={(e) => setReplyText(e.target.value)}
               placeholder={`Reply to ${reply.author?.firstName}...`}
               className="text-sm"
-              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleReply()}
+              onKeyDown={(e) =>
+                e.key === "Enter" && !e.shiftKey && handleReply()
+              }
             />
             <div className="flex gap-2">
               <Button
@@ -320,7 +328,11 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
               >
                 Cancel
               </Button>
-              <Button size="sm" onClick={handleReply} disabled={!replyText.trim()}>
+              <Button
+                size="sm"
+                onClick={handleReply}
+                disabled={!replyText.trim()}
+              >
                 <Send className="h-3 w-3 mr-1" />
                 Reply
               </Button>
