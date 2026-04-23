@@ -73,8 +73,8 @@ const AdminHome = () => {
             <div className="text-2xl font-bold">{blogsMetrics?.totalBlogs}</div>
             <p className="text-xs text-muted-foreground">
               {blogsMetrics && blogsMetrics?.totalBlogs > 0
-                ? "Published blogs"
-                : "No blogs published"}
+                ? "Blogs"
+                : "No blogs"}
             </p>
           </CardContent>
         </Card>
@@ -107,8 +107,8 @@ const AdminHome = () => {
             </div>
             <p className="text-xs text-muted-foreground">
               {appointmentsMetrics && appointmentsMetrics?.totalAppointments > 0
-                ? "Upcoming appointments"
-                : "No upcoming appointments"}
+                ? "Appointments"
+                : "No appointments"}
             </p>
           </CardContent>
         </Card>

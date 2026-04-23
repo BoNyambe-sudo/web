@@ -26,6 +26,8 @@ import {
   useSendInqiury,
 } from "@/hooks/serverState/userAppointmentServer";
 import toast from "react-hot-toast";
+import SEOHelmet from "@/components/SEOHelmet";
+import { SITE_URL, getOrganizationSchema } from "@/lib/seoConfig";
 
 const Home = () => {
   const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0);
@@ -104,9 +106,9 @@ const Home = () => {
     e.preventDefault();
     if (
       !appointmentFormData.name ||
-      appointmentFormData.phoneNumber ||
-      appointmentFormData.scheduledDate ||
-      appointmentFormData.scheduledTime
+      !appointmentFormData.phoneNumber ||
+      !appointmentFormData.scheduledDate ||
+      !appointmentFormData.scheduledTime
     ) {
       toast.error("Some fields are missing");
       return;
@@ -139,10 +141,23 @@ const Home = () => {
   }, [placeholders.length]);
 
   return (
-    <div
-      className={`h-screen w-screen bg-cover bg-center flex flex-col relative`}
-      style={{ backgroundImage: `url(${heroImg})` }}
-    >
+    <>
+      <SEOHelmet
+        title="Bo Nyambe - Professional Web, Mobile & AI Development"
+        description="Expert web development, mobile app development, AI solutions, and custom software engineering. Transform your business ideas into reality with cutting-edge technology."
+        keywords="web development, mobile app development, software engineering, AI development, custom solutions, technology services, full stack development"
+        url={SITE_URL}
+        canonicalUrl={SITE_URL}
+        type="website"
+      >
+        <script type="application/ld+json">
+          {JSON.stringify(getOrganizationSchema())}
+        </script>
+      </SEOHelmet>
+      <div
+        className={`h-screen w-screen bg-cover bg-center flex flex-col relative`}
+        style={{ backgroundImage: `url(${heroImg})` }}
+      >
       <Header textClassName="lightText" />
       <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col max-w-4xl w-6/10 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg p-6">
         <div className="flex flex-col mx-auto items-center gap-4">
@@ -414,6 +429,7 @@ const Home = () => {
         photo by Martin Martz (unsplash)
       </p>
     </div>
+    </>
   );
 };
 

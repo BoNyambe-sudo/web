@@ -1,0 +1,26 @@
+# Robots.txt for Bo Nyambe
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+Allow: /blogs
+Allow: /faqs
+Disallow: /admin
+Disallow: /*.json$
+Disallow: /manage-account
+
+# Allow specific crawlers
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://bonyambe-sudo.github.io/web/sitemap.xml
+
+# Site rules
+User-agent: *
+Request-rate: 1 request per 1 second

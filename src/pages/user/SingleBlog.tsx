@@ -23,6 +23,8 @@ import Twitter from "@/components/icons/twitter";
 import type { BlogQueryParams } from "./Blogs";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import SEOHelmet from "@/components/SEOHelmet";
+import { getBlogPostSchema } from "@/lib/seoConfig";
 
 const SingleBlog = () => {
   const { id } = useParams();
@@ -106,6 +108,21 @@ const SingleBlog = () => {
   }
   return (
     <>
+      <SEOHelmet
+        title={blog.title}
+        description={blog.description || blog.title}
+        keywords={`${blog.category}, ${blog.tags?.join(", ") || ""}, blog, article`}
+        url={currentUrl}
+        canonicalUrl={currentUrl}
+        type="article"
+        author={`${blog.author.firstName} ${blog.author.lastName}`}
+        publishedDate={new Date(blog.createdAt).toISOString()}
+        modifiedDate={new Date(blog.updatedAt || blog.createdAt).toISOString()}
+      >
+        <script type="application/ld+json">
+          {JSON.stringify(getBlogPostSchema(blog))}
+        </script>
+      </SEOHelmet>
       <Header />
       <div className="container py-10">
         <div className="mb-8">

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { HelmetProvider } from "react-helmet-async";
 import { queryClient } from "./hooks/queryClient";
 import { useTheme } from "./hooks/clientState/useTheme";
 import ThemeToggle from "./components/ToggleTheme";
@@ -21,11 +22,13 @@ function App() {
   useToken();
 
   return (
-    <Router basename={import.meta.env.BASE_URL}>
-      <QueryClientProvider client={queryClient}>
-        <AppWithQuery />
-      </QueryClientProvider>
-    </Router>
+    <HelmetProvider>
+      <Router basename={import.meta.env.BASE_URL}>
+        <QueryClientProvider client={queryClient}>
+          <AppWithQuery />
+        </QueryClientProvider>
+      </Router>
+    </HelmetProvider>
   );
 }
 

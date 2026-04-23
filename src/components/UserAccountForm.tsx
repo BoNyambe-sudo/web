@@ -270,7 +270,7 @@ const UserAccountForm = ({ user }: { user: UserDataResponse }) => {
                           value={formData.password}
                           onChange={handleInputChange}
                           disabled={isSaving}
-                          placeholder="Enter new password (optional)"
+                          placeholder="Enter new password"
                         />
                         {formData.password && (
                           <PasswordStrengthIndicator
