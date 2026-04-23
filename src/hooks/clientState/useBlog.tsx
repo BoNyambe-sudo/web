@@ -10,6 +10,7 @@ export interface BlogType {
   id?: string;
   title: string;
   content: string;
+  description?: string;
   published: boolean;
   author: Author;
   tags: string[];

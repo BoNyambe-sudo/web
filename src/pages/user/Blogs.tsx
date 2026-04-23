@@ -21,6 +21,14 @@ import {
 } from "@/hooks/serverState/useBlogServer";
 import { Loader2, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import SEOHelmet from "@/components/SEOHelmet";
+import {
+  BLOG_CATEGORIES,
+  SITE_URL,
+  getBlogListSchema,
+  getDescriptionForCategory,
+  getKeywordsForCategory,
+} from "@/lib/seoConfig";
 
 export type BlogQueryParams = {
   category?: string;
@@ -71,26 +79,29 @@ const Blogs = () => {
     useInfiniteBlogs(queryParams);
   const blogs = data?.pages.flatMap((page) => page.data) || [];
 
-  const availableCategories = [
-    "Technology",
-    "Lifestyle",
-    "Health",
-    "Photography",
-    "Sports",
-    "Business",
-    "Religious",
-    "Politics",
-    "Science",
-    "Art",
-    "Music",
-    "Film & TV",
-    "Fashion",
-    "Food",
-    "Travel",
-    "Finance",
-    "Education",
-    "Entertainment",
-  ];
+  // Generate SEO metadata based on selected category
+  const pageTitle = selectedFilters.category
+    ? `${selectedFilters.category} Blogs`
+    : "Explore Blogs";
+  
+  const pageDescription = selectedFilters.category
+    ? getDescriptionForCategory(selectedFilters.category)
+    : "Explore insightful articles on Technology, Lifestyle, Health, Photography, Sports, Business, and more. Read latest blog posts and expert insights.";
+  
+  const pageKeywords = selectedFilters.category
+    ? getKeywordsForCategory(selectedFilters.category)
+    : [
+        ...BLOG_CATEGORIES,
+        "blog",
+        "articles",
+        "latest posts",
+        "expert insights",
+      ].join(", ");
+
+  const blogListSchema = getBlogListSchema(
+    selectedFilters.category,
+    blogs.length
+  );
 
   // Handle filter changes
   const handleFiltersChange = (filters: BlogFilters) => {
@@ -133,10 +144,21 @@ const Blogs = () => {
 
   return (
     <SidebarProvider>
+      <SEOHelmet
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        url={`${SITE_URL}/blogs`}
+        canonicalUrl={`${SITE_URL}/blogs`}
+      >
+        <script type="application/ld+json">
+          {JSON.stringify(blogListSchema)}
+        </script>
+      </SEOHelmet>
       <BlogSidebar
         onFiltersChange={handleFiltersChange}
         selectedFilters={selectedFilters}
-        availableCategories={availableCategories}
+        availableCategories={BLOG_CATEGORIES}
         availableTags={availableTags}
       />
       <SidebarInset>
@@ -220,7 +242,7 @@ const Blogs = () => {
                 </Button>
               </div>
             ) : (
-              <span className="text-sm text-muted-foreground">Blogs</span>
+              <h1 className="text-sm text-muted-foreground">Blogs</h1>
             )}
           </div>
         </header>

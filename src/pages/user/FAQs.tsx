@@ -6,6 +6,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import SEOHelmet from "@/components/SEOHelmet";
+import { SITE_URL, getFAQSchema } from "@/lib/seoConfig";
+
 type FAQ = {
   question: string;
   answer: string;
@@ -19,7 +22,7 @@ const FAQs = () => {
     },
     {
       question: `How do I know I can trust you with only 2 years of experience?`,
-      answer: `I focus on quality over quantity. In my two years of professional practice, I have maintained a Top Rated status on global platforms by delivering results-oriented solutions. I don't just "make websites"; I solve business problems. You can view my curated case studies which detail the specific challenges I've overcome, the modern tech stacks I use (like React and Django), and the measurable business impact I've delivered.`,
+      answer: `I focus on quality over quantity. In my two years of professional practice, I have maintained a Top Rated status on global platforms by delivering results-oriented solutions. I don't just "make websites"; I solve business problems. You can view my curated case studies which detail the specific challenges I've overcome, the modern tech stacks I use (like Angular and Nest JS), and the measurable business impact I've delivered.`,
     },
     {
       question: `You’re based in Zambia. How will we handle the time difference?`,
@@ -31,15 +34,15 @@ const FAQs = () => {
     },
     {
       question: `Which tech stack do you specialize in for web applications?`,
-      answer: `I build scalable, high-performance applications using the MERN stack (MongoDB, Express, React, Node.js) or Python/Django for data-heavy projects. For CMS needs, I specialize in headless WordPress or Shopify. Every site I build is mobile-responsive and optimized for speed using modern best practices like lazy loading and CDN integration.`,
+      answer: `I build scalable, high-performance applications using the MANN stack (MongoDB, Angular, Nest JS, Node.js) or Python/Django for data-heavy projects. For CMS needs, I specialize in headless WordPress or Shopify. Every site I build is mobile-responsive and optimized for speed using modern best practices like lazy loading and CDN integration.`,
     },
     {
       question: `How do you handle payments and what are your terms?`,
-      answer: `I accept international payments via PayPal (integrated through FNB Zambia), Wise, Payoneer, or direct Bank Wire. For standard projects, I require a 50% deposit to secure your slot, with the remaining 50% due upon project completion or milestone approval. This ensures mutual commitment and a clear delivery schedule.`,
+      answer: `I accept international payments via PayPal (integrated through FNB Zambia), Zanaco Express(for local clients), or direct Bank Wire. For standard projects, I require a 50% deposit to secure your slot, with the remaining 50% due upon project completion or milestone approval. This ensures mutual commitment and a clear delivery schedule.`,
     },
     {
       question: `Do you provide hosting, or do I need to buy it myself?`,
-      answer: `I recommend that clients own their hosting and domain accounts for security and long-term control. However, I will fully manage the setup process for you. I recommend industry-standard providers like Vercel, SiteGround, or Bluehost, and I handle all the technical configurations to get your site live.`,
+      answer: `I recommend that clients own their hosting and domain accounts for security and long-term control. However, I will fully manage the setup process for you. I recommend industry-standard providers like Vercel, SiteGround, Hostinger, or Bluehost, and I handle all the technical configurations to get your site live.`,
     },
     {
       question: `What happens if my site breaks after it launches?`,
@@ -76,6 +79,17 @@ const FAQs = () => {
   ];
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHelmet
+        title="Frequently Asked Questions - Bo Nyambe"
+        description="Get answers to common questions about our web development, mobile app development, AI solutions, and design services. Learn about our process, pricing, and expertise."
+        keywords="FAQs, frequently asked questions, web development services, mobile app development, AI development, custom software"
+        url={`${SITE_URL}/faqs`}
+        canonicalUrl={`${SITE_URL}/faqs`}
+      >
+        <script type="application/ld+json">
+          {JSON.stringify(getFAQSchema(faqs))}
+        </script>
+      </SEOHelmet>
       <Header className="backdrop-blur-xl" />
       <div className="container py-10 flex-1">
         <h2 className="text-xl font-bold my-4">Frequently Asked Questions</h2>

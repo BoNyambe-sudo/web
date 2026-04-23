@@ -3,6 +3,21 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import FileHandler from "@tiptap/extension-file-handler";
+
+const ExtendedImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      alt: {
+        default: null,
+        parseHTML: element => element.getAttribute('alt'),
+        renderHTML: attributes => ({
+          alt: attributes.alt,
+        }),
+      },
+    };
+  },
+});
 import {
   Bold,
   Italic,
@@ -40,13 +55,14 @@ const BlogEditor = ({
   onChange,
   placeholder = "Start writing your blog...",
 }: BlogEditorProps) => {
-  const [imageUrl, setImageUrl] = useState<File>();
-  const [imagePreview, setImagePreview] = useState<string>("");
-  const [showImageInput, setShowImageInput] = useState(false);
-  const [showLinkDialog, setShowLinkDialog] = useState(false);
-  const [linkUrl, setLinkUrl] = useState("");
-  const [isDragging, setIsDragging] = useState(false);
-  const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
+   const [imageUrl, setImageUrl] = useState<File>();
+   const [imagePreview, setImagePreview] = useState<string>("");
+   const [showImageInput, setShowImageInput] = useState(false);
+   const [showLinkDialog, setShowLinkDialog] = useState(false);
+   const [linkUrl, setLinkUrl] = useState("");
+   const [imageAltText, setImageAltText] = useState<string>("");
+   const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
+   const [isDragging, setIsDragging] = useState(false);
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const { mutate: uploadImage } = useUploadBlogImage();
@@ -71,61 +87,61 @@ const BlogEditor = ({
     };
   }, []);
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [1, 2, 3],
-        },
-        link: {
-          openOnClick: false,
-          HTMLAttributes: {
-            rel: "noopener noreferrer",
-            target: "_blank",
-          },
-        },
-      }),
-      Image.configure({
-        inline: false,
-        allowBase64: true,
+const editor = useEditor({
+  extensions: [
+    StarterKit.configure({
+      heading: {
+        levels: [1, 2, 3],
+      },
+      link: {
+        openOnClick: false,
         HTMLAttributes: {
-          class: "max-w-full h-auto cursor-pointer",
+          rel: "noopener noreferrer",
+          target: "_blank",
         },
-      }),
-      FileHandler.configure({
-        onPaste: (currentEditor, files, htmlContent) => {
-          files.forEach((file) => {
-            if (htmlContent) {
-              return false;
-            }
+      },
+    }),
+    ExtendedImage.configure({
+      inline: false,
+      allowBase64: true,
+      HTMLAttributes: {
+        class: "max-w-full h-auto cursor-pointer",
+      },
+    }),
+    FileHandler.configure({
+      onPaste: (currentEditor, files, htmlContent) => {
+        files.forEach((file) => {
+          if (htmlContent) {
+            return false;
+          }
 
-            uploadImage(file, {
-              onSuccess: (data) => {
-                currentEditor
-                  .chain()
-                  .focus()
-                  .setImage({ src: data.url })
-                  .run();
-              },
-            });
+          uploadImage(file, {
+            onSuccess: (data) => {
+              currentEditor
+                .chain()
+                .focus()
+                .setImage({ src: data.url, alt: file.name })
+                .run();
+            },
           });
-        },
-        onDrop: (currentEditor, files) => {
-          files.forEach((file) => {
-            uploadImage(file, {
-              onSuccess: (data) => {
-                currentEditor
-                  .chain()
-                  .focus()
-                  .setImage({ src: data.url })
-                  .run();
-              },
-            });
+        });
+      },
+      onDrop: (currentEditor, files) => {
+        files.forEach((file) => {
+          uploadImage(file, {
+            onSuccess: (data) => {
+              currentEditor
+                .chain()
+                .focus()
+                .setImage({ src: data.url, alt: file.name })
+                .run();
+            },
           });
-        },
-        allowedMimeTypes: ["image/jpeg", "image/png", "image/gif"],
-      }),
-    ],
+        });
+      },
+      allowedMimeTypes: ["image/jpeg", "image/png", "image/gif"],
+    }),
+  ],
     content: initialContent,
     immediatelyRender: true,
     onUpdate: ({ editor }) => {
@@ -136,7 +152,7 @@ const BlogEditor = ({
         class:
           "prose prose-neutral dark:prose-invert max-w-none focus:outline-none",
       },
-      handleClickOn: (view, pos, _event, _node) => {
+      handleClickOn: (view, pos) => {
         if (!editor) return false;
         const { state } = view;
         const attrs = state.doc.nodeAt(pos)?.attrs;
@@ -152,7 +168,7 @@ const BlogEditor = ({
     if (imageUrl && editor) {
       uploadImage(imageUrl, {
         onSuccess: (data) => {
-          editor.chain().focus().setImage({ src: data.url }).run();
+          editor.chain().focus().setImage({ src: data.url, alt: imageAltText || imageUrl.name }).run();
         },
         onError: (error) => {
           console.error("Error uploading image:", error);
@@ -160,9 +176,10 @@ const BlogEditor = ({
       });
       setImageUrl(undefined);
       setImagePreview("");
+      setImageAltText("");
       setShowImageInput(false);
     }
-  }, [imageUrl, editor, uploadImage]);
+  }, [imageUrl, editor, uploadImage, imageAltText]);
 
   const handleRemoveImage = useCallback(() => {
     if (editor && selectedImageSrc) {
@@ -402,44 +419,57 @@ const BlogEditor = ({
 
       {/* Image Input */}
       {showImageInput && (
-        <div className="border-b p-3 bg-accent text-accent-foreground flex gap-2">
-          <div className="flex-1 relative">
-            <Input
-              type="file"
-              placeholder="Image"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  setImageUrl(file);
-                  setImagePreview(URL.createObjectURL(file));
-                }
-              }}
-              onKeyDown={(e) => e.key === "Enter" && handleImageSubmit()}
-            />
-            {imagePreview && (
-              <div className="mt-2">
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="h-20 w-auto rounded border"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setImageUrl(undefined);
-                    setImagePreview("");
-                  }}
-                  className="text-xs text-red-500 hover:text-red-700 mt-1"
-                >
-                  Remove
-                </button>
-              </div>
-            )}
+        <div className="border-b p-3 bg-accent text-accent-foreground flex gap-2 flex-col">
+          <div className="flex gap-2 w-full">
+            <div className="flex-1 relative">
+              <Input
+                type="file"
+                placeholder="Image"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setImageUrl(file);
+                    setImagePreview(URL.createObjectURL(file));
+                  }
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleImageSubmit()}
+              />
+              {imagePreview && (
+                <div className="mt-2">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="h-20 w-auto rounded border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageUrl(undefined);
+                      setImagePreview("");
+                    }}
+                    className="text-xs text-red-500 hover:text-red-700 mt-1"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
+            <Button size="sm" onClick={handleImageSubmit} disabled={!imageUrl}>
+              Add Image
+            </Button>
           </div>
-          <Button size="sm" onClick={handleImageSubmit} disabled={!imageUrl}>
-            Add Image
-          </Button>
+          <div className="w-full">
+            <label className="text-xs text-muted-foreground mb-1 block">Alt Text (optional)</label>
+            <Input
+              type="text"
+              placeholder="Describe the image for accessibility"
+              value={imageAltText}
+              onChange={(e) => setImageAltText(e.target.value)}
+              className="bg-background"
+              disabled={!imageUrl}
+            />
+          </div>
         </div>
       )}
 
@@ -489,7 +519,7 @@ const BlogEditor = ({
             if (file.type.startsWith("image/")) {
               uploadImage(file, {
                 onSuccess: (data) => {
-                  editor.chain().focus().setImage({ src: data.url }).run();
+                  editor.chain().focus().setImage({ src: data.url, alt: file.name }).run();
                 },
               });
             }
