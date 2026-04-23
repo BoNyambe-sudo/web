@@ -224,15 +224,15 @@ const Blogs = () => {
 
                 {/* Reset All Button */}
                 <Button
-                  variant="ghost"
+                  variant="destructive"
                   size="sm"
                   onClick={() => {
                     setSelectedFilters({
                       category: "",
                       tags: [],
                       latest: false,
-                      sortBy: "createdAt", // Default sort by date
-                      sortOrder: "desc", // Default sort order
+                      sortBy: "createdAt", 
+                      sortOrder: "desc", 
                     });
                     setSearchQuery("");
                   }}
