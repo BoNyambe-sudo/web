@@ -65,7 +65,7 @@ export default function SEOHelmet({
       <meta property="twitter:title" content={fullTitle} />
       <meta property="twitter:description" content={description} />
       <meta property="twitter:image" content={image} />
-      <meta name="twitter:creator" content="@bonyambe" />
+      <meta name="twitter:creator" content="@franknyambe213" />
 
       {/* Additional SEO */}
       <meta name="robots" content="index, follow" />

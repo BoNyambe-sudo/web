@@ -167,10 +167,10 @@ export const getOrganizationSchema = () => {
     logo: `${SITE_URL}/favicon.svg`,
     description: SITE_DESCRIPTION,
     sameAs: [
-      "https://www.facebook.com/bonyambe",
-      "https://www.twitter.com/bonyambe",
-      "https://www.linkedin.com/in/bonyambe",
-      "https://www.instagram.com/bonyambe",
+      "https://www.facebook.com/profile.php?id=61559651890241",
+      "https://www.x.com/franknyambe213",
+      "https://www.linkedin.com/in/frank-nyambe-79a633321",
+      "https://www.instagram.com/f_nyambe?igsh=b2wzd2t4Y3YxdmVj",
     ],
     contactPoint: {
       "@type": "ContactPoint",
