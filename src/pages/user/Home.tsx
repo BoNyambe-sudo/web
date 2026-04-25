@@ -443,7 +443,7 @@ const Home = () => {
           </div>
         </div>
         <p className="absolute bottom-4 right-4 text-xs text-muted-foreground">
-          photo by Martin Martz (unsplash)
+          photo by Martin Martz <span className="block text-center">(unsplash)</span>
         </p>
       </div>
     </>
