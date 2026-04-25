@@ -110,6 +110,11 @@ const Header = ({
     }
   };
 
+  const getInitials = (firstName?: string, lastName?: string) => {
+    if (!firstName && !lastName) return "U";
+    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
+  };
+
   return (
     <header
       className={cn(
@@ -154,7 +159,7 @@ const Header = ({
             >
               <AvatarImage src={user.profilePicture} />
               <AvatarFallback>
-                {user.firstName.charAt(0) + user.lastName.charAt(0)}
+                {getInitials(user.firstName, user.lastName)}
               </AvatarFallback>
             </Avatar>{" "}
             <UserCard />{" "}

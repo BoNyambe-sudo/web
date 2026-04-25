@@ -138,6 +138,11 @@ const UserAccountForm = ({ user }: { user: UserDataResponse }) => {
     });
   };
 
+  const getInitials = (firstName?: string, lastName?: string) => {
+    if (!firstName && !lastName) return "U";
+    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
+  };
+
   return (
     <div className="min-h-screen">
       <Header className="mb-8" />
@@ -179,8 +184,7 @@ const UserAccountForm = ({ user }: { user: UserDataResponse }) => {
                       alt={`${formData.firstName} ${formData.lastName}`}
                     />
                     <AvatarFallback className="text-xl">
-                      {formData.firstName.charAt(0)}
-                      {formData.lastName.charAt(0)}
+                      {getInitials(user.firstName, user.lastName)}
                     </AvatarFallback>
                   </Avatar>
                   {isEditing && (
