@@ -19,6 +19,11 @@ const UserCard = () => {
     setIsUserOpen(false),
   );
 
+  const getInitials = (firstName?: string, lastName?: string) => {
+    if (!firstName && !lastName) return "U";
+    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
+  };
+
   return (
     <Card
       className={`absolute right-4 top-8 ${isUserOpen ? "flex" : "hidden"} flex-col gap-4 p-4`}
@@ -28,10 +33,7 @@ const UserCard = () => {
         <Avatar size="lg">
           <AvatarImage src={user?.profilePicture} />
           <AvatarFallback>
-            {
-              ((user?.firstName.charAt(0) as string) +
-                user?.lastName.charAt(0)) as string
-            }
+            {getInitials(user?.firstName, user?.lastName)}
           </AvatarFallback>
         </Avatar>
 

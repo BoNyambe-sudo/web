@@ -23,7 +23,7 @@ function App() {
 
   return (
     <HelmetProvider>
-      <Router basename={import.meta.env.BASE_URL}>
+      <Router basename={import.meta.env.VITE_ROUTENAME_BASE}>
         <QueryClientProvider client={queryClient}>
           <AppWithQuery />
         </QueryClientProvider>
