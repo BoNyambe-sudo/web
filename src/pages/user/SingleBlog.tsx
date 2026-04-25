@@ -54,10 +54,9 @@ const SingleBlog = () => {
     const encodedMessage = encodeURIComponent(shareMessage);
     const shareText = `${shareMessage} ${currentUrl}`;
 
-    let shareUrl = "";
-    let shouldOpenUrl = true;
+     let shareUrl = "";
 
-    // Safe clipboard copy that ignores errors
+     // Safe clipboard copy that ignores errors
     const copyToClipboard = async () => {
       try {
         await navigator.clipboard.writeText(shareText);
@@ -82,40 +81,49 @@ const SingleBlog = () => {
         shareUrl = `https://wa.me/?text=${encodedMessage}%20${encodedUrl}`;
         break;
       case "instagram": {
-          // Copy share text to clipboard since Instagram doesn't support prefilled text via URL
+          // Open Instagram website synchronously first to avoid popup blockers
+          // This must happen before any async operations
+          const instagramWebsiteUrl = "https://instagram.com";
+          const anchor = document.createElement("a");
+          anchor.href = instagramWebsiteUrl;
+          anchor.target = "_blank";
+          anchor.rel = "noopener noreferrer";
+          document.body.appendChild(anchor);
+          anchor.click();
+          document.body.removeChild(anchor);
+
+          // Then copy to clipboard and show notification async
           await copyToClipboard();
           toast.success("Blog link copied! Opening Instagram...");
 
-          // Try to open Instagram app using various schemes
-          const instagramSchemes = [
-            "instagram://camera",
-            "instagram://app",
-            "instagram://",
-          ];
+          // Close the share dialog
+          setShareDialogOpen(false);
 
-          let appOpened = false;
-          for (const scheme of instagramSchemes) {
-            try {
-              const anchor = document.createElement("a");
-              anchor.href = scheme;
-              anchor.target = "_blank";
-              anchor.rel = "noopener noreferrer";
-              document.body.appendChild(anchor);
-              anchor.click();
-              document.body.removeChild(anchor);
-              appOpened = true;
-              break;
-            } catch {
-              // Scheme failed, continue to next
-            }
-          }
+          // Check if on mobile before trying app schemes
+          // On desktop, Instagram app is unlikely to be installed
+          const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-          // If no app scheme worked, fall back to Instagram website
-          if (!appOpened) {
-            try {
-              window.open("https://instagram.com", "_blank");
-            } catch (err) {
-              console.error("Failed to open Instagram:", err);
+          // Try to open Instagram app using various schemes (best effort, mobile only)
+          if (isMobile) {
+            const instagramSchemes = [
+              "instagram://camera",
+              "instagram://app",
+              "instagram://",
+            ];
+
+            for (const scheme of instagramSchemes) {
+              try {
+                const anchor = document.createElement("a");
+                anchor.href = scheme;
+                anchor.target = "_blank";
+                anchor.rel = "noopener noreferrer";
+                document.body.appendChild(anchor);
+                anchor.click();
+                document.body.removeChild(anchor);
+                break;
+              } catch {
+                // Scheme failed, continue to next
+              }
             }
           }
           break;
@@ -254,7 +262,6 @@ const SingleBlog = () => {
               </DialogContent>
             </Dialog>
           </div>
-
           <h1 className="text-3xl lg:text-4xl font-bold mb-4">{blog?.title}</h1>
 
           <div className="flex items-center gap-3">
