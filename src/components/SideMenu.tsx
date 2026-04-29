@@ -38,7 +38,7 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
             </button>
           </div>
 
-          <div className="flex flex-col space-y-2 font-medium tracking-wide flex-1">
+          <div className="flex flex-col space-y-2 font-medium tracking-wide relative">
             <Link
               to="/"
               onClick={onClose}

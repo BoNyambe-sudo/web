@@ -134,7 +134,7 @@ const AdminHome = () => {
             <TableBody>
               {blogs?.map((blog) => (
                 <TableRow key={blog.id}>
-                  <TableCell className="font-medium">{blog.title}</TableCell>
+                  <TableCell className="font-medium">{blog.title.substring(0, 30)}...</TableCell>
                   <TableCell>
                     <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
                       {blog.category}
