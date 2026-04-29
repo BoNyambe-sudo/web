@@ -23,7 +23,7 @@ function App() {
 
   return (
     <HelmetProvider>
-      <Router /* basename='/web' */>
+      <Router basename='/web'>
         <QueryClientProvider client={queryClient}>
           <AppWithQuery />
         </QueryClientProvider>
