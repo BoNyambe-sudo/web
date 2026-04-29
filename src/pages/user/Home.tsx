@@ -263,15 +263,15 @@ const Home = () => {
         style={{ backgroundImage: `url(${heroImg})` }}
       >
         <Header textClassName="lightText" />
-        <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col max-w-4xl w-7/10 bg-white/15 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg p-6">
-          <div className="flex flex-col mx-auto items-center gap-4 md:p-6 p-3">
-            <div className="space-y-3">
+        <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col max-w-4xl w-9/10 md:w-7/10 bg-white/15 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg p-3 md:p-6">
+          <div className="flex flex-col mx-auto items-center gap-3 md:gap-4 md:p-6 p-3">
+            <div className="space-y-2 md:space-y-3">
               <h1
-                className="font-bold text-2xl md:text-3xl text-center"
+                className="font-bold text-2xl lightText md:text-3xl text-center"
                 ref={titleRef}
               ></h1>
               <p
-                className="text-xs md:text-sm text-center"
+                className="text-xs md:text-sm lightText text-center"
                 ref={paragraphRef}
               ></p>
               <div
@@ -282,7 +282,7 @@ const Home = () => {
             <div className="w-full max-w-2xl relative">
               <Input
                 list="placeholders"
-                placeholder="Your message or query"
+                placeholder="Your message"
                 autoFocus
                 value={messageFormData.message}
                 onChange={(e) =>
