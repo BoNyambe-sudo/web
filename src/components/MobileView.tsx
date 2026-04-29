@@ -1,6 +1,6 @@
 import { useToggleState } from "@/hooks/clientState/useToggles";
 import { Button } from "./ui/button";
-import { AlignRight, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import SideMenu from "./SideMenu";
 import { cn } from "@/lib/utils";
 
@@ -10,12 +10,11 @@ const MobileView = ({ textClassName }: { textClassName?: string }) => {
   return (
     <div>
       <Button
-        className={cn("text-foreground font-semibold", textClassName)}
+        className={cn("md:hidden text-foreground font-semibold", textClassName)}
         variant={"ghost"}
         onClick={() => toggleSidebarOpen(!sidebarOpen)}
       >
-        <Menu className="md:hidden hover:text-muted-foreground" />
-        {/* <AlignRight /> */}
+        <Menu  />
       </Button>
       <div className="md:hidden">
         <SideMenu
