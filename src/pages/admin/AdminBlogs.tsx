@@ -79,6 +79,7 @@ import { AdminCommentCard } from "@/components/AdminCommentCard";
 import type { BlogQueryParams } from "../user/Blogs";
 import toast from "react-hot-toast";
 import { useUserData } from "@/hooks/serverState/useUserServer";
+import warn from "@/lib/warnToaster";
 
 type BlogFormData = {
   title: string;
@@ -194,6 +195,7 @@ const AdminBlogs = () => {
     "Finance",
     "Education",
     "Entertainment",
+    "Productivity",
   ];
 
   const canDelete = user && user.role === "ADMIN";
@@ -286,6 +288,11 @@ const AdminBlogs = () => {
     }
     if (updateFormData.published !== selectedBlog.published) {
       updatedBlog.published = updateFormData.published;
+    }
+
+    if (Object.keys(updatedBlog).length === 0) {
+      warn("Everything is up to date");
+      return;
     }
 
     updateBlog(
@@ -500,6 +507,37 @@ const AdminBlogs = () => {
       sortOrder: "desc",
     });
   }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!user || user.status === "BLOCKED" || !selectedBlog) return;
+      if (
+        !isEditDialogOpen ||
+        selectedBlog?.content === updateFormData.content
+      ) {
+        return;
+      }
+      updateBlog(
+        {
+          id: selectedBlog.id as string,
+          blog: { content: updateFormData.content },
+        },
+        {
+          onSuccess: () => {
+            toast.success("Changes saved.");
+          },
+        },
+      );
+    }, 120000);
+
+    return () => clearInterval(intervalId);
+  }, [
+    isEditDialogOpen,
+    selectedBlog,
+    updateFormData.content,
+    user,
+    updateBlog,
+  ]);
 
   return (
     <div className="p-6">
@@ -824,7 +862,9 @@ const AdminBlogs = () => {
             <TableBody>
               {blogs?.map((blog) => (
                 <TableRow key={blog.id}>
-                  <TableCell className="font-medium">{blog.title.substring(0, 30)}...</TableCell>
+                  <TableCell className="font-medium">
+                    {blog.title.substring(0, 30)}...
+                  </TableCell>
                   <TableCell>
                     <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
                       {blog.category}

@@ -26,6 +26,7 @@ export const BLOG_CATEGORIES = [
   "Finance",
   "Education",
   "Entertainment",
+  "Productivity",
 ];
 
 export const CATEGORY_KEYWORDS: Record<string, string[]> = {
@@ -131,6 +132,14 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "educational resources",
     "online courses",
     "skill development",
+  ],
+  Productivity: [
+    "productivity tips",
+    "time management",
+    "workflow optimization",
+    "task management",
+    "focus techniques",
+    "efficiency strategies",
   ],
   Entertainment: [
     "entertainment news",
