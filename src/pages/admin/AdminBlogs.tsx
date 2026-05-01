@@ -510,9 +510,7 @@ const AdminBlogs = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (!user) return;
-      if (user.status === "BLOCKED") return;
-      if (!selectedBlog) return;
+      if (!user || user.status === "BLOCKED" || !selectedBlog) return;
       if (
         !isEditDialogOpen ||
         selectedBlog?.content === updateFormData.content
