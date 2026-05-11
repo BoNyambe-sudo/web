@@ -5,7 +5,8 @@
 
 export const SITE_NAME = "Bo Nyambe";
 export const SITE_URL = "https://bonyambe-sudo.github.io/web/";
-export const SITE_DESCRIPTION = "Professional web, mobile, and AI development services. Expert in technology solutions for modern businesses.";
+export const SITE_DESCRIPTION =
+  "Professional web, mobile, and AI development services. Expert in technology solutions for modern businesses.";
 
 export const BLOG_CATEGORIES = [
   "Technology",
@@ -39,6 +40,17 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "cloud computing",
     "DevOps",
     "full stack development",
+    "Code Newbie",
+    "Junior Dev",
+    "Beginners Guide",
+    "Career Tips",
+    "Self Taught",
+    "Programming Basics",
+    "Web Dev",
+    "Software development",
+    "Tech Tips",
+    "JavaScript",
+    "Python",
   ],
   Lifestyle: [
     "lifestyle tips",
@@ -101,6 +113,106 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "TV show analysis",
     "entertainment news",
     "cinematography",
+    "Power Book II Ghost Review",
+    "Is Power Book 2 worth watching",
+    "Power Book 2 vs Original Power",
+    "Tariq St Patrick character arc",
+    "Power Book 2 finale explained",
+    "Erick Stark",
+    "Whiz Kid",
+    "Lil Ghost",
+    "Apex Predator",
+    "Tariq Scam Patrick",
+    "Power Book 2 spoilers",
+    "Mary J Blige Power character",
+    "Monet Tejada death",
+    "Monet vs Tasha St Patrick",
+    "Woody McClain Power",
+    "Cane Tejada loyalty",
+    "Cane vs Tariq rivalry",
+    "Method Man Power",
+    "Davis MacLean best moments",
+    "Davis MacLean legal tactics",
+    "Gianni Paolo Power",
+    "Brayden Weston character arc",
+    "Tariq and Brayden partnership",
+    "Tariq and Brayden brotherhood",
+    "Tejada siblings drug business",
+    "The aftermath of Ghost's murde",
+    "The trial and legal drama focus",
+    "Global expansion with Noma",
+    "The 'Ghost in the Machine' finale",
+    "Why was Power Book 2 cancelled",
+    "Starz money saving tactics",
+    "Lionsgate Starz separation impact",
+    "Jeffrey Hirsch Starz strategy",
+    "Power Book 2 budget",
+    "Mary J Blige salary Power",
+    "cost of Power spinoffs",
+    "Power Book 2 vs Original Power",
+    "Power Book 2 vs Raising Kanan",
+    "Power Book 2 vs Power Book 4",
+    "Ghost spinoff vs Power",
+    "Tariq and Tommy spinoff",
+    "Power Legacy release date",
+    "will Tariq be in Power Legacy",
+    "Michael Rainey Jr and Joseph Sikora team up",
+    "Young Ghost and Tommy preque",
+    "Power Origins cast",
+    "MeKai Curtis as Kanan in Origins",
+    "origin of Ghost and Tommy",
+    "How Power Book 2 sets up Power Legacy",
+    "Tariq St Patrick future in Power universe",
+    "Is Tariq the new Ghost",
+    "Omari Hardwick return in Book 2",
+    "Ghost vs Tariq comparison",
+    "did Tariq ruin the Power legacy",
+    "Legacy, betrayal, and the 'Ghost' moniker",
+    "Most shocking deaths Power Book 2",
+    "Tariq St Patrick outfits",
+    "Power Book 2 best moments",
+    "is Power Book 2 entertaining",
+    "Spectacle",
+    "fashion",
+    "vibes",
+    "Tariq St Patrick plot armor",
+    "Power Book 2 unrealistic writing",
+    "Reddit Power TV theories",
+    "Cane Tejada vs Tariq debate",
+    "Realism",
+    "plot holes",
+    "community consensus",
+    "Does Monet Tejada die?",
+    "Who killed Zion in Power Book 2?",
+    "Where to watch Power Book 2?",
+    "Is Lauren Baldwin alive?",
+    "Power Book II entertaining as hell",
+    "best spinoff in the universe",
+    "must-watch for Power fans",
+    "Tariq St Patrick aura",
+    "Objectively awful writing",
+    "Tariq is an insufferable lead",
+    "waste of a spinof",
+    "rushed finale disappointment",
+    "Power Book II ratings 2026",
+    "where to stream Power spinoffs",
+    "Power Book 2 season 4 part 2 schedule",
+    "Power universe chronological order",
+    "Is Power Book 2 worth the hype",
+    " honest Power Book 2 review",
+    "Tariq St Patrick plot armor",
+    "Power Book 2 soap opera criticism",
+    "Power Legacy release date 2027",
+    " Power Origins prequel cast",
+    "Power Book 2 vs Raising Kanan",
+    "best order to watch Power spinoffs",
+    "Ghost in the Machine finale explained",
+    "Power Book 2 cancellation reason",
+    "Tariq and Brayden murder Zion",
+    "who died in Power Book 2 season 4",
+    "Michael Rainey Jr acting growth",
+    "Brayden Weston character development",
+    "Monet Tejada legacy",
   ],
   Fashion: [
     "fashion trends",
@@ -140,6 +252,15 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "task management",
     "focus techniques",
     "efficiency strategies",
+    "Procrastination",
+    "Habit Stacking",
+    "5 Second Rule",
+    "James Clear",
+    "Mel Robbins",
+    "Neuroscience",
+    "Metacognition",
+    "Behavior Change",
+    "Self-Regulatory Failure",
   ],
   Entertainment: [
     "entertainment news",
@@ -192,16 +313,11 @@ export const getOrganizationSchema = () => {
 /**
  * Generate structured data for Blog List
  */
-export const getBlogListSchema = (
-  category?: string,
-  blogCount: number = 0
-) => {
+export const getBlogListSchema = (category?: string, blogCount: number = 0) => {
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: category
-      ? `${category} Blog Articles`
-      : "Blog - " + SITE_NAME,
+    name: category ? `${category} Blog Articles` : "Blog - " + SITE_NAME,
     description: category
       ? getDescriptionForCategory(category)
       : SITE_DESCRIPTION,
@@ -246,13 +362,15 @@ export const getBlogPostSchema = (blog: {
   updatedAt?: Date | string;
 }) => {
   // Ensure dates are in ISO string format
-  const datePublished = blog.createdAt instanceof Date
-    ? blog.createdAt.toISOString()
-    : blog.createdAt || new Date().toISOString();
+  const datePublished =
+    blog.createdAt instanceof Date
+      ? blog.createdAt.toISOString()
+      : blog.createdAt || new Date().toISOString();
 
-  const dateModified = blog.updatedAt instanceof Date
-    ? blog.updatedAt.toISOString()
-    : blog.updatedAt || datePublished;
+  const dateModified =
+    blog.updatedAt instanceof Date
+      ? blog.updatedAt.toISOString()
+      : blog.updatedAt || datePublished;
 
   return {
     "@context": "https://schema.org",
@@ -269,11 +387,15 @@ export const getBlogPostSchema = (blog: {
     dateModified,
     author: {
       "@type": "Person",
-      name: `${blog.author?.firstName || ""} ${blog.author?.lastName || ""}`.trim() || SITE_NAME,
-      image: blog.author?.profilePicture ? {
-        "@type": "ImageObject",
-        url: blog.author.profilePicture,
-      } : undefined,
+      name:
+        `${blog.author?.firstName || ""} ${blog.author?.lastName || ""}`.trim() ||
+        SITE_NAME,
+      image: blog.author?.profilePicture
+        ? {
+            "@type": "ImageObject",
+            url: blog.author.profilePicture,
+          }
+        : undefined,
     },
     publisher: {
       "@type": "Organization",
@@ -297,7 +419,9 @@ export const getBlogPostSchema = (blog: {
 /**
  * Generate structured data for FAQ
  */
-export const getFAQSchema = (faqs: Array<{ question: string; answer: string }>) => {
+export const getFAQSchema = (
+  faqs: Array<{ question: string; answer: string }>,
+) => {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -315,7 +439,9 @@ export const getFAQSchema = (faqs: Array<{ question: string; answer: string }>) 
 /**
  * Generate breadcrumb schema
  */
-export const getBreadcrumbSchema = (items: Array<{ name: string; url: string }>) => {
+export const getBreadcrumbSchema = (
+  items: Array<{ name: string; url: string }>,
+) => {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
