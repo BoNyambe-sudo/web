@@ -34,23 +34,24 @@ import ContactLinksCard from "@/components/ContactLinksCard";
 import { Separator } from "@/components/ui/separator";
 import gsap from "gsap";
 import TextPlugin from "gsap/dist/TextPlugin";
+import { SplitText } from "gsap/SplitText";
 
 gsap.registerPlugin(TextPlugin);
+gsap.registerPlugin(SplitText);
 
 // Text content constants
-const MAIN_TITLE =
-  "Architecting Premium, High-Performance Web Ecosystems.";
+const MAIN_TITLE = "Architecting Premium, High-Performance Web Ecosystems";
 
 const MAIN_PARAGRAPH =
-  "Leveraging NestJS and Angular, I build scalable, SEO-optimized applications where sophisticated backend logic meets seamless, responsive design.";
+  "Leveraging NestJS and Angular, I build scalable, SEO-optimized applications where sophisticated backend logic meets seamless, responsive design";
 
 const STATEMENTS = [
-  "Engineering robust NestJS architectures.",
-  "Crafting fluid Angular & React experiences.",
-  "Deploying SEO-optimized, high-growth platforms.",
-  "Building for ultimate scalability and speed.",
-  "Translating complex ideas into premium code.",
-  "Designing pixel-perfect, responsive interfaces.",
+  "Engineering robust NestJS architectures",
+  "Crafting fluid Angular & React experiences",
+  "Deploying SEO-optimized, high-growth platforms",
+  "Building for ultimate scalability and speed",
+  "Translating complex ideas into premium code",
+  "Designing pixel-perfect, responsive interfaces",
 ];
 
 const Home = () => {
@@ -58,9 +59,12 @@ const Home = () => {
   const [isAppointmentDialogOpen, setIsAppointmentDialogOpen] = useState(false);
 
   // GSAP animation refs
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const paragraphRef = useRef<HTMLParagraphElement>(null);
+  const titleRef = useRef<(HTMLHeadingElement | null)[]>([]);
+  const paragraphRef = useRef<(HTMLParagraphElement | null)[]>([]);
   const statementRef = useRef<HTMLDivElement>(null);
+
+  const titleSplitRefs = useRef<Array<SplitText | null>>([]);
+  const paragraphSplitRefs = useRef<Array<SplitText | null>>([]);
 
   const placeholders = [
     "I want a website",
@@ -80,91 +84,84 @@ const Home = () => {
   const navigate = useNavigate();
   const setIsContactOpen = useToggleState((state) => state.toggleContactOpen);
 
-   // GSAP animations using useEffect
-   useEffect(() => {
-     const tl = gsap.timeline();
+  // GSAP animations using useEffect
+  useEffect(() => {
+    const tl = gsap.timeline();
 
-     // Animate main title - typewriter effect
-     if (titleRef.current) {
-       tl.from(titleRef.current, {
-         opacity: 0,
-         duration: 0.5,
-       }).to(
-         titleRef.current,
-         {
-           text: MAIN_TITLE,
-           duration: 2.5,
-           ease: "none",
-           opacity: 1,
-         });
-     }
+    // Animate main title - typewriter effect
+    if (titleRef.current) {
+      tl.from(titleRef.current, {
+        opacity: 0,
+        duration: 0.5,
+      }).to(titleRef.current, {
+        text: MAIN_TITLE,
+        duration: 2.5,
+        ease: "none",
+        opacity: 1,
+      });
+    }
 
-     // Animate main paragraph - staggered character reveal after title completes
-     if (paragraphRef.current) {
-       tl.from(
-         paragraphRef.current,
-         {
-           opacity: 0,
-           duration: 0.5,
-         }
-       ).to(
-         paragraphRef.current,
-         {
-           text: MAIN_PARAGRAPH,
-           duration: 4,
-           ease: "none",
-           opacity: 1,
-         });
-     }
+    // Animate main paragraph - staggered character reveal after title completes
+    if (paragraphRef.current) {
+      tl.from(paragraphRef.current, {
+        opacity: 0,
+        duration: 0.5,
+      }).to(paragraphRef.current, {
+        text: MAIN_PARAGRAPH,
+        duration: 4,
+        ease: "none",
+        opacity: 1,
+      });
+    }
 
-     // Animate statements - typewriter effect with alternation after paragraph completes
-     if (statementRef.current) {
-       let currentStatementIndex = 0;
+    // Animate statements - typewriter effect with alternation after paragraph completes
+    if (statementRef.current) {
+      let currentStatementIndex = 0;
 
-       const animateStatement = () => {
-         const statement = STATEMENTS[currentStatementIndex];
+      const animateStatement = () => {
+        const statement = STATEMENTS[currentStatementIndex];
 
-         const statementTl = gsap.timeline();
+        const statementTl = gsap.timeline();
 
-         // Type in the statement
-         statementTl.to(statementRef.current, {
-           text: statement,
-           duration: 1.5,
-           ease: "none",
-         });
+        // Type in the statement
+        statementTl.to(statementRef.current, {
+          text: statement,
+          duration: 1.5,
+          ease: "none",
+        });
 
-         // Hold the statement visible
-         statementTl.to(
-           statementRef.current,
-           {
-             duration: 1,
-           },
-           "+=0.3",
-         );
+        // Hold the statement visible
+        statementTl.to(
+          statementRef.current,
+          {
+            duration: 1,
+          },
+          "+=0.3",
+        );
 
-         // Fade out (delete) the statement
-         statementTl.to(statementRef.current, {
-           text: "",
-           duration: 1,
-           ease: "none",
-         });
+        // Fade out (delete) the statement
+        statementTl.to(statementRef.current, {
+          text: "",
+          duration: 1,
+          ease: "none",
+        });
 
-         // Move to next statement
-         currentStatementIndex = (currentStatementIndex + 1) % STATEMENTS.length;
+        // Move to next statement
+        currentStatementIndex = (currentStatementIndex + 1) % STATEMENTS.length;
 
-         // Recursively animate next statement
-         statementTl.call(animateStatement);
-       };
+        // Recursively animate next statement
+        statementTl.call(animateStatement);
+      };
 
-       // Start the statement animation after main text animations complete
-       tl.call(animateStatement);
-     }
+      // Start the statement animation after main text animations complete
+      tl.call(animateStatement);
+    }
 
-     // Cleanup function to kill animations on unmount
-     return () => {
-       tl.kill();
-     };
-   }, []);
+    // Cleanup function to kill animations on unmount
+    return () => {
+      tl.kill();
+    };
+  }, []);
 
   const [messageFormData, setMessageFormData] = useState({
     name: "",
@@ -263,24 +260,25 @@ const Home = () => {
         style={{ backgroundImage: `url(${heroImg})` }}
       >
         <Header textClassName="lightText" />
-        <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col max-w-4xl w-9/10 md:w-7/10 bg-white/15 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg p-3 md:p-6">
+        <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col max-w-4xl w-9/10 md:w-7/10 bg-background/30 backdrop-blur-md border border-border rounded-lg shadow-lg p-3 md:p-6">
           <div className="flex flex-col mx-auto items-center gap-3 md:gap-4 md:p-6 p-3">
             <div className="space-y-2 md:space-y-3">
               <h1
-                className="font-bold text-2xl lightText md:text-3xl text-center"
+                className="font-black text-2xl md:text-3xl text-center"
                 ref={titleRef}
               ></h1>
               <p
-                className="text-xs md:text-sm lightText text-center"
+                className="text-xs font-medium md:text-sm text-center"
                 ref={paragraphRef}
               ></p>
               <div
                 ref={statementRef}
-                className="min-h-8 md:text-sm text-center text-xs font-semibold text-primary"
+                className="min-h-8 md:text-sm text-center text-xs font-medium text-primary"
               ></div>
             </div>
             <div className="w-full max-w-2xl relative">
               <Input
+                className="placeholder:text-foreground"
                 list="placeholders"
                 placeholder="Your message"
                 autoFocus

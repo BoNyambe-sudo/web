@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   ChevronDown,
-  ChevronRight,
   Edit,
   Loader2,
   MessageCircle,
@@ -18,10 +17,10 @@ import {
 import type { CommentType } from "@/hooks/clientState/useBlog";
 import { formatDate } from "@/lib/formattedDate";
 import {
+  useAllReplies,
   useCommentHardDelete,
   useCreateComment,
   useDislikeComment,
-  useInfiniteReplies,
   useLikeComment,
   useUpdateComment,
 } from "@/hooks/serverState/useBlogServer";
@@ -33,7 +32,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { AdminReplyCard } from "./AdminReplyCard";
+import { useCommentReplyStore } from "@/hooks/clientState/useComments";
+import getTotalReplies from "@/lib/allReplies";
 
 interface AdminCommentCardProps {
   comment: CommentType;
@@ -45,19 +45,17 @@ export const AdminCommentCard = ({
   blogId,
 }: AdminCommentCardProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
-  const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.content);
+  const setShowReplies = useCommentReplyStore((state) => state.setShowReplies);
+  const setSelectedComment = useCommentReplyStore(
+    (state) => state.setSelectedComment,
+  );
 
   const { data: user } = useUserData();
-  const {
-    data: repliesData,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  } = useInfiniteReplies(blogId, comment.id as string);
-  const replies = repliesData?.pages.flatMap((page) => page.data) || [];
+  const { data: allRepliesData } = useAllReplies(blogId);
+  const allReplies = allRepliesData || [];
 
   const { mutate: createReply } = useCreateComment();
   const { mutate: likeComment } = useLikeComment();
@@ -112,10 +110,9 @@ export const AdminCommentCard = ({
       },
       {
         onSuccess: () => {
+          toast.success("Reply successfully created.");
           setReplyText("");
           setShowReplyForm(false);
-          setShowReplies(true);
-          toast.success("Reply successfully created.");
         },
       },
     );
@@ -187,210 +184,180 @@ export const AdminCommentCard = ({
   };
 
   return (
-    <>
-      <Card key={comment.id} className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          <div className="flex items-center gap-2">
-            <div className="font-medium">
-              {comment.author?.firstName} {comment.author?.lastName}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {formatDate(comment.createdAt as Date)}
-            </div>
+    <Card key={comment.id} className="p-4">
+      <div className="flex justify-between items-start mb-2">
+        <div className="flex items-center gap-2">
+          <div className="font-medium">
+            {comment.author?.firstName} {comment.author?.lastName}
           </div>
-          <div className="flex gap-1">
-            <TooltipProvider>
-              {(replies.length > 0 || showReplies) && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setShowReplies(!showReplies)}
-                      className="h-8 w-8"
-                    >
-                      {showReplies ? (
-                        <ChevronDown className="h-4 w-4" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>
-                      {showReplies ? "Hide" : "Show"} Replies ({replies.length})
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
+          <div className="text-xs text-muted-foreground">
+            {formatDate(comment.createdAt as Date)}
+          </div>
+        </div>
+        <div className="flex gap-1">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setSelectedComment(comment);
+                    setShowReplies(true);
+                  }}
+                  className="h-8 w-8"
+                >
+                  <ChevronDown className="h-4 w-4" />
+                  {getTotalReplies(allReplies, comment.id as string)}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  Show Replies (
+                  {getTotalReplies(allReplies, comment.id as string)})
+                </p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowReplyForm(!showReplyForm)}
+                  className="h-8 w-8"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Reply</p>
+              </TooltipContent>
+            </Tooltip>
+            {canEdit && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => setShowReplyForm(!showReplyForm)}
+                    onClick={handleStartEdit}
                     className="h-8 w-8"
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <Edit className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Reply</p>
+                  <p>Edit</p>
                 </TooltipContent>
               </Tooltip>
-              {canEdit && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleStartEdit}
-                      className="h-8 w-8"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Edit</p>
-                  </TooltipContent>
-                </Tooltip>
+            )}
+            {canDelete && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleDelete}
+                    className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Delete</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </TooltipProvider>
+        </div>
+      </div>
+
+      {isEditing ? (
+        <div className="space-y-2 mt-2">
+          <Input
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            placeholder="Edit comment..."
+            onKeyDown={(e) => e.key === "Enter" && handleSaveEdit()}
+          />
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={handleCancelEdit}>
+              <X className="h-4 w-4 mr-1" />
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSaveEdit}
+              disabled={!editText.trim() || isUpdating}
+            >
+              {isUpdating ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4 mr-1" />
               )}
-              {canDelete && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleDelete}
-                      className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Delete</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
-            </TooltipProvider>
+              Save
+            </Button>
           </div>
         </div>
-
-        {isEditing ? (
-          <div className="space-y-2 mt-2">
-            <Input
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              placeholder="Edit comment..."
-              onKeyDown={(e) => e.key === "Enter" && handleSaveEdit()}
-            />
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={handleCancelEdit}>
-                <X className="h-4 w-4 mr-1" />
-                Cancel
+      ) : (
+        <>
+          <p className="text-sm text-muted-foreground">{comment.content}</p>
+          <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-muted-foreground hover:text-primary"
+                onClick={handleLike}
+              >
+                <ThumbsUp
+                  className={`h-3 w-3 mr-1 ${comment.likedBy?.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
+                />
+                {comment.likedBy?.length || 0}
               </Button>
               <Button
+                variant="ghost"
                 size="sm"
-                onClick={handleSaveEdit}
-                disabled={!editText.trim() || isUpdating}
+                className="h-7 px-2 text-muted-foreground hover:text-primary"
+                onClick={handleDislike}
               >
-                {isUpdating ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4 mr-1" />
-                )}
-                Save
+                <ThumbsDown
+                  className={`h-3 w-3 mr-1 ${comment.dislikedBy?.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
+                />
+                {comment.dislikedBy?.length || 0}
               </Button>
             </div>
           </div>
-        ) : (
-          <>
-            <p className="text-sm text-muted-foreground">{comment.content}</p>
-            <div className="flex items-center gap-2 mt-2">
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 px-2 text-muted-foreground hover:text-primary"
-                  onClick={handleLike}
-                >
-                  <ThumbsUp
-                    className={`h-3 w-3 mr-1 ${comment.likedBy?.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
-                  />
-                  {comment.likedBy?.length || 0}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 px-2 text-muted-foreground hover:text-primary"
-                  onClick={handleDislike}
-                >
-                  <ThumbsDown
-                    className={`h-3 w-3 mr-1 ${comment.dislikedBy?.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
-                  />
-                  {comment.dislikedBy?.length || 0}
-                </Button>
-              </div>
-            </div>
-          </>
-        )}
+        </>
+      )}
 
-        {showReplyForm && (
-          <div className="space-y-2 mt-2">
-            <Input
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              placeholder={`Reply to ${comment.author?.firstName}...`}
-              onKeyDown={(e) =>
-                e.key === "Enter" && !e.shiftKey && handleReply()
-              }
-            />
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setShowReplyForm(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleReply}
-                disabled={!replyText.trim()}
-              >
-                <Send className="h-4 w-4 mr-1" />
-                Reply
-              </Button>
-            </div>
+      {showReplyForm && (
+        <div className="space-y-2 mt-2">
+          <Input
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            placeholder={`Reply to ${comment.author?.firstName}...`}
+            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleReply()}
+          />
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowReplyForm(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleReply}
+              disabled={!replyText.trim()}
+            >
+              <Send className="h-4 w-4 mr-1" />
+              Reply
+            </Button>
           </div>
-        )}
-      </Card>
-      {showReplies && replies?.length > 0 && (
-        <div className="mt-2 ml-4 space-y-2">
-          {replies?.map((reply) => (
-            <AdminReplyCard key={reply.id} reply={reply} blogId={blogId} />
-          ))}
-          {hasNextPage && (
-            <div className="mt-4 text-center">
-              <Button
-                variant="outline"
-                onClick={() => fetchNextPage()}
-                disabled={isFetchingNextPage}
-                size="sm"
-              >
-                {isFetchingNextPage ? (
-                  <>
-                    <Loader2 className="h-3 w-3 animate-spin mr-2" />
-                    Loading...
-                  </>
-                ) : (
-                  "Load More Replies"
-                )}
-              </Button>
-            </div>
-          )}
         </div>
       )}
-    </>
+    </Card>
   );
 };

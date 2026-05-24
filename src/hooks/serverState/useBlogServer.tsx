@@ -90,7 +90,12 @@ const createBlog = async (
     // Append all non-file fields
     Object.entries(blog).forEach(([key, value]) => {
       if (value !== undefined && value !== null && !(value instanceof File)) {
-        if (key === "content" || key === "title" || key === "category" || typeof value === "boolean") {
+        if (
+          key === "content" ||
+          key === "title" ||
+          key === "category" ||
+          typeof value === "boolean"
+        ) {
           formData.append(key, value as string);
         } else {
           formData.append(key, JSON.stringify(value));
@@ -130,7 +135,12 @@ const updateBlog = async (
     // Append all non-file fields
     Object.entries(blog).forEach(([key, value]) => {
       if (value !== undefined && value !== null && !(value instanceof File)) {
-        if (key === "content" || key === "title" || key === "category" || typeof value === "boolean") {
+        if (
+          key === "content" ||
+          key === "title" ||
+          key === "category" ||
+          typeof value === "boolean"
+        ) {
           formData.append(key, value as string);
         } else {
           formData.append(key, JSON.stringify(value));
@@ -219,6 +229,13 @@ const fetchReplies = async (
     url: `/blogs/${blogId}/comments/${commentId}`,
     method: "GET",
     params,
+  });
+};
+
+const fetchAllReplies = async (blogId: string): Promise<CommentType[]> => {
+  return await request<CommentType[]>({
+    url: `/blogs/comments/all-replies/${blogId}`,
+    method: "GET",
   });
 };
 
@@ -388,7 +405,9 @@ export const useUpdateBlog = () => {
   });
 };
 
-export const useBlogAnalytics = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useBlogAnalytics = ({
+  enabled = true,
+}: { enabled?: boolean } = {}) => {
   return useQuery({
     queryKey: ["blog-analytics"],
     queryFn: fetchBlogAnalytics,
@@ -456,7 +475,17 @@ export const useReplies = (
     queryFn: () => fetchReplies(blogId, commentId, params),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 60,
-    enabled: !!commentId,
+    enabled: !!commentId && !!blogId,
+  });
+};
+
+export const useAllReplies = (blogId: string) => {
+  return useQuery({
+    queryKey: ["all-replies", blogId],
+    queryFn: () => fetchAllReplies(blogId),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 60,
+    enabled: !!blogId,
   });
 };
 
@@ -525,6 +554,7 @@ export const useCreateComment = () => {
           queryKey: ["replies", variables.blogId, variables.parentId],
         });
       }
+      queryClient.invalidateQueries({ queryKey: ["all-replies"] });
     },
   });
 };
@@ -549,51 +579,64 @@ export const useUpdateComment = () => {
 
       const updateCache = (oldData: unknown): unknown => {
         if (!oldData || typeof oldData !== "object") return undefined;
-        
+
         const obj = oldData as Record<string, unknown>;
-        
+
         // Handle infinite query structure (has pages)
         if (obj.pages && Array.isArray(obj.pages)) {
           return {
             ...obj,
-            pages: (obj.pages as Array<{ data: CommentType[] }>).map((page) => ({
-              ...page,
-              data: page.data.map((c) =>
-                c.id === variables.commentId ? { ...c, content: updatedComment.content } : c
-              ),
-            })),
+            pages: (obj.pages as Array<{ data: CommentType[] }>).map(
+              (page) => ({
+                ...page,
+                data: page.data.map((c) =>
+                  c.id === variables.commentId
+                    ? { ...c, content: updatedComment.content }
+                    : c,
+                ),
+              }),
+            ),
           };
         }
-        
+
         // Handle regular query structure (has data)
         if (obj.data && Array.isArray(obj.data)) {
           return {
             ...obj,
             data: (obj.data as CommentType[]).map((c) =>
-              c.id === variables.commentId ? { ...c, content: updatedComment.content } : c
+              c.id === variables.commentId
+                ? { ...c, content: updatedComment.content }
+                : c,
             ),
           };
         }
-        
+
         return undefined;
       };
 
       // Update comments cache
       queryClient.setQueriesData(
         { queryKey: ["comments", variables.blogId], exact: false },
-        updateCache
+        updateCache,
       );
 
       // Update replies cache
       queryClient.setQueriesData(
         { queryKey: ["replies", variables.blogId], exact: false },
-        updateCache
+        updateCache,
       );
 
       // Also invalidate to trigger background refetch
-      queryClient.invalidateQueries({ queryKey: ["comments", variables.blogId], exact: false });
-      queryClient.invalidateQueries({ queryKey: ["replies", variables.blogId], exact: false });
-      
+      queryClient.invalidateQueries({
+        queryKey: ["comments", variables.blogId],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["replies", variables.blogId],
+        exact: false,
+      });
+      queryClient.invalidateQueries({ queryKey: ["all-replies"] });
+
       toast.success("Comment updated successfully");
     },
   });
@@ -621,6 +664,7 @@ export const useDeleteComment = () => {
         queryKey: ["replies", variables.blogId],
         exact: false,
       });
+      queryClient.invalidateQueries({ queryKey: ["all-replies"] });
     },
   });
 };
@@ -649,6 +693,8 @@ export const useLikeComment = () => {
           queryKey: ["replies", blogId, parentId],
         });
       }
+
+      queryClient.invalidateQueries({ queryKey: ["all-replies"] });
     },
   });
 };
@@ -676,6 +722,7 @@ export const useDislikeComment = () => {
           queryKey: ["replies", blogId, parentId],
         });
       }
+      queryClient.invalidateQueries({ queryKey: ["all-replies"] });
     },
   });
 };
@@ -702,6 +749,7 @@ export const useFlagComment = () => {
           queryKey: ["replies", blogId, parentId],
         });
       }
+      queryClient.invalidateQueries({ queryKey: ["all-replies"] });
     },
   });
 };
@@ -741,6 +789,7 @@ export const useCommetRestore = () => {
       queryClient.invalidateQueries({
         queryKey: ["replies", variables.blogId],
       });
+      queryClient.invalidateQueries({ queryKey: ["all-replies"] });
       toast.success("Comment restored successfully");
     },
   });
@@ -765,6 +814,7 @@ export const useCommentHardDelete = () => {
       queryClient.invalidateQueries({
         queryKey: ["replies", variables.blogId],
       });
+      queryClient.invalidateQueries({ queryKey: ["all-replies"] });
     },
   });
 };

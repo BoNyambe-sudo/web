@@ -27,7 +27,7 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
         ref={sidebarRef}
         className={`absolute inset-y-0 right-0 z-10 h-full w-full max-w-[24rem] bg-popover text-popover-foreground shadow-xl border-l border-l-primary/60 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
-        <div className="h-full p-10 flex flex-col gap-6">
+        <div className="h-full p-10 flex flex-col gap-6 relative">
           <div className="flex items-center justify-between gap-5">
             <UserIcon />
             <button

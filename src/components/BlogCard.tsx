@@ -5,7 +5,13 @@ import { Calendar } from "lucide-react";
 import type { BlogType } from "@/hooks/clientState/useBlog";
 import { formatDate } from "@/lib/formattedDate";
 
-const BlogCard = ({blog ,className}: {blog: BlogType, className?: string}) => {
+const BlogCard = ({
+  blog,
+  className,
+}: {
+  blog: BlogType;
+  className?: string;
+}) => {
   const formattedDate = formatDate(blog.createdAt);
   return (
     <Card
@@ -15,7 +21,6 @@ const BlogCard = ({blog ,className}: {blog: BlogType, className?: string}) => {
       )}
     >
       <Link to={`/blogs/${blog.id}`} className=" hoverEffect group">
-        <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
         <img
           src={blog.thumbnail}
           className="relative z-20 aspect-video w-full object-cover transition-transform group-hover:scale-[1.02]"

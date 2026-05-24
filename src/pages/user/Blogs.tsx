@@ -83,11 +83,11 @@ const Blogs = () => {
   const pageTitle = selectedFilters.category
     ? `${selectedFilters.category} Blogs`
     : "Explore Blogs";
-  
+
   const pageDescription = selectedFilters.category
     ? getDescriptionForCategory(selectedFilters.category)
     : "Explore insightful articles on Technology, Lifestyle, Health, Photography, Sports, Business, and more. Read latest blog posts and expert insights.";
-  
+
   const pageKeywords = selectedFilters.category
     ? getKeywordsForCategory(selectedFilters.category)
     : [
@@ -100,7 +100,7 @@ const Blogs = () => {
 
   const blogListSchema = getBlogListSchema(
     selectedFilters.category,
-    blogs.length
+    blogs.length,
   );
 
   // Handle filter changes
@@ -169,77 +169,82 @@ const Blogs = () => {
 
             {/* Filter Summary */}
             {hasSelectedFilters ? (
-              <div className="flex flex-wrap items-center gap-2 overflow-x-auto">
-                <span className="text-sm font-medium whitespace-nowrap">
-                  Selected Filters:
-                </span>
+              <div className="flex-1 min-w-0 overflow-x-auto">
+                <div className="flex items-center gap-2 px-2 py-1">
+                  <span className="text-sm font-medium whitespace-nowrap shrink-0">
+                    Selected Filters:
+                  </span>
 
-                {/* Categories */}
+                  {/* Categories */}
 
-                {selectedFilters.category && (
-                  <span
-                    key={`category-${selectedFilters.category}`}
-                    className="inline-flex items-center gap-1 bg-background px-2 py-1 rounded-full text-xs border"
+                  {selectedFilters.category && (
+                    <span
+                      key={`category-${selectedFilters.category}`}
+                      className="inline-flex items-center gap-1 bg-background px-2 py-1 rounded-full text-xs border shrink-0"
+                    >
+                      {selectedFilters.category}
+                      <button
+                        onClick={() =>
+                          handleFilterRemove(
+                            "category",
+                            selectedFilters.category,
+                          )
+                        }
+                        className="hover:text-red-500"
+                      >
+                        <X size={12} />
+                      </button>
+                    </span>
+                  )}
+
+                  {/* Tags */}
+                  {selectedFilters.tags.map((tag) => (
+                    <span
+                      key={`tag-${tag}`}
+                      className="inline-flex items-center gap-1 bg-background px-2 py-1 rounded-full text-xs border shrink-0"
+                    >
+                      {tag}
+                      <button
+                        onClick={() => handleFilterRemove("tags", tag)}
+                        className="hover:text-red-500"
+                      >
+                        <X size={12} />
+                      </button>
+                    </span>
+                  ))}
+
+                  {/* Latest */}
+                  {selectedFilters.latest && (
+                    <span className="inline-flex items-center gap-1 bg-background px-2 py-1 rounded-full text-xs border shrink-0">
+                      Latest Blogs
+                      <button
+                        onClick={() => handleFilterRemove("latest", "latest")}
+                        className="hover:text-red-500"
+                      >
+                        <X size={12} />
+                      </button>
+                    </span>
+                  )}
+
+                  {/* Reset All Button */}
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedFilters({
+                        category: "",
+                        tags: [],
+                        latest: false,
+                        sortBy: "createdAt",
+                        sortOrder: "desc",
+                      });
+                      setSearchQuery("");
+                    }}
+                    className="text-xs"
                   >
-                    {selectedFilters.category}
-                    <button
-                      onClick={() =>
-                        handleFilterRemove("category", selectedFilters.category)
-                      }
-                      className="hover:text-red-500"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                )}
-
-                {/* Tags */}
-                {selectedFilters.tags.map((tag) => (
-                  <span
-                    key={`tag-${tag}`}
-                    className="inline-flex items-center gap-1 bg-background px-2 py-1 rounded-full text-xs border"
-                  >
-                    {tag}
-                    <button
-                      onClick={() => handleFilterRemove("tags", tag)}
-                      className="hover:text-red-500"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                ))}
-
-                {/* Latest */}
-                {selectedFilters.latest && (
-                  <span className="inline-flex items-center gap-1 bg-background px-2 py-1 rounded-full text-xs border">
-                    Latest Blogs
-                    <button
-                      onClick={() => handleFilterRemove("latest", "latest")}
-                      className="hover:text-red-500"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                )}
-
-                {/* Reset All Button */}
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedFilters({
-                      category: "",
-                      tags: [],
-                      latest: false,
-                      sortBy: "createdAt", 
-                      sortOrder: "desc", 
-                    });
-                    setSearchQuery("");
-                  }}
-                  className="text-xs"
-                >
-                  Reset All
-                </Button>
+                    Reset All
+                  </Button>
+                </div>
               </div>
             ) : (
               <h1 className="text-sm text-muted-foreground">Blogs</h1>
