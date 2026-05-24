@@ -16,6 +16,7 @@ import {
   X,
   Edit,
   RotateCcw,
+  ArrowLeft,
 } from "lucide-react";
 import {
   Dialog,
@@ -72,6 +73,7 @@ import {
   useDeleteBlog,
   useInfiniteBlogs,
   useInfiniteComments,
+  useInfiniteReplies,
   useUpdateBlog,
   type CreateBlogType,
 } from "@/hooks/serverState/useBlogServer";
@@ -80,6 +82,7 @@ import type { BlogQueryParams } from "../user/Blogs";
 import toast from "react-hot-toast";
 import { useUserData } from "@/hooks/serverState/useUserServer";
 import warn from "@/lib/warnToaster";
+import { useCommentReplyStore } from "@/hooks/clientState/useComments";
 
 type BlogFormData = {
   title: string;
@@ -131,6 +134,15 @@ const AdminBlogs = () => {
   const [isCreatingComment, setIsCreatingComment] = useState(false);
   const [showDeleted, setShowDeleted] = useState<boolean>(false);
 
+  const showReplies = useCommentReplyStore((state) => state.showReplies);
+  const setShowReplies = useCommentReplyStore((state) => state.setShowReplies);
+  const selectedComment = useCommentReplyStore(
+    (state) => state.selectedComment,
+  );
+  const setSelectedComment = useCommentReplyStore(
+    (state) => state.setSelectedComment,
+  );
+
   const queryParams: BlogQueryParams = {
     sortBy: selectedFilters.sortBy,
     sortOrder: selectedFilters.sortOrder,
@@ -175,6 +187,18 @@ const AdminBlogs = () => {
     fetchNextPage: fetchCommentsNextPage,
   } = useInfiniteComments(selectedCommentsBlog || "");
   const comments = commentsData?.pages.flatMap((page) => page.data) || [];
+
+  const {
+    data: repliesData,
+    isFetchingNextPage: isFetchingRepliesNextPage,
+    hasNextPage: hasRepliesNextPage,
+    fetchNextPage: fetchNextReplies,
+    isLoading: loadingReplies,
+  } = useInfiniteReplies(
+    selectedCommentsBlog as string,
+    selectedComment?.id as string,
+  );
+  const replies = repliesData?.pages.flatMap((page) => page.data) || [];
 
   const categories = [
     "Technology",
@@ -238,10 +262,10 @@ const AdminBlogs = () => {
 
     createBlog(newBlog, {
       onSuccess: () => {
+        toast.success("Blog created successfully");
         resetCreateForm();
         setIsCreateDialogOpen(false);
         resetCreateForm();
-        toast.success("Blog created successfully");
       },
     });
   };
@@ -299,11 +323,11 @@ const AdminBlogs = () => {
       { id: selectedBlog?.id as string, blog: updatedBlog },
       {
         onSuccess: () => {
+          toast.success("Blog updated successfully");
           resetUpdateForm();
           setIsEditDialogOpen(false);
           setSelectedBlog(null);
           resetUpdateForm();
-          toast.success("Blog updated successfully");
         },
       },
     );
@@ -462,16 +486,33 @@ const AdminBlogs = () => {
     }
     if (!newCommentText.trim() || !selectedCommentsBlog) return;
 
-    createComment(
-      { blogId: selectedCommentsBlog, comment: { content: newCommentText } },
-      {
-        onSuccess: () => {
-          setNewCommentText("");
-          setIsCreatingComment(false);
-          toast.success("Comment created successfully");
+    if (showReplies && selectedComment) {
+      createComment(
+        {
+          blogId: selectedCommentsBlog,
+          comment: { content: newCommentText },
+          parentId: selectedComment.id,
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            toast.success("Reply created successfully");
+            setNewCommentText("");
+            setIsCreatingComment(false);
+          },
+        },
+      );
+    } else {
+      createComment(
+        { blogId: selectedCommentsBlog, comment: { content: newCommentText } },
+        {
+          onSuccess: () => {
+            toast.success("Comment created successfully");
+            setNewCommentText("");
+            setIsCreatingComment(false);
+          },
+        },
+      );
+    }
   };
 
   const handleCancelNewComment = () => {
@@ -520,7 +561,10 @@ const AdminBlogs = () => {
       updateBlog(
         {
           id: selectedBlog.id as string,
-          blog: { content: updateFormData.content },
+          blog: {
+            content: updateFormData.content,
+            readTime: calculateReadTime(updateFormData.content),
+          },
         },
         {
           onSuccess: () => {
@@ -1256,9 +1300,28 @@ const AdminBlogs = () => {
       >
         <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto scrollbar-hide">
           <DialogHeader>
-            <DialogTitle>Blog Comments</DialogTitle>
+            <DialogTitle>
+              {showReplies && selectedComment && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setShowReplies(false);
+                    setSelectedComment(null);
+                  }}
+                  className="h-6 w-6 mr-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              )}
+              {showReplies && selectedComment
+                ? `Replies to ${selectedComment.author?.firstName}`
+                : "Blog Comments"}
+            </DialogTitle>
             <DialogDescription>
-              Manage comments for this blog post.
+              Manage {showReplies && selectedComment ? "replies" : "comments"}{" "}
+              for this{" "}
+              {showReplies && selectedComment ? "comment." : "blog post."}{" "}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -1270,12 +1333,16 @@ const AdminBlogs = () => {
                 onClick={() => setIsCreatingComment(true)}
               >
                 <MessageCircle className="mr-2 h-4 w-4" />
-                Add Comment
+                {showReplies && selectedComment ? "Add Reply" : " Add Comment"}
               </Button>
             ) : (
               <Card className="p-4">
                 <div className="flex justify-between items-center mb-2">
-                  <Label>New Comment</Label>
+                  <Label>
+                    {showReplies && selectedComment
+                      ? `Reply to ${selectedComment.author.firstName}`
+                      : "New Comment"}
+                  </Label>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -1288,7 +1355,11 @@ const AdminBlogs = () => {
                 <Input
                   value={newCommentText}
                   onChange={(e) => setNewCommentText(e.target.value)}
-                  placeholder="Write a comment..."
+                  placeholder={
+                    showReplies && selectedComment
+                      ? `Reply to ${selectedComment.author.firstName}`
+                      : `Write your comment here...`
+                  }
                   onKeyDown={(e) =>
                     e.key === "Enter" && !e.shiftKey && handleCreateComment()
                   }
@@ -1316,43 +1387,87 @@ const AdminBlogs = () => {
                 </div>
               </Card>
             )}
-
-            {commentsLoading ? (
-              <div className="flex justify-center">
-                <Loader2 className="size-4 animate-spin text-primary" />
-              </div>
-            ) : topLevelComments.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <p>No comments yet.</p>
-              </div>
+            {/* Comments List */}
+            {showReplies && selectedComment ? (
+              <>
+                {loadingReplies ? (
+                  <div className="flex justify-center">
+                    <Loader2 className="size-4 animate-spin text-primary" />
+                  </div>
+                ) : replies.length === 0 && !loadingReplies ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <p>No replies yet.</p>
+                  </div>
+                ) : (
+                  replies?.map((comment) => (
+                    <div key={comment?.id}>
+                      <AdminCommentCard
+                        comment={comment}
+                        blogId={selectedCommentsBlog as string}
+                      />
+                    </div>
+                  ))
+                )}
+                {hasRepliesNextPage && (
+                  <div className="mt-6 text-center">
+                    <Button
+                      variant="outline"
+                      onClick={() => fetchNextReplies()}
+                      disabled={isFetchingRepliesNextPage}
+                      className="h-10"
+                    >
+                      {isFetchingRepliesNextPage ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin mr-2 text-primary" />
+                          Loading...
+                        </>
+                      ) : (
+                        "Load More Replies"
+                      )}
+                    </Button>
+                  </div>
+                )}
+              </>
             ) : (
-              topLevelComments?.map((comment) => (
-                <div key={comment?.id}>
-                  <AdminCommentCard
-                    comment={comment}
-                    blogId={selectedCommentsBlog as string}
-                  />
-                </div>
-              ))
-            )}
-            {hasCommentsNextPage && (
-              <div className="mt-6 text-center">
-                <Button
-                  variant="outline"
-                  onClick={() => fetchCommentsNextPage()}
-                  disabled={isFetchingCommentsNextPage}
-                  className="h-10"
-                >
-                  {isFetchingCommentsNextPage ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin mr-2 text-primary" />
-                      Loading...
-                    </>
-                  ) : (
-                    "Load More Comments"
-                  )}
-                </Button>
-              </div>
+              <>
+                {commentsLoading ? (
+                  <div className="flex justify-center">
+                    <Loader2 className="size-4 animate-spin text-primary" />
+                  </div>
+                ) : topLevelComments.length === 0 && !commentsLoading ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <p>No comments yet.</p>
+                  </div>
+                ) : (
+                  topLevelComments?.map((comment) => (
+                    <div key={comment?.id}>
+                      <AdminCommentCard
+                        comment={comment}
+                        blogId={selectedCommentsBlog as string}
+                      />
+                    </div>
+                  ))
+                )}
+                {hasCommentsNextPage && (
+                  <div className="mt-6 text-center">
+                    <Button
+                      variant="outline"
+                      onClick={() => fetchCommentsNextPage()}
+                      disabled={isFetchingCommentsNextPage}
+                      className="h-10"
+                    >
+                      {isFetchingCommentsNextPage ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin mr-2 text-primary" />
+                          Loading...
+                        </>
+                      ) : (
+                        "Load More Comments"
+                      )}
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </DialogContent>
@@ -1360,7 +1475,7 @@ const AdminBlogs = () => {
 
       {/* Preview Dialog */}
       <Dialog open={isPreviewDialogOpen} onOpenChange={setIsPreviewDialogOpen}>
-        <DialogContent className="sm:max-w-6xl max-h-[90vh] overflow-y-auto scrollbar-hide">
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide">
           <DialogHeader>
             <DialogTitle>Blog Preview</DialogTitle>
             <DialogDescription>

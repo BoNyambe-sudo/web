@@ -54,9 +54,9 @@ const SingleBlog = () => {
     const encodedMessage = encodeURIComponent(shareMessage);
     const shareText = `${shareMessage} ${currentUrl}`;
 
-     let shareUrl = "";
+    let shareUrl = "";
 
-     // Safe clipboard copy that ignores errors
+    // Safe clipboard copy that ignores errors
     const copyToClipboard = async () => {
       try {
         await navigator.clipboard.writeText(shareText);
@@ -81,53 +81,53 @@ const SingleBlog = () => {
         shareUrl = `https://wa.me/?text=${encodedMessage}%20${encodedUrl}`;
         break;
       case "instagram": {
-          // Open Instagram website synchronously first to avoid popup blockers
-          // This must happen before any async operations
-          const instagramWebsiteUrl = "https://instagram.com";
-          const anchor = document.createElement("a");
-          anchor.href = instagramWebsiteUrl;
-          anchor.target = "_blank";
-          anchor.rel = "noopener noreferrer";
-          document.body.appendChild(anchor);
-          anchor.click();
-          document.body.removeChild(anchor);
+        // Open Instagram website synchronously first to avoid popup blockers
+        // This must happen before any async operations
+        const instagramWebsiteUrl = "https://instagram.com";
+        const anchor = document.createElement("a");
+        anchor.href = instagramWebsiteUrl;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
 
-          // Then copy to clipboard and show notification async
-          await copyToClipboard();
-          toast.success("Blog link copied! Opening Instagram...");
+        // Then copy to clipboard and show notification async
+        await copyToClipboard();
+        toast.success("Blog link copied! Opening Instagram...");
 
-          // Close the share dialog
-          setShareDialogOpen(false);
+        // Close the share dialog
+        setShareDialogOpen(false);
 
-          // Check if on mobile before trying app schemes
-          // On desktop, Instagram app is unlikely to be installed
-          const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        // Check if on mobile before trying app schemes
+        // On desktop, Instagram app is unlikely to be installed
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-          // Try to open Instagram app using various schemes (best effort, mobile only)
-          if (isMobile) {
-            const instagramSchemes = [
-              "instagram://camera",
-              "instagram://app",
-              "instagram://",
-            ];
+        // Try to open Instagram app using various schemes (best effort, mobile only)
+        if (isMobile) {
+          const instagramSchemes = [
+            "instagram://camera",
+            "instagram://app",
+            "instagram://",
+          ];
 
-            for (const scheme of instagramSchemes) {
-              try {
-                const anchor = document.createElement("a");
-                anchor.href = scheme;
-                anchor.target = "_blank";
-                anchor.rel = "noopener noreferrer";
-                document.body.appendChild(anchor);
-                anchor.click();
-                document.body.removeChild(anchor);
-                break;
-              } catch {
-                // Scheme failed, continue to next
-              }
+          for (const scheme of instagramSchemes) {
+            try {
+              const anchor = document.createElement("a");
+              anchor.href = scheme;
+              anchor.target = "_blank";
+              anchor.rel = "noopener noreferrer";
+              document.body.appendChild(anchor);
+              anchor.click();
+              document.body.removeChild(anchor);
+              break;
+            } catch {
+              // Scheme failed, continue to next
             }
           }
-          break;
         }
+        break;
+      }
     }
 
     if (shareUrl) {

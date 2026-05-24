@@ -26,7 +26,7 @@ const UserCard = () => {
 
   return (
     <Card
-      className={`absolute right-4 top-8 ${isUserOpen ? "flex" : "hidden"} flex-col gap-4 p-4`}
+      className={`absolute right-4 top-8 ${isUserOpen ? "flex" : "hidden"} flex-col gap-2 p-4`}
       ref={userCardRef}
     >
       <div className="flex items-center gap-2">
@@ -50,6 +50,7 @@ const UserCard = () => {
       <div
         role="button"
         className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-primary transition-colors"
+        onMouseDown={(e) => e.stopPropagation()}
         onClick={() => {
           navigate("/manage-account");
           setIsUserOpen(false);
@@ -60,9 +61,11 @@ const UserCard = () => {
       </div>
       <Separator />
       <Button
+        onMouseDown={(e) => e.stopPropagation()}
         onClick={() => {
           logout();
           setIsUserOpen(false);
+          navigate("/");
         }}
         variant={"secondary"}
       >
