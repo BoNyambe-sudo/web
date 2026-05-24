@@ -284,7 +284,7 @@ const Home = () => {
               </p>
               <div
                 ref={statementRef}
-                className="min-h-8 md:text-sm text-center text-xs font-medium text-primary"
+                className="min-h-8 md:text-sm text-center text-xs font-semibold text-primary"
               ></div>
             </div>
             <div className="w-full max-w-2xl relative">
