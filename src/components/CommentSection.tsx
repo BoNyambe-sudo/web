@@ -28,8 +28,13 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
     (state) => state.setSelectedComment,
   );
   const setShowReplies = useCommentReplyStore((state) => state.setShowReplies);
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteComments(blogId);
+  const {
+    data,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    isLoading: commentsLoading,
+  } = useInfiniteComments(blogId);
   const comments = data?.pages.flatMap((page) => page.data);
   const topLevelComments = comments?.filter(
     (cmm) => cmm.parentComment === null,
@@ -40,6 +45,7 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
     isFetchingNextPage: isFetchingNextReplies,
     hasNextPage: hasNextReplies,
     fetchNextPage: fetchNextReplies,
+    isLoading: repliesLoading,
   } = useInfiniteReplies(blogId, selectedComment?.id as string);
   const replies = repliesData?.pages.flatMap((page) => page.data) || [];
 
@@ -147,7 +153,11 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
       {/* Comments list */}
       {showReplies && selectedComment ? (
         <>
-          {replies?.length === 0 ? (
+          {repliesLoading ? (
+            <div className="flex justify-center">
+              <Loader2 className="size-4 animate-spin text-primary" />
+            </div>
+          ) : replies?.length === 0 && !repliesLoading ? (
             <div className="text-center py-12 text-muted-foreground">
               <p>No replies yet. Be the first to reply!</p>
             </div>
@@ -188,7 +198,11 @@ const CommentSection = ({ blogId }: CommentsSectionProps) => {
         </>
       ) : (
         <>
-          {topLevelComments?.length === 0 ? (
+          {commentsLoading ? (
+            <div className="flex justify-center">
+              <Loader2 className="size-4 animate-spin text-primary" />
+            </div>
+          ) : topLevelComments?.length === 0 && !commentsLoading ? (
             <div className="text-center py-12 text-muted-foreground">
               <p>No comments yet. Be the first to comment!</p>
             </div>

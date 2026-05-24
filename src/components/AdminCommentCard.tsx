@@ -205,10 +205,12 @@ export const AdminCommentCard = ({
                     setSelectedComment(comment);
                     setShowReplies(true);
                   }}
-                  className="h-8 w-8"
+                  className="h-8 w-8 px-6 space-x-1"
                 >
                   <ChevronDown className="h-4 w-4" />
-                  {getTotalReplies(allReplies, comment.id as string)}
+                  <span>
+                    ({getTotalReplies(allReplies, comment.id as string)})
+                  </span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

@@ -59,12 +59,9 @@ const Home = () => {
   const [isAppointmentDialogOpen, setIsAppointmentDialogOpen] = useState(false);
 
   // GSAP animation refs
-  const titleRef = useRef<(HTMLHeadingElement | null)[]>([]);
-  const paragraphRef = useRef<(HTMLParagraphElement | null)[]>([]);
   const statementRef = useRef<HTMLDivElement>(null);
-
-  const titleSplitRefs = useRef<Array<SplitText | null>>([]);
-  const paragraphSplitRefs = useRef<Array<SplitText | null>>([]);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const paragraphRef = useRef<HTMLParagraphElement>(null);
 
   const placeholders = [
     "I want a website",
@@ -86,32 +83,34 @@ const Home = () => {
 
   // GSAP animations using useEffect
   useEffect(() => {
+    let titleSplit = null;
+    let paragraphSplit = null;
     const tl = gsap.timeline();
 
-    // Animate main title - typewriter effect
     if (titleRef.current) {
-      tl.from(titleRef.current, {
-        opacity: 0,
-        duration: 0.5,
-      }).to(titleRef.current, {
-        text: MAIN_TITLE,
-        duration: 2.5,
-        ease: "none",
-        opacity: 1,
+      titleSplit = SplitText.create(titleRef.current, { type: "words, chars" });
+      tl.from(titleSplit.chars, {
+        duration: 1,
+        y: -100, // animate from 100px above
+        autoAlpha: 0, // fade in from opacity: 0 and visibility: hidden
+        stagger: 0.05, // 0.05 seconds between each
       });
     }
 
-    // Animate main paragraph - staggered character reveal after title completes
+    // Animate paragraph - whole element from top, fade in (no character split)
     if (paragraphRef.current) {
-      tl.from(paragraphRef.current, {
-        opacity: 0,
-        duration: 0.5,
-      }).to(paragraphRef.current, {
-        text: MAIN_PARAGRAPH,
-        duration: 4,
-        ease: "none",
-        opacity: 1,
+      paragraphSplit = SplitText.create(paragraphRef.current, {
+        type: "words, lines",
       });
+      tl.from(
+        paragraphSplit.words,
+        {
+          duration: 1,
+          y: -100, // animate from 100px above
+          autoAlpha: 0, // fade in from opacity: 0 and visibility: hidden
+        },
+        0.5, // start 0.5 seconds after the timeline starts
+      );
     }
 
     // Animate statements - typewriter effect with alternation after paragraph completes
@@ -153,15 +152,23 @@ const Home = () => {
         statementTl.call(animateStatement);
       };
 
-      // Start the statement animation after main text animations complete
-      tl.call(animateStatement);
+      // Start the statement animation after the paragraph animation ends, plus a gap of 0.5 seconds
+      // Paragraph animation starts at 0.5s and lasts 1s -> ends at 1.5s
+      // Add 0.5s gap -> start statement at 2.0s
+      tl.call(animateStatement, [], 2.0);
     }
 
     // Cleanup function to kill animations on unmount
     return () => {
       tl.kill();
+      if (titleSplit) {
+        titleSplit.revert();
+      }
+      if (paragraphSplit) {
+        paragraphSplit.revert();
+      }
     };
-  }, []);
+  }, []); // empty deps because we create split inside effect and refs are stable
 
   const [messageFormData, setMessageFormData] = useState({
     name: "",
@@ -264,13 +271,17 @@ const Home = () => {
           <div className="flex flex-col mx-auto items-center gap-3 md:gap-4 md:p-6 p-3">
             <div className="space-y-2 md:space-y-3">
               <h1
-                className="font-black text-2xl md:text-3xl text-center"
                 ref={titleRef}
-              ></h1>
+                className="mainTitle font-black text-2xl md:text-3xl text-center"
+              >
+                {MAIN_TITLE}
+              </h1>
               <p
-                className="text-xs font-medium md:text-sm text-center"
                 ref={paragraphRef}
-              ></p>
+                className="paragraph text-xs font-medium md:text-sm text-center"
+              >
+                {MAIN_PARAGRAPH}
+              </p>
               <div
                 ref={statementRef}
                 className="min-h-8 md:text-sm text-center text-xs font-medium text-primary"

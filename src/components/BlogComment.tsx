@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  ChevronDown,
   Loader2,
+  MessageCircle,
   Save,
   ThumbsDown,
   ThumbsUp,
@@ -237,10 +237,13 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
                     setSelectedComment(comment);
                     setShowReplies(true);
                   }}
-                  className="h-8 w-8 px-6"
+                  className="h-8 w-8 px-6 space-x-1"
                 >
-                  <ChevronDown className="h-4 w-4" /> (
-                  {getTotalReplies(allReplies, comment.id as string)})
+                  <MessageCircle className="h-4 w-4" /> (
+                  <span className="text-xs">
+                    {getTotalReplies(allReplies, comment.id as string)}
+                  </span>
+                  )
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

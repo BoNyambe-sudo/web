@@ -262,10 +262,10 @@ const AdminBlogs = () => {
 
     createBlog(newBlog, {
       onSuccess: () => {
+        toast.success("Blog created successfully");
         resetCreateForm();
         setIsCreateDialogOpen(false);
         resetCreateForm();
-        toast.success("Blog created successfully");
       },
     });
   };
@@ -323,11 +323,11 @@ const AdminBlogs = () => {
       { id: selectedBlog?.id as string, blog: updatedBlog },
       {
         onSuccess: () => {
+          toast.success("Blog updated successfully");
           resetUpdateForm();
           setIsEditDialogOpen(false);
           setSelectedBlog(null);
           resetUpdateForm();
-          toast.success("Blog updated successfully");
         },
       },
     );
@@ -561,7 +561,10 @@ const AdminBlogs = () => {
       updateBlog(
         {
           id: selectedBlog.id as string,
-          blog: { content: updateFormData.content },
+          blog: {
+            content: updateFormData.content,
+            readTime: calculateReadTime(updateFormData.content),
+          },
         },
         {
           onSuccess: () => {
@@ -1312,7 +1315,7 @@ const AdminBlogs = () => {
                 </Button>
               )}
               {showReplies && selectedComment
-                ? `Comment Replies to ${selectedComment.author?.firstName}`
+                ? `Replies to ${selectedComment.author?.firstName}`
                 : "Blog Comments"}
             </DialogTitle>
             <DialogDescription>
@@ -1391,7 +1394,7 @@ const AdminBlogs = () => {
                   <div className="flex justify-center">
                     <Loader2 className="size-4 animate-spin text-primary" />
                   </div>
-                ) : replies.length === 0 ? (
+                ) : replies.length === 0 && !loadingReplies ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <p>No replies yet.</p>
                   </div>
@@ -1431,7 +1434,7 @@ const AdminBlogs = () => {
                   <div className="flex justify-center">
                     <Loader2 className="size-4 animate-spin text-primary" />
                   </div>
-                ) : topLevelComments.length === 0 ? (
+                ) : topLevelComments.length === 0 && !commentsLoading ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <p>No comments yet.</p>
                   </div>
