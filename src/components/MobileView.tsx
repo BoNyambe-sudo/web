@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useToggleState } from "@/hooks/clientState/useToggles";
 import { Button } from "./ui/button";
 import { Menu } from "lucide-react";
@@ -7,6 +8,15 @@ import { cn } from "@/lib/utils";
 const MobileView = ({ textClassName }: { textClassName?: string }) => {
   const sidebarOpen = useToggleState((state) => state.sidebarOpen);
   const toggleSidebarOpen = useToggleState((state) => state.toggleSidebarOpen);
+  const loginDialogOpen = useToggleState((state) => state.loginDialogOpen);
+  const signupDialogOpen = useToggleState((state) => state.signupDialogOpen);
+
+  useEffect(() => {
+    if (loginDialogOpen || signupDialogOpen) {
+      toggleSidebarOpen(false);
+    }
+  }, [loginDialogOpen, signupDialogOpen, toggleSidebarOpen]);
+
   return (
     <div>
       <Button

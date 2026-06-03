@@ -75,6 +75,7 @@ const SignupDialog = ({
           confirmPassword: "",
         });
         setIsSignUpDialogOpen(false);
+        toggleSidebarOpen(false);
       },
     });
   };
@@ -85,9 +86,7 @@ const SignupDialog = ({
   };
   const handleDialogOpenChange = (open: boolean) => {
     setIsSignUpDialogOpen(open);
-    if (open) {
-      toggleSidebarOpen(false);
-    }
+    toggleSidebarOpen(false);
   };
 
   return (
