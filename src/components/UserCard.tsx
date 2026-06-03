@@ -47,8 +47,8 @@ const UserCard = () => {
         </div>
       </div>
       <Separator />
-      <div
-        role="button"
+      <Button
+        variant="ghost"
         className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-primary transition-colors"
         onMouseDown={(e) => e.stopPropagation()}
         onClick={() => {
@@ -58,7 +58,7 @@ const UserCard = () => {
       >
         <Settings />
         <p>Manage Account</p>
-      </div>
+      </Button>
       <Separator />
       <Button
         onMouseDown={(e) => e.stopPropagation()}

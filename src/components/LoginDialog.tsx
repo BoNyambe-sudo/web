@@ -56,6 +56,7 @@ const LoginDialog = ({
             password: "",
           });
           setIsLoginDialogOpen(false);
+          toggleSidebarOpen(false);
           toast.success("Logged in successfully");
         },
       },
@@ -69,9 +70,7 @@ const LoginDialog = ({
 
   const handleDialogOpenChange = (open: boolean) => {
     setIsLoginDialogOpen(open);
-    if (open) {
-      toggleSidebarOpen(false);
-    }
+    toggleSidebarOpen(false);
   };
 
   return (
