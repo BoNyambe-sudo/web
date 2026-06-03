@@ -284,7 +284,7 @@ const Home = () => {
               </p>
               <div
                 ref={statementRef}
-                className="min-h-8 md:text-sm text-center text-xs font-medium text-primary"
+                className="min-h-8 md:text-sm text-center text-xs font-semibold text-primary"
               ></div>
             </div>
             <div className="w-full max-w-2xl relative">
@@ -399,13 +399,19 @@ const Home = () => {
                 </DialogContent>
               </Dialog>
             </div>
-            <div className="flex items-center gap-3 justify-between">
+            <div className="flex w-full flex-col md:flex-row items-center gap-2 justify-between md:justify-center md:gap-4">
               <Dialog
                 open={isAppointmentDialogOpen}
                 onOpenChange={setIsAppointmentDialogOpen}
               >
                 <DialogTrigger asChild>
-                  <Button variant={"default"}>Book a call</Button>
+                  <Button
+                    size={"lg"}
+                    className="w-full md:w-auto"
+                    variant={"default"}
+                  >
+                    Book a call
+                  </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogTitle>Book a call now</DialogTitle>
@@ -535,7 +541,12 @@ const Home = () => {
                   </form>
                 </DialogContent>
               </Dialog>
-              <Button variant={"outline"} onClick={() => navigate("/faqs")}>
+              <Button
+                size="lg"
+                className="w-full md:w-auto"
+                variant={"outline"}
+                onClick={() => navigate("/faqs")}
+              >
                 FAQs
               </Button>
             </div>
