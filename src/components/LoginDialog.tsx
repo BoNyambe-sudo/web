@@ -36,6 +36,7 @@ const LoginDialog = ({
   const setIsSignUpDialogOpen = useToggleState(
     (state) => state.setSignupDialogOpen,
   );
+  const toggleSidebarOpen = useToggleState((state) => state.toggleSidebarOpen);
 
   const { mutate: login, isPending: isLoginPending } = useLogin();
 
@@ -66,8 +67,15 @@ const LoginDialog = ({
     setIsSignUpDialogOpen(true);
   };
 
+  const handleDialogOpenChange = (open: boolean) => {
+    setIsLoginDialogOpen(open);
+    if (open) {
+      toggleSidebarOpen(false);
+    }
+  };
+
   return (
-    <Dialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}>
+    <Dialog open={isLoginDialogOpen} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
         <Button variant={variant} className={className}>
           Login

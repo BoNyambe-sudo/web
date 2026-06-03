@@ -15,7 +15,7 @@ type SidebarProps = {
 
 const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
   const pathname = useLocation().pathname;
-  const sidebarRef = useOutsideClick<HTMLDivElement>(onClose);
+  const sidebarRef = useOutsideClick<HTMLDivElement>(onClose, isOpen);
   const { data: user } = useUserData();
 
   return (

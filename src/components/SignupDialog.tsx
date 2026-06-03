@@ -42,6 +42,7 @@ const SignupDialog = ({
   const setIsLoginDialogOpen = useToggleState(
     (state) => state.setLoginDialogOpen,
   );
+  const toggleSidebarOpen = useToggleState((state) => state.toggleSidebarOpen);
 
   const { mutate: register, isPending: isRegisterPending } = useRegister();
 
@@ -82,8 +83,15 @@ const SignupDialog = ({
     setIsSignUpDialogOpen(false);
     setIsLoginDialogOpen(true);
   };
+  const handleDialogOpenChange = (open: boolean) => {
+    setIsSignUpDialogOpen(open);
+    if (open) {
+      toggleSidebarOpen(false);
+    }
+  };
+
   return (
-    <Dialog open={isSignUpDialogOpen} onOpenChange={setIsSignUpDialogOpen}>
+    <Dialog open={isSignUpDialogOpen} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
         <Button variant={variant} className={className}>
           Sign Up
