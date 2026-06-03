@@ -556,7 +556,7 @@ const Home = () => {
         </div>
         <div className="absolute bottom-4 left-4 text-xs text-foreground flex gap-4">
           <div className="flex items-center gap-2">
-            <Link className="lightText" to="mailto:franknyambe202205@gmail.com">
+            <Link className="lightText flex items-center gap-2" to="mailto:franknyambe202205@gmail.com">
               <Mail size={"16"} className="lightText" />
               {!isMobile && "franknyambe202205@gmail.com"}
             </Link>
