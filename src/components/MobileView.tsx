@@ -14,7 +14,7 @@ const MobileView = ({ textClassName }: { textClassName?: string }) => {
         variant={"ghost"}
         onClick={() => toggleSidebarOpen(!sidebarOpen)}
       >
-        <Menu  />
+        <Menu />
       </Button>
       <div className="md:hidden">
         <SideMenu

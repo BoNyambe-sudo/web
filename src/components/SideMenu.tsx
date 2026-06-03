@@ -3,6 +3,10 @@ import { Link, useLocation } from "react-router";
 import { X } from "lucide-react";
 import SocialMedia from "./SocialLinks";
 import UserIcon from "./UserIcon";
+import Logo from "./Logo";
+import { useUserData } from "@/hooks/serverState/useUserServer";
+import LoginDialog from "./LoginDialog";
+import SignupDialog from "./SignupDialog";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -12,6 +16,7 @@ type SidebarProps = {
 const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
   const pathname = useLocation().pathname;
   const sidebarRef = useOutsideClick<HTMLDivElement>(onClose);
+  const { data: user } = useUserData();
 
   return (
     <div
@@ -27,9 +32,9 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
         ref={sidebarRef}
         className={`absolute inset-y-0 right-0 z-10 h-full w-full max-w-[24rem] bg-popover text-popover-foreground shadow-xl border-l border-l-primary/60 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
-        <div className="h-full p-10 flex flex-col gap-6 relative">
+        <div className="h-full p-10 flex flex-col gap-6">
           <div className="flex items-center justify-between gap-5">
-            <UserIcon />
+            {user ? <UserIcon /> : <Logo size={32} />}
             <button
               onClick={onClose}
               className="hover:text-primary/80 hovorEffect"
@@ -38,7 +43,7 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
             </button>
           </div>
 
-          <div className="flex flex-col space-y-2 font-medium tracking-wide relative">
+          <div className="flex flex-col space-y-2 font-medium tracking-wide">
             <Link
               to="/"
               onClick={onClose}
@@ -62,6 +67,12 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
             </Link>
           </div>
 
+          {!user && (
+            <div className="flex flex-col gap-2">
+              <LoginDialog variant="default" className="w-full" />
+              <SignupDialog variant="secondary" className="w-full" />
+            </div>
+          )}
           <SocialMedia />
         </div>
       </div>

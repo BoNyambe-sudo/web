@@ -42,7 +42,7 @@ const socialLinks = [
 const SocialMedia = ({ className, iconClassName, tooltipClassName }: Props) => {
   return (
     <TooltipProvider>
-      <div className={cn("flex absolute bottom-4 left-4 items-center gap-3", className)}>
+      <div className={cn("flex items-center gap-3", className)}>
         {socialLinks?.map((item) => {
           return (
             <Tooltip key={item.href}>
