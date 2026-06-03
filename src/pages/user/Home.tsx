@@ -35,6 +35,7 @@ import { Separator } from "@/components/ui/separator";
 import gsap from "gsap";
 import TextPlugin from "gsap/dist/TextPlugin";
 import { SplitText } from "gsap/SplitText";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 gsap.registerPlugin(TextPlugin);
 gsap.registerPlugin(SplitText);
@@ -80,6 +81,7 @@ const Home = () => {
 
   const navigate = useNavigate();
   const setIsContactOpen = useToggleState((state) => state.toggleContactOpen);
+  const isMobile = useIsMobile();
 
   // GSAP animations using useEffect
   useEffect(() => {
@@ -552,25 +554,25 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-4 left-4 text-xs text-foreground flex-col sm:flex-row flex gap-4">
+        <div className="absolute bottom-4 left-4 text-xs text-foreground flex gap-4">
           <div className="flex items-center gap-2">
-            <Mail size={"16"} className="lightText" />
-            <Link className="lightText" to="mailto:franknyambe202205@gmail.com">
-              franknyambe202205@gmail.com
+            <Link className="lightText flex items-center gap-2" to="mailto:franknyambe202205@gmail.com">
+              <Mail size={"16"} className="lightText" />
+              {!isMobile && "franknyambe202205@gmail.com"}
             </Link>
           </div>
           <div className="relative flex items-center gap-1">
-            <div className="flex gap-2 items-center justify-between">
-              <Phone size={"16"} className="lightText" />
-              <Separator orientation="vertical" className="h-4" />
-              <Whatsapp size={16} className="lightText" />
-            </div>
             <Button
               variant={"ghost"}
               className="lightText text-xs font-normal"
               onClick={() => setIsContactOpen(true)}
             >
-              +260978000956
+              <div className="flex gap-2 items-center justify-between">
+                <Phone size={"16"} className="lightText" />
+                <Separator orientation="vertical" className="h-4" />
+                <Whatsapp size={16} className="lightText" />
+              </div>
+              {!isMobile && "+260978000956"}
             </Button>
             <ContactLinksCard />
           </div>
