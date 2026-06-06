@@ -401,7 +401,7 @@ const Home = () => {
                 </DialogContent>
               </Dialog>
             </div>
-            <div className="flex w-full flex-col md:flex-row items-center gap-2 justify-between md:justify-center md:gap-4">
+            <div className="flex w-full flex-col sm:flex-row items-center gap-2 justify-between sm:justify-center sm:gap-4">
               <Dialog
                 open={isAppointmentDialogOpen}
                 onOpenChange={setIsAppointmentDialogOpen}
@@ -409,7 +409,7 @@ const Home = () => {
                 <DialogTrigger asChild>
                   <Button
                     size={"lg"}
-                    className="w-full md:w-auto"
+                    className="w-full sm:w-auto"
                     variant={"default"}
                   >
                     Book a call
@@ -545,7 +545,7 @@ const Home = () => {
               </Dialog>
               <Button
                 size="lg"
-                className="w-full md:w-auto"
+                className="w-full sm:w-auto"
                 variant={"outline"}
                 onClick={() => navigate("/faqs")}
               >
@@ -556,7 +556,10 @@ const Home = () => {
         </div>
         <div className="absolute bottom-4 left-4 text-xs text-foreground flex gap-4">
           <div className="flex items-center gap-2">
-            <Link className="lightText flex items-center gap-2" to="mailto:franknyambe202205@gmail.com">
+            <Link
+              className="lightText flex items-center gap-2"
+              to="mailto:franknyambe202205@gmail.com"
+            >
               <Mail size={"16"} className="lightText" />
               {!isMobile && "franknyambe202205@gmail.com"}
             </Link>
@@ -577,10 +580,10 @@ const Home = () => {
             <ContactLinksCard />
           </div>
         </div>
-        <p className="absolute bottom-4 right-4 text-xs text-muted-foreground">
+        <small className="absolute bottom-4 right-4 text-xs text-muted-foreground">
           photo by Martin Martz{" "}
           <span className="block text-center">(unsplash)</span>
-        </p>
+        </small>
       </div>
     </>
   );
