@@ -580,7 +580,7 @@ const Home = () => {
             <ContactLinksCard />
           </div>
         </div>
-        <small className="absolute bottom-4 right-4 text-[6px] text-muted-foreground">
+        <small className="absolute bottom-4 right-4 text-[6px] md:text-[10px] text-muted-foreground">
           photo by Martin Martz{" "}
           <span className="block text-center">(unsplash)</span>
         </small>
