@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import PasswordInput from "./PasswordInput";
 type FormData = {
   id?: string;
   firstName: string;
@@ -261,38 +262,34 @@ const AdminAccountForm = ({ user }: { user: UserDataResponse }) => {
 
                   {isEditing && (
                     <>
-                      <div className="space-y-2">
-                        <Label htmlFor="password">New Password</Label>
-                        <Input
+                      <div>
+                        <PasswordInput
                           id="password"
-                          name="password"
-                          type="password"
+                          label="New Password"
                           value={formData.password}
                           onChange={handleInputChange}
+                          name="password"
+                          required
                           disabled={isSaving}
                           placeholder="Enter new password"
                         />
+
                         {formData.password && (
                           <PasswordStrengthIndicator
                             password={formData.password}
                           />
                         )}
                       </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="confirmPassword">
-                          Confirm Password
-                        </Label>
-                        <Input
-                          id="confirmPassword"
-                          name="confirmPassword"
-                          type="password"
-                          value={formData.confirmPassword}
-                          onChange={handleInputChange}
-                          disabled={isSaving}
-                          placeholder="Confirm new password"
-                        />
-                      </div>
+                      <PasswordInput
+                        required
+                        label="Confirm New Password"
+                        id="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        name="confirmPassword"
+                        disabled={isSaving}
+                        placeholder="Confirm new password"
+                      />
                     </>
                   )}
                 </div>

@@ -13,6 +13,7 @@ import { Label } from "./ui/label";
 import { useRegister } from "@/hooks/serverState/useUserServer";
 import toast from "react-hot-toast";
 import { useToggleState } from "@/hooks/clientState/useToggles";
+import PasswordInput from "./PasswordInput";
 type FormData = {
   firstName: string;
   lastName: string;
@@ -138,36 +139,27 @@ const SignupDialog = ({
               }
             />
           </div>
-          <div className="space-y-2 ">
-            <Label htmlFor="password">Password *</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
-          </div>
+          <PasswordInput
+            required
+            id="password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+          />
 
           <PasswordStrengthIndicator password={formData.password} />
-
-          <div className="space-y-2">
-            <Label htmlFor="confirm-password">Confirm Password *</Label>
-            <Input
-              id="confirm-password"
-              type="password"
-              placeholder="Confirm your password"
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  confirmPassword: e.target.value,
-                })
-              }
-            />
-          </div>
+          <PasswordInput
+            required
+            label="Confirm Password"
+            id="confrim-password"
+            placeholder="Confirm your password"
+            value={formData.confirmPassword}
+            onChange={(e) =>
+              setFormData({ ...formData, confirmPassword: e.target.value })
+            }
+          />
 
           <div>
             <Button

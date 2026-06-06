@@ -12,6 +12,7 @@ import { Label } from "./ui/label";
 import { useState } from "react";
 import { useLogin } from "@/hooks/serverState/useUserServer";
 import { useToggleState } from "@/hooks/clientState/useToggles";
+import PasswordInput from "./PasswordInput";
 
 type FormData = {
   email: string;
@@ -97,18 +98,15 @@ const LoginDialog = ({
               }
             />
           </div>
-          <div className="space-y-2 ">
-            <Label htmlFor="password">Password *</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
-          </div>
+          <PasswordInput
+            required
+            id="password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+          />
 
           <div>
             <Button type="submit" className="w-full" disabled={isLoginPending}>

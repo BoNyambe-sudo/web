@@ -56,6 +56,7 @@ import {
 } from "@/hooks/serverState/useUserServer";
 import type { UserType } from "@/hooks/clientState/useUser";
 import toast from "react-hot-toast";
+import PasswordInput from "@/components/PasswordInput";
 
 type UserFormData = {
   firstName: string;
@@ -459,34 +460,25 @@ const AdminUsers = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password *</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  required
-                />
-                <PasswordStrengthIndicator password={formData.password} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password *</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      confirmPassword: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
+              <PasswordInput
+                required
+                id="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+              <PasswordStrengthIndicator password={formData.password} />
+              <PasswordInput
+                required
+                label="Confirm Password"
+                id="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={(e) =>
+                  setFormData({ ...formData, confirmPassword: e.target.value })
+                }
+              />
+
               <div className="flex justify-end gap-2">
                 <Button
                   type="button"
