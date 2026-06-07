@@ -218,7 +218,7 @@ const SingleBlog = () => {
             {blog.views !== undefined && (
               <div className="flex items-center gap-1 text-muted-foreground">
                 <Eye size={16} />
-                <span>{blog.views} views</span>
+                <span>{blog.views} {blog.views === 1 ? "view" : "views"}</span>
               </div>
             )}
             <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
