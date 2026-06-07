@@ -264,7 +264,7 @@ const Blogs = () => {
                 />
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <p className="hidden md:block">Sort By:</p>
 
               <Select

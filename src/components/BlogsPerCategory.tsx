@@ -34,7 +34,12 @@ const BlogsPerCategory = () => {
             </p>
             <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
               <Eye size={14} />
-              <span>{viewsByCategory.get(category.category) ?? 0} views</span>
+              <span>
+                {viewsByCategory.get(category.category) ?? 0}{" "}
+                {viewsByCategory.get(category.category) === 1
+                  ? "view"
+                  : "views"}
+              </span>
             </div>
           </CardContent>
         </Card>
