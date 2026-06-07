@@ -38,7 +38,6 @@ export type BlogQueryParams = {
   limit?: number;
   q?: string;
   sortBy?: string;
-  sortOrder?: "asc" | "desc";
   author?: string;
   published?: boolean;
   deleted?: boolean;
@@ -48,8 +47,7 @@ const Blogs = () => {
     category: "",
     tags: [],
     latest: false,
-    sortBy: "createdAt",
-    sortOrder: "desc",
+    sortBy: "-views",
   });
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
@@ -58,7 +56,6 @@ const Blogs = () => {
 
   const queryParams: BlogQueryParams = {
     sortBy: selectedFilters.sortBy,
-    sortOrder: selectedFilters.sortOrder,
     deleted: false,
     published: true,
   };
@@ -235,8 +232,7 @@ const Blogs = () => {
                         category: "",
                         tags: [],
                         latest: false,
-                        sortBy: "createdAt",
-                        sortOrder: "desc",
+                        sortBy: "-views",
                       });
                       setSearchQuery("");
                     }}
@@ -252,12 +248,12 @@ const Blogs = () => {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-2 p-4">
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="flex gap-4 mb-6">
             <div className="flex-1">
               <div className="relative">
                 <Input
                   type="search"
-                  placeholder="Search Blogs"
+                  placeholder="Search..."
                   className="w-full pl-9"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -268,35 +264,37 @@ const Blogs = () => {
                 />
               </div>
             </div>
-            <Select
-              value={selectedFilters.sortBy}
-              onValueChange={(value) =>
-                setSelectedFilters({ ...selectedFilters, sortBy: value })
-              }
-            >
-              <SelectTrigger className="max-w-45">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="title">Title</SelectItem>
-                <SelectItem value="createdAt">Date Created</SelectItem>
-                <SelectItem value="updatedAt">Date Updated</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select
-              value={selectedFilters.sortOrder}
-              onValueChange={(value: "asc" | "desc") =>
-                setSelectedFilters({ ...selectedFilters, sortOrder: value })
-              }
-            >
-              <SelectTrigger className="max-w-45">
-                <SelectValue placeholder="Sort order" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="asc">A to Z</SelectItem>
-                <SelectItem value="desc">Z to A</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex gap-2">
+              <p className="hidden md:block">Sort By:</p>
+
+              <Select
+                value={selectedFilters.sortBy}
+                onValueChange={(value) =>
+                  setSelectedFilters({ ...selectedFilters, sortBy: value })
+                }
+              >
+                <SelectTrigger className="max-w-45">
+                  <SelectValue placeholder="Sort" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="-views">Most Viewed</SelectItem>
+                  <SelectItem value="title">Title: A to Z</SelectItem>
+                  <SelectItem value="-title">Title: Z to A</SelectItem>
+                  <SelectItem value="createdAt">
+                    Date Created: New to Old
+                  </SelectItem>
+                  <SelectItem value="-createdAt">
+                    Date Created: Old to New
+                  </SelectItem>
+                  <SelectItem value="updatedAt">
+                    Date Updated: New to Old
+                  </SelectItem>
+                  <SelectItem value="-updatedAt">
+                    Date Updated: Old to New
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           <div className="text-sm text-muted-foreground mb-4">
             Found {blogs.length} {blogs.length === 1 ? "blog" : "blogs"}
@@ -345,8 +343,7 @@ const Blogs = () => {
                     category: "",
                     tags: [],
                     latest: false,
-                    sortBy: "createdAt",
-                    sortOrder: "desc",
+                    sortBy: "-views",
                   });
                   setSearchQuery("");
                 }}

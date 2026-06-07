@@ -17,6 +17,7 @@ export interface BlogType {
   category: string;
   thumbnail: string;
   readTime: number;
+  views?: number;
   createdAt: Date;
   updatedAt: Date;
   deleted?: boolean;

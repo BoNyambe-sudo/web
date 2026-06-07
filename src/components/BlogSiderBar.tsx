@@ -16,7 +16,6 @@ import { ArrowLeft } from "lucide-react";
 export interface BlogFilters {
   category: string;
   sortBy: string;
-  sortOrder: "asc" | "desc";
   tags: string[];
   latest: boolean;
 }
@@ -69,16 +68,18 @@ export function BlogSidebar({
       category: "",
       tags: [],
       latest: false,
-      sortBy: "createAt", // Default sort by date
-      sortOrder: "desc", // Default sort order
+      sortBy: "-views",
     });
   };
 
   return (
     <Sidebar collapsible="offcanvas">
       <SidebarHeader>
-        <Link className=" font-semibold hover:text-primary text-muted-foreground flex items-center gap-2" to="/">
-        <ArrowLeft size={16}/>
+        <Link
+          className=" font-semibold hover:text-primary text-muted-foreground flex items-center gap-2"
+          to="/"
+        >
+          <ArrowLeft size={16} />
           Home
         </Link>
         <h2 className="text-lg font-semibold px-4 py-2">Filters</h2>
@@ -180,6 +181,5 @@ export function BlogSidebar({
     </Sidebar>
   );
 }
-
 
 export default BlogSidebar;
