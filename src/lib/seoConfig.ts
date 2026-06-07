@@ -5,7 +5,8 @@
 
 export const SITE_NAME = "Bo Nyambe";
 export const SITE_URL = "https://bonyambe-sudo.github.io/web/";
-export const SITE_DESCRIPTION = "Professional web, mobile, and AI development services. Expert in technology solutions for modern businesses.";
+export const SITE_DESCRIPTION =
+  "Professional web, mobile, and AI development services. Expert in technology solutions for modern businesses.";
 
 export const BLOG_CATEGORIES = [
   "Technology",
@@ -81,6 +82,55 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "religious insights",
     "personal growth",
     "community",
+    "What is the Mark of the Beast",
+    "National Sunday Law",
+    "Daniel and Revelation Prophecy",
+    "Project 2025 Sunday Rest",
+    "Sabbath vs Sunday in Prophecy",
+    "Sabbath vs Sunday in Prophecy",
+    "Jesuit influence in American institutions",
+    "The role of the Catholic Church in end-time events",
+    "The significance of the Papacy in biblical prophecy",
+    "Liberty of conscience threatened",
+    "Heritage Foundation uniform day of rest",
+    "Vicarius Filii Dei 666 calculation",
+    "The Mark of the Beast and modern technology",
+    "The role of the United States in end-time prophecy",
+    "The importance of religious freedom in the context of end-time events",
+    "The connection between the Mark of the Beast and economic control",
+    "The significance of the number 666 in biblical prophecy",
+    "The role of the Catholic Church in shaping global events",
+    "The impact of religious persecution on end-time events",
+    "The importance of understanding biblical prophecy for modern believers",
+    "The connection between the Mark of the Beast and the rise of authoritarianism",
+    "The significance of the Papacy in shaping world history",
+    "The role of religious institutions in end-time events",
+    "The importance of staying informed about current events in the context of biblical prophecy",
+    "The connection between the Mark of the Beast and the rise of global surveillance",
+    "The significance of the number 666 in popular culture",
+    "The role of the Catholic Church in influencing political decisions",
+    "The impact of religious beliefs on end-time events",
+    "The importance of maintaining faith and hope in the face of end-time challenges",
+    "The connection between the Mark of the Beast and the rise of cashless societies",
+    "The significance of the Papacy in shaping religious beliefs",
+    "The role of religious leaders in end-time events",
+    "The importance of understanding the historical context of biblical prophecy",
+    "The connection between the Mark of the Beast and the rise of digital currencies",
+    "The significance of the number 666 in literature and media",
+    "The role of the Catholic Church in shaping cultural norms",
+    "The impact of religious beliefs on social and political movements",
+    "The importance of staying vigilant in the face of end-time challenges",
+    "The connection between the Mark of the Beast and the rise of global governance",
+    "The significance of the Papacy in shaping religious practices",
+    "The role of religious institutions in providing support during end-time events",
+    "The importance of understanding the spiritual implications of biblical prophecy",
+    "The connection between the Mark of the Beast and the rise of authoritarian regimes",
+    "The significance of the number 666 in religious symbolism",
+    "The role of the Catholic Church in shaping moral values",
+    "The impact of religious beliefs on humanitarian efforts during end-time events",
+    "The importance of maintaining a strong faith community in the face of end-time challenges",
+    "Dignitatis Humanae church state separation",
+    "Ellen G White Great Controversy Sunday Law",
   ],
   Politics: ["political analysis", "current events", "policy discussion"],
   Science: [
@@ -192,16 +242,11 @@ export const getOrganizationSchema = () => {
 /**
  * Generate structured data for Blog List
  */
-export const getBlogListSchema = (
-  category?: string,
-  blogCount: number = 0
-) => {
+export const getBlogListSchema = (category?: string, blogCount: number = 0) => {
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: category
-      ? `${category} Blog Articles`
-      : "Blog - " + SITE_NAME,
+    name: category ? `${category} Blog Articles` : "Blog - " + SITE_NAME,
     description: category
       ? getDescriptionForCategory(category)
       : SITE_DESCRIPTION,
@@ -246,13 +291,15 @@ export const getBlogPostSchema = (blog: {
   updatedAt?: Date | string;
 }) => {
   // Ensure dates are in ISO string format
-  const datePublished = blog.createdAt instanceof Date
-    ? blog.createdAt.toISOString()
-    : blog.createdAt || new Date().toISOString();
+  const datePublished =
+    blog.createdAt instanceof Date
+      ? blog.createdAt.toISOString()
+      : blog.createdAt || new Date().toISOString();
 
-  const dateModified = blog.updatedAt instanceof Date
-    ? blog.updatedAt.toISOString()
-    : blog.updatedAt || datePublished;
+  const dateModified =
+    blog.updatedAt instanceof Date
+      ? blog.updatedAt.toISOString()
+      : blog.updatedAt || datePublished;
 
   return {
     "@context": "https://schema.org",
@@ -269,11 +316,15 @@ export const getBlogPostSchema = (blog: {
     dateModified,
     author: {
       "@type": "Person",
-      name: `${blog.author?.firstName || ""} ${blog.author?.lastName || ""}`.trim() || SITE_NAME,
-      image: blog.author?.profilePicture ? {
-        "@type": "ImageObject",
-        url: blog.author.profilePicture,
-      } : undefined,
+      name:
+        `${blog.author?.firstName || ""} ${blog.author?.lastName || ""}`.trim() ||
+        SITE_NAME,
+      image: blog.author?.profilePicture
+        ? {
+            "@type": "ImageObject",
+            url: blog.author.profilePicture,
+          }
+        : undefined,
     },
     publisher: {
       "@type": "Organization",
@@ -297,7 +348,9 @@ export const getBlogPostSchema = (blog: {
 /**
  * Generate structured data for FAQ
  */
-export const getFAQSchema = (faqs: Array<{ question: string; answer: string }>) => {
+export const getFAQSchema = (
+  faqs: Array<{ question: string; answer: string }>,
+) => {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -315,7 +368,9 @@ export const getFAQSchema = (faqs: Array<{ question: string; answer: string }>) 
 /**
  * Generate breadcrumb schema
  */
-export const getBreadcrumbSchema = (items: Array<{ name: string; url: string }>) => {
+export const getBreadcrumbSchema = (
+  items: Array<{ name: string; url: string }>,
+) => {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
