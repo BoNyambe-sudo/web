@@ -114,8 +114,7 @@ const AdminBlogs = () => {
     category: "",
     tags: [],
     latest: false,
-    sortBy: "createdAt",
-    sortOrder: "desc",
+    sortBy: "-views",
   });
   const [updateFormData, setUpdateFormData] = useState<BlogFormData>({
     title: "",
@@ -145,7 +144,6 @@ const AdminBlogs = () => {
 
   const queryParams: BlogQueryParams = {
     sortBy: selectedFilters.sortBy,
-    sortOrder: selectedFilters.sortOrder,
     deleted: showDeleted,
   };
   if (debouncedSearchQuery) {
@@ -544,8 +542,7 @@ const AdminBlogs = () => {
       category: "",
       tags: [],
       latest: false,
-      sortBy: "createAt",
-      sortOrder: "desc",
+      sortBy: "-views",
     });
   }
 
@@ -733,7 +730,7 @@ const AdminBlogs = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search for blogs..."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -767,7 +764,7 @@ const AdminBlogs = () => {
               setSelectedFilters({ ...selectedFilters, category: value })
             }
           >
-            <SelectTrigger className="max-w-45">
+            <SelectTrigger className="w-full md:w-45">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
@@ -785,36 +782,35 @@ const AdminBlogs = () => {
               setSelectedFilters({ ...selectedFilters, sortBy: value })
             }
           >
-            <SelectTrigger className="max-w-45">
+            <SelectTrigger className="w-full md:w-45">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="title">Title</SelectItem>
-              <SelectItem value="createdAt">Date Created</SelectItem>
-              <SelectItem value="updatedAt">Date Updated</SelectItem>
+              <SelectItem value="-views">Most Viewed</SelectItem>
+              <SelectItem value="title">Title: A to Z</SelectItem>
+              <SelectItem value="-title">Title: Z to A</SelectItem>
+              <SelectItem value="-createdAt">
+                Date Created: New to Old
+              </SelectItem>
+              <SelectItem value="createdAt">
+                Date Created: Old to New
+              </SelectItem>
+              <SelectItem value="-updatedAt">
+                Date Updated: New to Old
+              </SelectItem>
+              <SelectItem value="updatedAt">
+                Date Updated: Old to New
+              </SelectItem>
             </SelectContent>
           </Select>
-          <Select
-            value={selectedFilters.sortOrder}
-            onValueChange={(value: "asc" | "desc") =>
-              setSelectedFilters({ ...selectedFilters, sortOrder: value })
-            }
-          >
-            <SelectTrigger className="max-w-45">
-              <SelectValue placeholder="Sort order" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="asc">Ascending</SelectItem>
-              <SelectItem value="desc">Descending</SelectItem>
-            </SelectContent>
-          </Select>
+
           <Button variant="destructive" onClick={handleReset}>
             Reset
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Blogs</CardTitle>
@@ -862,7 +858,20 @@ const AdminBlogs = () => {
             </p>
           </CardContent>
         </Card>
-
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
+            <Eye className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{blogsMetrics?.totalViews}</div>
+            <p className="text-xs text-muted-foreground">
+              {blogsMetrics && blogsMetrics.totalViews > 0
+                ? "Total views"
+                : "No views"}
+            </p>
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Deleted Blogs</CardTitle>
@@ -898,6 +907,7 @@ const AdminBlogs = () => {
                 <TableHead>Title</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Views</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead>Read Time</TableHead>
                 <TableHead className="w-24">Actions</TableHead>
@@ -926,6 +936,10 @@ const AdminBlogs = () => {
                         Draft
                       </span>
                     )}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    <Eye className="inline h-4 w-4 mr-1" />
+                    {blog.views ?? 0}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {formatDate(blog.createdAt)}
@@ -1141,7 +1155,7 @@ const AdminBlogs = () => {
               )}
               {blogsLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center">
+                  <TableCell colSpan={7} className="text-center">
                     <div className="flex justify-center">
                       <Loader2 className="size-4 animate-spin text-primary" />
                     </div>
@@ -1150,7 +1164,7 @@ const AdminBlogs = () => {
               ) : (
                 blogs?.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center">
+                    <TableCell colSpan={7} className="text-center">
                       No Blogs found
                     </TableCell>
                   </TableRow>

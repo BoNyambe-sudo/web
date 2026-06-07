@@ -1,13 +1,13 @@
 import BlogRenderer from "@/components/BlogRenderer";
 import CommentSection from "@/components/CommentSection";
 import Header from "@/components/Header";
-import { useBlog, useBlogs } from "@/hooks/serverState/useBlogServer";
-import { Clock, Share2, Tag, Copy, Loader2 } from "lucide-react";
+import { useBlog, useBlogs, addView } from "@/hooks/serverState/useBlogServer";
+import { Clock, Share2, Tag, Copy, Loader2, Eye } from "lucide-react";
 import Facebook from "@/components/icons/facebook";
 import { useNavigate, useParams } from "react-router";
 import BlogCard from "@/components/BlogCard";
 import Footer from "@/components/Footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import {
   Dialog,
@@ -26,6 +26,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import SEOHelmet from "@/components/SEOHelmet";
 import { getBlogPostSchema } from "@/lib/seoConfig";
 import Whatsapp from "@/components/icons/whatsapp";
+
+const BLOG_VIEWED_KEY_PREFIX = "blog-viewed-";
+
+const hasBlogBeenViewed = (id: string): boolean => {
+  if (typeof window === "undefined") return true;
+  return localStorage.getItem(`${BLOG_VIEWED_KEY_PREFIX}${id}`) !== null;
+};
+
+const markBlogAsViewed = (id: string): void => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(`${BLOG_VIEWED_KEY_PREFIX}${id}`, "true");
+};
 
 const SingleBlog = () => {
   const { id } = useParams();
@@ -48,6 +60,14 @@ const SingleBlog = () => {
     useBlogs(queryParams);
   const similarBlogs =
     similarBlogsData?.data.filter((blg) => blg?.id !== id) || [];
+
+  useEffect(() => {
+    if (!id || !blog?.id || blogLoading) return;
+    if (!hasBlogBeenViewed(id)) {
+      addView(id).catch(() => {});
+      markBlogAsViewed(id);
+    }
+  }, [id, blog?.id, blogLoading]);
 
   const handleShare = async (platform: string) => {
     const encodedUrl = encodeURIComponent(currentUrl);
@@ -195,6 +215,12 @@ const SingleBlog = () => {
               <Clock size={16} />
               <span>{blog.readTime} min read</span>
             </div>
+            {blog.views !== undefined && (
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <Eye size={16} />
+                <span>{blog.views} views</span>
+              </div>
+            )}
             <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
               <DialogTrigger asChild>
                 <div className="flex items-center gap-2.5 text-muted-foreground hover:text-primary  cursor-pointer">

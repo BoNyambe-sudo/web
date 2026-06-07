@@ -44,7 +44,9 @@ type BlogAnalytics = {
   publishedBlogs: number;
   draftBlogs: number;
   deletedBlogs: number;
+  totalViews: number;
   blogsPerCategory: { category: string; count: number }[];
+  viewsPerCategory: { category: string; views: number }[];
 };
 
 const uploadImage = async (image: File): Promise<{ url: string }> => {
@@ -205,6 +207,13 @@ const restoreBlog = async (id: string): Promise<BlogType> => {
   return await request<BlogType>({
     url: `/blogs/restore/${id}`,
     method: "PATCH",
+  });
+};
+
+export const addView = async (id: string): Promise<{ views: number }> => {
+  return await request<{ views: number }>({
+    url: `/blogs/${id}/view`,
+    method: "GET",
   });
 };
 

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Card, CardAction, CardContent, CardHeader } from "./ui/card";
 import { Link } from "react-router";
-import { Calendar } from "lucide-react";
+import { Calendar, Eye } from "lucide-react";
 import type { BlogType } from "@/hooks/clientState/useBlog";
 import { formatDate } from "@/lib/formattedDate";
 
@@ -32,12 +32,17 @@ const BlogCard = ({
         <p className="font-semibold text-sm border-b-2 pb-1 text-primary/60">
           {blog.category}
         </p>
-        <CardAction className="flex gap-2 items-center border-b-2 pb-1">
-          {" "}
+        <CardAction className="flex gap-2 items-center border-b-2 pb-1 flex-wrap">
           <Calendar size={16} className="text-muted-foreground" />
           <p className="font font-semibold text-muted-foreground text-sm">
             {formattedDate}
           </p>
+          {blog.views !== undefined && (
+            <span className="flex items-center gap-1 text-muted-foreground text-xs">
+              <Eye size={14} />
+              {blog.views}
+            </span>
+          )}
         </CardAction>
       </CardHeader>
       <CardContent>
