@@ -409,7 +409,7 @@ const Home = () => {
                 <DialogTrigger asChild>
                   <Button
                     size={"lg"}
-                    className="w-full sm:w-auto"
+                    className="w-full sm:w-auto sm:px-10 md:px-12 sm:py-4 md:py-6 sm:text-xl text-lg sm:font-bold"
                     variant={"default"}
                   >
                     Book a call
@@ -545,7 +545,7 @@ const Home = () => {
               </Dialog>
               <Button
                 size="lg"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto sm:px-10 md:px-12 sm:py-4 md:py-6 sm:text-xl text-lg sm:font-bold"
                 variant={"outline"}
                 onClick={() => navigate("/faqs")}
               >

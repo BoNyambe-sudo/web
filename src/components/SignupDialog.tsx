@@ -43,7 +43,6 @@ const SignupDialog = ({
   const setIsLoginDialogOpen = useToggleState(
     (state) => state.setLoginDialogOpen,
   );
-  const toggleSidebarOpen = useToggleState((state) => state.toggleSidebarOpen);
 
   const { mutate: register, isPending: isRegisterPending } = useRegister();
 
@@ -76,7 +75,6 @@ const SignupDialog = ({
           confirmPassword: "",
         });
         setIsSignUpDialogOpen(false);
-        toggleSidebarOpen(false);
       },
     });
   };
@@ -87,7 +85,6 @@ const SignupDialog = ({
   };
   const handleDialogOpenChange = (open: boolean) => {
     setIsSignUpDialogOpen(open);
-    toggleSidebarOpen(false);
   };
 
   return (

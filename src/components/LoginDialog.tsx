@@ -37,7 +37,6 @@ const LoginDialog = ({
   const setIsSignUpDialogOpen = useToggleState(
     (state) => state.setSignupDialogOpen,
   );
-  const toggleSidebarOpen = useToggleState((state) => state.toggleSidebarOpen);
 
   const { mutate: login, isPending: isLoginPending } = useLogin();
 
@@ -57,7 +56,6 @@ const LoginDialog = ({
             password: "",
           });
           setIsLoginDialogOpen(false);
-          toggleSidebarOpen(false);
           toast.success("Logged in successfully");
         },
       },
@@ -71,7 +69,6 @@ const LoginDialog = ({
 
   const handleDialogOpenChange = (open: boolean) => {
     setIsLoginDialogOpen(open);
-    toggleSidebarOpen(false);
   };
 
   return (
