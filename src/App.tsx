@@ -11,6 +11,8 @@ import Home from "./pages/user/Home";
 import SingleBlog from "./pages/user/SingleBlog";
 import Blogs from "./pages/user/Blogs";
 import FAQs from "./pages/user/FAQs";
+import PrivacyPolicy from "./pages/user/PrivacyPolicy";
+import TermsOfService from "./pages/user/TermsOfService";
 import NotFoundPage from "./pages/NotFoundPage";
 import ManageAccount from "./pages/user/ManageAccount";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -51,6 +53,8 @@ function AppWithQuery() {
             <Route path="/" element={<Home />} />
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/faqs" element={<FAQs />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/blogs/:id" element={<SingleBlog />} />
             <Route path="/manage-account" element={<ManageAccount />} />
             <Route path="*" element={<NotFoundPage />} />

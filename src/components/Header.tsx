@@ -54,6 +54,7 @@ const Header = ({
           >
             Blogs
           </Link>
+          
         </div>
 
         <MobileView textClassName={textClassName} />
