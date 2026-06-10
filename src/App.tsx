@@ -16,6 +16,8 @@ import ManageAccount from "./pages/user/ManageAccount";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useUserData } from "./hooks/serverState/useUserServer";
+import SideMenu from "./components/SideMenu";
+import { useToggleState } from "./hooks/clientState/useToggles";
 
 function App() {
   useTheme();
@@ -23,7 +25,7 @@ function App() {
 
   return (
     <HelmetProvider>
-      <Router basename='/web'>
+      <Router basename="/web">
         <QueryClientProvider client={queryClient}>
           <AppWithQuery />
         </QueryClientProvider>
@@ -34,20 +36,32 @@ function App() {
 
 function AppWithQuery() {
   const { data: user } = useUserData();
+  const sidebarOpen = useToggleState((state) => state.sidebarOpen);
+    const toggleSidebarOpen = useToggleState((state) => state.toggleSidebarOpen);
 
   return (
     <TooltipProvider>
-      {user && user.status === "ACTIVE" && (user.role === "ADMIN" || user.role === "CONTRIBUTOR") ? (
+      {user &&
+      user.status === "ACTIVE" &&
+      (user.role === "ADMIN" || user.role === "CONTRIBUTOR") ? (
         <AdminDashboard />
       ) : (
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blogs" element={<Blogs />} />
-          <Route path="/faqs" element={<FAQs />} />
-          <Route path="/blogs/:id" element={<SingleBlog />} />
-          <Route path="/manage-account" element={<ManageAccount />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/faqs" element={<FAQs />} />
+            <Route path="/blogs/:id" element={<SingleBlog />} />
+            <Route path="/manage-account" element={<ManageAccount />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+          {sidebarOpen && (
+            <SideMenu
+              isOpen={sidebarOpen}
+              onClose={() => toggleSidebarOpen(false)}
+            />
+          )}
+        </>
       )}
       <Toaster
         position="top-right"

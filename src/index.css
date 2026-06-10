@@ -132,27 +132,52 @@
     @apply cursor-pointer;
   }
   input[type="time"] {
-  color-scheme: light dark; /* Automatically switches icon to light color */
-  
+    color-scheme: light dark; /* Automatically switches icon to light color */
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield; /* Added for general compatibility */
+  }
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background: var(--muted);
 }
 
 .container {
-  @apply mx-auto px-3 sm:px-4 lg:px-6;
+  @apply mx-auto px-2 sm:px-4 lg:px-6;
 }
 
 .lightText {
   color: oklch(0.95 0.01 250);
-  @apply hover:text-primary
+  @apply hover:text-primary;
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator {
-    /* If the icon is black and you can't see it, 
+  /* If the icon is black and you can't see it, 
        invert(1) will turn it white. */
-    filter: invert(0.5); /* Try 0.5 for gray or 1 for white */
-    
-    /* Ensure it has full opacity */
-    opacity: 1;
+  filter: invert(0.5); /* Try 0.5 for gray or 1 for white */
+
+  /* Ensure it has full opacity */
+  opacity: 1;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
