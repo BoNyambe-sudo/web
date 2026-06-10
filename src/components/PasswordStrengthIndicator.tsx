@@ -38,11 +38,11 @@ const getStrengthLabel = (strength: PasswordStrength): string => {
 const getStrengthColor = (strength: PasswordStrength): string => {
   switch (strength) {
     case "weak":
-      return `bg-red-500`;
+      return `bg-destructive`;
     case "medium":
       return `bg-yellow-500`;
     case "strong":
-      return `bg-blue-500`;
+      return `bg-primary`;
     case "very-strong":
       return `bg-green-500`;
   }
@@ -51,11 +51,11 @@ const getStrengthColor = (strength: PasswordStrength): string => {
 const getStrengthLabelColor = (strength: PasswordStrength): string => {
   switch (strength) {
     case "weak":
-      return `text-red-500`;
+      return `text-destructive`;
     case "medium":
       return `text-yellow-500`;
     case "strong":
-      return `text-blue-500`;
+      return `text-primary`;
     case "very-strong":
       return `text-green-500`;
   }
@@ -69,7 +69,7 @@ export function PasswordStrengthIndicator({
 
   if (password.length < 8) {
     return (
-      <div className={cn("text-sm text-red-500 mt-1", className)}>
+      <div className={cn("text-sm text-destructive mt-1", className)}>
         Password must be at least 8 characters long
       </div>
     );
@@ -78,7 +78,7 @@ export function PasswordStrengthIndicator({
   return (
     <div className={cn("mt-1", className)}>
       <div className="flex items-center gap-2">
-        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
           <div
             className={cn(
               "h-full transition-all duration-300 ease-in-out",
