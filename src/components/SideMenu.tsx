@@ -57,6 +57,20 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
           >
             FAQs
           </Link>
+          <Link
+            to="/privacy-policy"
+            onClick={onClose}
+            className={`hover:primary border-b hoverEffect ${pathname === "/privacy-policy" ? "text-primary" : ""}`}
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            to="/terms-of-service"
+            onClick={onClose}
+            className={`hover:primary border-b hoverEffect ${pathname === "/terms-of-service" ? "text-primary" : ""}`}
+          >
+            Terms of Service
+          </Link>
         </nav>
 
         {!user && (
