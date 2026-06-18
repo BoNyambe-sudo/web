@@ -92,6 +92,7 @@ type BlogFormData = {
   tags: string;
   published: boolean;
   image?: File;
+  readTime?: number;
 };
 
 const AdminBlogs = () => {
@@ -312,6 +313,9 @@ const AdminBlogs = () => {
     if (updateFormData.published !== selectedBlog.published) {
       updatedBlog.published = updateFormData.published;
     }
+    if (calculateReadTime(updateFormData.content) !== selectedBlog.readTime) {
+      updatedBlog.readTime = calculateReadTime(updateFormData.content);
+    }
 
     if (Object.keys(updatedBlog).length === 0) {
       warn("Everything is up to date");
@@ -396,6 +400,7 @@ const AdminBlogs = () => {
       category: blog.category || "Technology",
       tags: blog.tags.join(","),
       published: blog.published,
+      readTime: blog.readTime,
     });
     setIsEditDialogOpen(true);
   };
@@ -865,7 +870,9 @@ const AdminBlogs = () => {
             <Eye className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCompactNumber(blogsMetrics?.totalViews)}</div>
+            <div className="text-2xl font-bold">
+              {formatCompactNumber(blogsMetrics?.totalViews)}
+            </div>
             <p className="text-xs text-muted-foreground">
               {blogsMetrics && blogsMetrics.totalViews > 0
                 ? "Total views"
