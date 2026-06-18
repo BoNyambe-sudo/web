@@ -9,8 +9,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router";
-import { ArrowLeft } from "lucide-react";
 
 // Filter options interface
 export interface BlogFilters {
@@ -75,13 +73,6 @@ export function BlogSidebar({
   return (
     <Sidebar collapsible="offcanvas">
       <SidebarHeader>
-        <Link
-          className=" font-semibold hover:text-primary text-muted-foreground flex items-center gap-2"
-          to="/"
-        >
-          <ArrowLeft size={16} />
-          Home
-        </Link>
         <h2 className="text-lg font-semibold px-4 py-2">Filters</h2>
       </SidebarHeader>
       <SidebarContent className="p-4 space-y-6">
