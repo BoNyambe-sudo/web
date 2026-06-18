@@ -33,6 +33,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { formatCompactNumber } from "@/lib/utils";
 
 interface AdminReplyCardProps {
   reply: CommentType;
@@ -291,7 +292,7 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
                   <ThumbsUp
                     className={`h-3 w-3 mr-1 ${reply.likedBy?.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
                   />
-                  {reply.likedBy?.length || 0}
+                  {formatCompactNumber(reply.likedBy?.length || 0)}
                 </Button>
                 <Button
                   variant="ghost"
@@ -302,7 +303,7 @@ export const AdminReplyCard = ({ reply, blogId }: AdminReplyCardProps) => {
                   <ThumbsDown
                     className={`h-3 w-3 mr-1 ${reply.dislikedBy?.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
                   />
-                  {reply.dislikedBy?.length || 0}
+                  {formatCompactNumber(reply.dislikedBy?.length || 0)}
                 </Button>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, formatCompactNumber } from "@/lib/utils";
 import { Card, CardAction, CardContent, CardHeader } from "./ui/card";
 import { Link } from "react-router";
 import { Calendar, Eye } from "lucide-react";
@@ -40,7 +40,7 @@ const BlogCard = ({
           {blog.views !== undefined && (
             <span className="flex items-center gap-1 text-muted-foreground text-xs">
               <Eye size={14} />
-              {blog.views}
+              {formatCompactNumber(blog.views)}
             </span>
           )}
         </CardAction>

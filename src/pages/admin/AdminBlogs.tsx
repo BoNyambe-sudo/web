@@ -82,6 +82,7 @@ import type { BlogQueryParams } from "../user/Blogs";
 import toast from "react-hot-toast";
 import { useUserData } from "@/hooks/serverState/useUserServer";
 import warn from "@/lib/warnToaster";
+import { formatCompactNumber } from "@/lib/utils";
 import { useCommentReplyStore } from "@/hooks/clientState/useComments";
 
 type BlogFormData = {
@@ -864,7 +865,7 @@ const AdminBlogs = () => {
             <Eye className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{blogsMetrics?.totalViews}</div>
+            <div className="text-2xl font-bold">{formatCompactNumber(blogsMetrics?.totalViews)}</div>
             <p className="text-xs text-muted-foreground">
               {blogsMetrics && blogsMetrics.totalViews > 0
                 ? "Total views"
@@ -939,7 +940,7 @@ const AdminBlogs = () => {
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     <Eye className="inline h-4 w-4 mr-1" />
-                    {blog.views ?? 0}
+                    {formatCompactNumber(blog.views ?? 0)}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {formatDate(blog.createdAt)}

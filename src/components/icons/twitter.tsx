@@ -3,7 +3,7 @@ const Twitter = ({
   className,
 }: {
   size?: number;
-  className: string;
+  className?: string;
 }) => {
   return (
     <svg

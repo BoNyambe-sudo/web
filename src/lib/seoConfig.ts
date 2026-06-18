@@ -3,6 +3,8 @@
  * Centralized SEO keywords, categories, and metadata
  */
 
+import { facebookLink, instagramLink, linkedinLink, xLink } from "./constants";
+
 export const SITE_NAME = "Bo Nyambe";
 export const SITE_URL = "https://bonyambe-sudo.github.io/web/";
 export const SITE_DESCRIPTION =
@@ -414,10 +416,10 @@ export const getOrganizationSchema = () => {
     logo: `${SITE_URL}/favicon.svg`,
     description: SITE_DESCRIPTION,
     sameAs: [
-      "https://www.facebook.com/profile.php?id=61559651890241",
-      "https://www.x.com/franknyambe213",
-      "https://www.linkedin.com/in/frank-nyambe-79a633321",
-      "https://www.instagram.com/f_nyambe?igsh=b2wzd2t4Y3YxdmVj",
+      facebookLink,
+      xLink,
+      linkedinLink,
+      instagramLink,
     ],
     contactPoint: {
       "@type": "ContactPoint",
