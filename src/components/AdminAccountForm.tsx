@@ -108,6 +108,11 @@ const AdminAccountForm = ({ user }: { user: UserDataResponse }) => {
       updateData.image = formData.image;
     }
 
+    if(Object.keys(updateData).length === 0){
+      toast.error("Already up to date")
+      return
+    }
+
     updateUser(
       { id: user.id as string, user: updateData },
       {

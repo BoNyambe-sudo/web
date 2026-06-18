@@ -116,11 +116,6 @@ const AdminAppointments = () => {
 
   function handleUpdateAppointment(): void {
     const updatedAppointment: Partial<AppointmentFormType> = {};
-    console.log({
-      updatedAppointment,
-      appointmentFormData,
-      selectedAppointment,
-    });
     if (
       appointmentFormData.status &&
       appointmentFormData.status !== selectedAppointment?.status
@@ -146,6 +141,11 @@ const AdminAppointments = () => {
     ) {
       toast.error("Some fields are missing");
       return;
+    }
+
+    if(Object.keys(updatedAppointment).length === 0){
+      toast.error("Already up to date")
+      return
     }
     updateAppointment(
       {

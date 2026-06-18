@@ -64,19 +64,51 @@ const Home = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const paragraphRef = useRef<HTMLParagraphElement>(null);
 
-  const placeholders = [
-    "I want a website",
-    "I want a mobile app",
-    "I need an e-commerce website",
-    "I want a desktop app",
-    "I want a chatbot",
-    "I need a blog website",
-    "I want a landing page",
-    "I want an AI model",
-    "Can you redesign my website?",
-    "Can you optimize my mobile app?",
-    "Can you create a chatbot for my business?",
-    "Can you develop an AI model for my project?",
+  const messages = [
+    // Professional Consultations
+    "I'd like to discuss my project idea with you",
+    "Could we schedule a consultation about my business needs?",
+    "I'm looking for expert advice on my tech stack",
+
+    // Web Development
+    "I need a professional website for my business",
+    "Can you help me build a high-performance web application?",
+    "I'm looking to redesign my current website",
+
+    // E-Commerce & SaaS
+    "I need to build an e-commerce platform",
+    "Can you develop a SaaS application for my startup?",
+    "I want to create an online marketplace",
+
+    // Mobile Development
+    "I'm interested in developing a mobile app",
+    "Can you build a native or cross-platform mobile application?",
+    "I need to optimize my existing mobile app for better performance",
+
+    // AI & Advanced Solutions
+    "I'd like to explore AI integration for my business",
+    "Can you help me build an intelligent chatbot or automation system?",
+    "I'm interested in custom AI solutions for my specific use case",
+
+    // Website Enhancement
+    "I want to improve my website's SEO and performance",
+    "Can you migrate my website to a modern, scalable architecture?",
+    "I need help optimizing my site for better user experience",
+
+    // Problem-Focused
+    "My current website isn't performing well. Can you help?",
+    "We need a complete digital transformation of our online presence",
+    "I'm struggling with scalability issues in my application",
+
+    // Questions & Discovery
+    "What's your experience with NestJS and Angular?",
+    "How do you approach building scalable web applications?",
+    "Can you tell me about your development process?",
+
+    // Ongoing Support
+    "I need ongoing maintenance and support for my application",
+    "Can you help me with technical support and updates?",
+    "I'm looking for a dedicated development partner",
   ];
 
   const navigate = useNavigate();
@@ -292,7 +324,7 @@ const Home = () => {
             <div className="w-full max-w-2xl relative">
               <Input
                 className="placeholder:text-foreground"
-                list="placeholders"
+                list="messages"
                 placeholder="Your message"
                 autoFocus
                 value={messageFormData.message}
@@ -303,9 +335,9 @@ const Home = () => {
                   })
                 }
               />
-              <datalist id="placeholders">
-                {placeholders.map((placeholder, index) => (
-                  <option key={index} value={placeholder} />
+              <datalist id="messages">
+                {messages.map((message, index) => (
+                  <option key={index} value={message} />
                 ))}
               </datalist>
               <Dialog
