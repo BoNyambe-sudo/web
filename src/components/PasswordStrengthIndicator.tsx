@@ -69,7 +69,7 @@ export function PasswordStrengthIndicator({
 
   if (password.length < 8) {
     return (
-      <div className={cn("text-sm text-destructive mt-1", className)}>
+      <div className={cn("text-xs text-destructive mt-1", className)}>
         Password must be at least 8 characters long
       </div>
     );
