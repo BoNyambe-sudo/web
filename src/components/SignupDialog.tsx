@@ -14,7 +14,7 @@ import { useRegister } from "@/hooks/serverState/useUserServer";
 import toast from "react-hot-toast";
 import { useToggleState } from "@/hooks/clientState/useToggles";
 import PasswordInput from "./PasswordInput";
-import Google from "./icons/google";
+//import Google from "./icons/google";
 type FormData = {
   firstName: string;
   lastName: string;
@@ -23,7 +23,7 @@ type FormData = {
   confirmPassword?: string;
 };
 
-const GOOGLE_AUTH_URL = `${import.meta.env.VITE_BASE_URL}/auth/google`;
+//const GOOGLE_AUTH_URL = `${import.meta.env.VITE_BASE_URL}/auth/google`;
 
 const SignupDialog = ({
   className,
@@ -48,9 +48,9 @@ const SignupDialog = ({
   );
 
   const { mutate: register, isPending: isRegisterPending } = useRegister();
-  const handleGoogleLogin = () => {
+  /* const handleGoogleLogin = () => {
     window.location.href = GOOGLE_AUTH_URL;
-  };
+  }; */
 
   const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -105,7 +105,7 @@ const SignupDialog = ({
           <DialogTitle>Sign Up</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             className="w-full"
@@ -123,7 +123,7 @@ const SignupDialog = ({
                 Or continue with email
               </span>
             </div>
-          </div>
+          </div> */}
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-3">
               <Label htmlFor="first-name">First Name *</Label>

@@ -13,14 +13,14 @@ import { useState } from "react";
 import { useLogin } from "@/hooks/serverState/useUserServer";
 import { useToggleState } from "@/hooks/clientState/useToggles";
 import PasswordInput from "./PasswordInput";
-import Google from "./icons/google";
+//import Google from "./icons/google";
 
 type FormData = {
   email: string;
   password: string;
 };
 
-const GOOGLE_AUTH_URL = `${import.meta.env.VITE_BASE_URL}/auth/google`;
+//const GOOGLE_AUTH_URL = `${import.meta.env.VITE_BASE_URL}/auth/google`;
 
 const LoginDialog = ({
   className,
@@ -43,9 +43,9 @@ const LoginDialog = ({
 
   const { mutate: login, isPending: isLoginPending } = useLogin();
 
-  const handleGoogleLogin = () => {
+  /* const handleGoogleLogin = () => {
     window.location.href = GOOGLE_AUTH_URL;
-  };
+  }; */
 
   const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -90,7 +90,7 @@ const LoginDialog = ({
           <DialogTitle>Login</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <Button
+          {/*<Button
             type="button"
             variant="outline"
             className="w-full"
@@ -108,7 +108,7 @@ const LoginDialog = ({
                 Or continue with email
               </span>
             </div>
-          </div>
+          </div>*/}
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="email">Email *</Label>
