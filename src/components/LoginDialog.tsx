@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -89,6 +90,10 @@ const LoginDialog = ({
         <DialogHeader>
           <DialogTitle>Login</DialogTitle>
         </DialogHeader>
+        <DialogDescription>
+          <span className="sr-only">Fill in your credentials to login</span>
+          Required fields <span className="text-destructive">*</span>
+        </DialogDescription>
         <div className="space-y-4">
           {/*<Button
             type="button"
@@ -111,7 +116,9 @@ const LoginDialog = ({
           </div>*/}
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <Label htmlFor="email">Email *</Label>
+              <Label htmlFor="email">
+                Email <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="email"
                 type="email"

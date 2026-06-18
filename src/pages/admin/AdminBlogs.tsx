@@ -605,13 +605,19 @@ const AdminBlogs = () => {
               <DialogHeader>
                 <DialogTitle>Create New Blog</DialogTitle>
                 <DialogDescription>
-                  Write and publish a new blog post.
+                  <span className="sr-only">
+                    Write and publish a new blog post.
+                  </span>
+                  Required fields <span className="text-destructive">*</span>
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="create-title">Title</Label>
+                  <Label htmlFor="create-title">
+                    Title <span className="text-destructive">*</span>
+                  </Label>
                   <Input
+                    required
                     id="create-title"
                     placeholder="Enter blog title"
                     value={createFormData.title}
@@ -624,8 +630,11 @@ const AdminBlogs = () => {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="create-category">Category</Label>
+                  <Label htmlFor="create-category">
+                    Category <span className="text-destructive">*</span>
+                  </Label>
                   <Select
+                    required
                     value={createFormData.category}
                     onValueChange={(value) =>
                       setCreateFormData({
@@ -647,8 +656,12 @@ const AdminBlogs = () => {
                   </Select>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="create-tags">Tags (comma-separated)</Label>
+                  <Label htmlFor="create-tags">
+                    Tags (comma-separated){" "}
+                    <span className="text-destructive">*</span>{" "}
+                  </Label>
                   <Input
+                    required
                     id="create-tags"
                     placeholder="e.g. technology, AI, programming"
                     value={createFormData.tags}
@@ -661,8 +674,11 @@ const AdminBlogs = () => {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="create-thumbnail">Thumbnail</Label>
+                  <Label htmlFor="create-thumbnail">
+                    Thumbnail <span className="text-destructive">*</span>
+                  </Label>
                   <Input
+                    required
                     id="create-thumbnail"
                     type="file"
                     accept="image/*"
@@ -691,7 +707,9 @@ const AdminBlogs = () => {
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="create-content">Content</Label>
+                  <Label htmlFor="create-content">
+                    Content <span className="text-destructive">*</span>
+                  </Label>
                   <BlogEditor
                     initialContent={createFormData.content}
                     onChange={(content) =>
@@ -1100,7 +1118,7 @@ const AdminBlogs = () => {
                                       onClick={() =>
                                         openDeleteDialog(blog.id as string)
                                       }
-                                      className="text-red-600 hover:text-red-700"
+                                      className="text-destructive hover:text-red-700"
                                     >
                                       <Trash2 className="h-4 w-4" />
                                     </Button>
@@ -1188,12 +1206,18 @@ const AdminBlogs = () => {
         <DialogContent className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide">
           <DialogHeader>
             <DialogTitle>Edit Blog</DialogTitle>
-            <DialogDescription>Update the blog post content.</DialogDescription>
+            <DialogDescription>
+              <span className="sr-only">Update the blog post content.</span>
+              Requied fields <span className="text-destructive">*</span>
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="update-title">Title</Label>
+              <Label htmlFor="update-title">
+                Title <span className="text-destructive">*</span>
+              </Label>
               <Input
+                required
                 id="update-title"
                 placeholder="Enter blog title"
                 value={updateFormData.title}
@@ -1206,8 +1230,11 @@ const AdminBlogs = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="update-category">Category</Label>
+              <Label htmlFor="update-category">
+                Category <span className="text-destructive">*</span>
+              </Label>
               <Select
+                required
                 value={updateFormData.category}
                 onValueChange={(value) =>
                   setUpdateFormData({ ...updateFormData, category: value })
@@ -1226,8 +1253,12 @@ const AdminBlogs = () => {
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="update-tags">Tags (comma-separated)</Label>
+              <Label htmlFor="update-tags">
+                Tags (comma-separated){" "}
+                <span className="text-destructive">*</span>
+              </Label>
               <Input
+                required
                 id="update-tags"
                 placeholder="e.g. technology, AI, programming"
                 value={updateFormData.tags}
@@ -1240,7 +1271,7 @@ const AdminBlogs = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="update-thumbnail">Thumbnail</Label>
+              <Label htmlFor="update-thumbnail">Thumbnail </Label>
               <Input
                 id="update-thumbnail"
                 type="file"
@@ -1280,7 +1311,9 @@ const AdminBlogs = () => {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="update-content">Content</Label>
+              <Label htmlFor="update-content">
+                Content <span className="text-destructive">*</span>
+              </Label>
               <BlogEditor
                 initialContent={updateFormData.content}
                 onChange={(content) =>

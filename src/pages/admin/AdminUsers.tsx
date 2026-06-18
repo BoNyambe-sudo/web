@@ -322,7 +322,7 @@ const AdminUsers = () => {
                           className={`px-2 py-1 rounded-full text-xs ${
                             user.status === "ACTIVE"
                               ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
+                              : "bg-red-100 text-destructive"
                           }`}
                         >
                           {user.status === "ACTIVE" ? "Active" : "Blocked"}
@@ -380,7 +380,7 @@ const AdminUsers = () => {
                                 setUserToDelete(user.id);
                                 setIsDeleteDialogOpen(true);
                               }}
-                              className="text-red-600"
+                              className="text-destructive"
                             >
                               <Trash2 className="mr-2 h-4 w-4" />
                               Delete
@@ -400,14 +400,19 @@ const AdminUsers = () => {
             <DialogHeader>
               <DialogTitle>Add User</DialogTitle>
               <DialogDescription>
-                Create a new user account. You can specify if it's a regular
-                user, contributor or an admin.
+                <span className="sr-only">
+                  Create a new user account. You can specify if it's a regular
+                  user, contributor or an admin.
+                </span>
+                Required fields <span className="text-destructive">*</span>
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleAddUser} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name *</Label>
+                  <Label htmlFor="firstName">
+                    First Name <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="firstName"
                     value={formData.firstName}
@@ -418,7 +423,9 @@ const AdminUsers = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name *</Label>
+                  <Label htmlFor="lastName">
+                    Last Name <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="lastName"
                     value={formData.lastName}
@@ -430,7 +437,9 @@ const AdminUsers = () => {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="email">
+                  Email <span className="text-destructive">*</span>
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -497,7 +506,10 @@ const AdminUsers = () => {
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Edit User</DialogTitle>
-              <DialogDescription>Update user account role.</DialogDescription>
+              <DialogDescription>
+                <span className="sr-only">Update user account role.</span>
+                Required fields <span className="text-destructive">*</span>
+              </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSaveUserChanges} className="space-y-4">
               <div className="space-y-2">
