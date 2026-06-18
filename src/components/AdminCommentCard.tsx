@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useCommentReplyStore } from "@/hooks/clientState/useComments";
 import getTotalReplies from "@/lib/allReplies";
+import { formatCompactNumber } from "@/lib/utils";
 
 interface AdminCommentCardProps {
   comment: CommentType;
@@ -315,7 +316,7 @@ export const AdminCommentCard = ({
                 <ThumbsUp
                   className={`h-3 w-3 mr-1 ${comment.likedBy?.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
                 />
-                {comment.likedBy?.length || 0}
+                {formatCompactNumber(comment.likedBy?.length || 0)}
               </Button>
               <Button
                 variant="ghost"
@@ -326,7 +327,7 @@ export const AdminCommentCard = ({
                 <ThumbsDown
                   className={`h-3 w-3 mr-1 ${comment.dislikedBy?.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
                 />
-                {comment.dislikedBy?.length || 0}
+                {formatCompactNumber(comment.dislikedBy?.length || 0)}
               </Button>
             </div>
           </div>

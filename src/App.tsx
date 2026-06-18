@@ -20,6 +20,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useUserData } from "./hooks/serverState/useUserServer";
 import SideMenu from "./components/SideMenu";
 import { useToggleState } from "./hooks/clientState/useToggles";
+import AuthCallback from "./pages/user/AuthCallback";
 
 function App() {
   useTheme();
@@ -51,6 +52,7 @@ function AppWithQuery() {
         <>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />

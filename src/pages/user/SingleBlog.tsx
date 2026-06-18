@@ -25,6 +25,7 @@ import LoadingIndicator from "@/components/LoadingIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import SEOHelmet from "@/components/SEOHelmet";
 import { getBlogPostSchema } from "@/lib/seoConfig";
+import { formatCompactNumber } from "@/lib/utils";
 import Whatsapp from "@/components/icons/whatsapp";
 
 const BLOG_VIEWED_KEY_PREFIX = "blog-viewed-";
@@ -218,7 +219,7 @@ const SingleBlog = () => {
             {blog.views !== undefined && (
               <div className="flex items-center gap-1 text-muted-foreground">
                 <Eye size={16} />
-                <span>{blog.views} {blog.views === 1 ? "view" : "views"}</span>
+                <span>{formatCompactNumber(blog.views)} {blog.views === 1 ? "view" : "views"}</span>
               </div>
             )}
             <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>

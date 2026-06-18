@@ -29,6 +29,7 @@ import {
 } from "./ui/tooltip";
 import { useCommentReplyStore } from "@/hooks/clientState/useComments";
 import getTotalReplies from "@/lib/allReplies";
+import { formatCompactNumber } from "@/lib/utils";
 
 interface BlogCommentProps {
   comment: CommentType;
@@ -219,13 +220,13 @@ const BlogComment = ({ comment, blogId, onReply }: BlogCommentProps) => {
             <ThumbsUp
               className={`${comment.likedBy.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
             />{" "}
-            <span>{comment.likedBy.length}</span>
+            <span>{formatCompactNumber(comment.likedBy.length)}</span>
           </Button>
           <Button onClick={handleDislikeComment} variant={"ghost"}>
             <ThumbsDown
               className={`${comment.dislikedBy.includes(user?.id as string) ? "fill-primary stroke-primary" : ""}`}
             />{" "}
-            <span>{comment.dislikedBy.length}</span>
+            <span>{formatCompactNumber(comment.dislikedBy.length)}</span>
           </Button>
           <TooltipProvider>
             <Tooltip>
