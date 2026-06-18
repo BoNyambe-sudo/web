@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -352,11 +353,19 @@ const Home = () => {
                     <ArrowUp />
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="overflow-y-auto scrollbar-hide max-h-[90vh]">
                   <DialogTitle>Send a message</DialogTitle>
+                  <DialogDescription>
+                    <span className="sr-only">
+                      Send a message to the author
+                    </span>
+                    Required fields <span className="text-destructive">*</span>
+                  </DialogDescription>
                   <form onSubmit={handleSendMessage} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Name *</Label>
+                      <Label htmlFor="name">
+                        Name <span className="text-destructive">*</span>
+                      </Label>
                       <Input
                         required
                         id="name"
@@ -371,7 +380,9 @@ const Home = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email *</Label>
+                      <Label htmlFor="email">
+                        Email <span className="text-destructive">*</span>
+                      </Label>
                       <Input
                         required
                         id="email"
@@ -401,7 +412,9 @@ const Home = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="message">Message *</Label>
+                      <Label htmlFor="message">
+                        Message <span className="text-destructive">*</span>
+                      </Label>
                       <Textarea
                         required
                         id="message"
@@ -447,14 +460,20 @@ const Home = () => {
                     Book a call
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="overflow-y-auto scrollbar-hide max-h-[90vh]">
                   <DialogTitle>Book a call now</DialogTitle>
+                  <DialogDescription>
+                    <span className="sr-only">Schedule a call</span>Required
+                    fields <span className="text-destructive">*</span>
+                  </DialogDescription>
                   <form
                     onSubmit={handleCreateAppointment}
                     className="space-y-4"
                   >
                     <div className="space-y-2">
-                      <Label htmlFor="phone-number">Name *</Label>
+                      <Label htmlFor="phone-number">
+                        Name <span className="text-destructive">*</span>
+                      </Label>
                       <Input
                         type="text"
                         required
@@ -469,7 +488,9 @@ const Home = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="phone-number">Phone Number *</Label>
+                      <Label htmlFor="phone-number">
+                        Phone Number <span className="text-destructive">*</span>
+                      </Label>
                       <Input
                         type="tel"
                         required
@@ -484,7 +505,9 @@ const Home = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Date *</Label>
+                      <Label>
+                        Date <span className="text-destructive">*</span>
+                      </Label>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
@@ -516,7 +539,9 @@ const Home = () => {
                       </Popover>
                     </div>
                     <div className="space-y-2">
-                      <Label>Time *</Label>
+                      <Label>
+                        Time <span className="text-destructive">*</span>
+                      </Label>
                       <Input
                         required
                         type="time"
@@ -545,7 +570,9 @@ const Home = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Description *</Label>
+                      <Label>
+                        Description <span className="text-destructive">*</span>
+                      </Label>
                       <Textarea
                         required
                         value={appointmentFormData.description}

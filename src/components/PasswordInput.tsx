@@ -15,7 +15,7 @@ const PasswordInput = ({
       {label && (
         <Label htmlFor={props.id} className="block text-sm font-medium mb-2">
           {" "}
-          {label} *
+          {label} <span className="text-destructive">*</span>
         </Label>
       )}
       <Input

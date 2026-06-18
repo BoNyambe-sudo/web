@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -104,6 +105,10 @@ const SignupDialog = ({
         <DialogHeader>
           <DialogTitle>Sign Up</DialogTitle>
         </DialogHeader>
+        <DialogDescription>
+          <span className="sr-only">Sign up for an account</span>Required fields{" "}
+          <span className="text-destructive">*</span>
+        </DialogDescription>
         <div className="space-y-4">
           {/* <Button
             type="button"
@@ -126,7 +131,9 @@ const SignupDialog = ({
           </div> */}
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-3">
-              <Label htmlFor="first-name">First Name *</Label>
+              <Label htmlFor="first-name">
+                First Name <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="first-name"
                 type="text"
@@ -139,7 +146,9 @@ const SignupDialog = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="last-name">Last Name *</Label>
+              <Label htmlFor="last-name">
+                Last Name <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="last-name"
                 type="text"
@@ -151,7 +160,9 @@ const SignupDialog = ({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email *</Label>
+              <Label htmlFor="email">
+                Email <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="email"
                 type="email"
