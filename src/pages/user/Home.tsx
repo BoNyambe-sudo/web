@@ -353,7 +353,7 @@ const Home = () => {
                     <ArrowUp />
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="overflow-y-auto scrollbar-hide max-h-[90vh]">
                   <DialogTitle>Send a message</DialogTitle>
                   <DialogDescription>
                     <span className="sr-only">
@@ -460,7 +460,7 @@ const Home = () => {
                     Book a call
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="overflow-y-auto scrollbar-hide max-h-[90vh]">
                   <DialogTitle>Book a call now</DialogTitle>
                   <DialogDescription>
                     <span className="sr-only">Schedule a call</span>Required
