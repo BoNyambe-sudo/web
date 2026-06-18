@@ -170,7 +170,6 @@ const AdminUsers = () => {
 
   function handleSaveUserChanges(event: React.SubmitEvent) {
     event.preventDefault();
-    console.log("role: ", formData.role, "id: ", formData.id);
     updateUser(
       { id: formData?.id as string, user: { role: formData.role } },
       {
