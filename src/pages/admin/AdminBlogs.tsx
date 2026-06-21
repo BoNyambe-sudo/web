@@ -813,6 +813,10 @@ const AdminBlogs = () => {
               <SelectItem value="-views">Most Viewed</SelectItem>
               <SelectItem value="title">Title: A to Z</SelectItem>
               <SelectItem value="-title">Title: Z to A</SelectItem>
+              <SelectItem value="readTime">Read Time: Short to Long</SelectItem>
+              <SelectItem value="-readTime">
+                Read Time: Long to Short
+              </SelectItem>
               <SelectItem value="-createdAt">
                 Date Created: New to Old
               </SelectItem>
