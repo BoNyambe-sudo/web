@@ -1556,7 +1556,7 @@ const AdminBlogs = () => {
               <BlogRenderer htmlContent={selectedBlog.content} />
               {selectedBlog.tags.length > 0 && (
                 <div className="border-t pt-4">
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     {selectedBlog.tags?.map((tag) => (
                       <span
                         key={tag}

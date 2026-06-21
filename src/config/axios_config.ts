@@ -7,6 +7,7 @@ import axios, {
 import { toast } from "react-hot-toast";
 
 const baseURL = import.meta.env.VITE_BASE_URL || "https://mysite-backend-eight.vercel.app/api/v1";
+console.log({baseURL})
 
 const client = axios.create({ baseURL });
 

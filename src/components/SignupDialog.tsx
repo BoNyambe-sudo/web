@@ -15,6 +15,7 @@ import { useRegister } from "@/hooks/serverState/useUserServer";
 import toast from "react-hot-toast";
 import { useToggleState } from "@/hooks/clientState/useToggles";
 import PasswordInput from "./PasswordInput";
+import { Link } from "react-router";
 //import Google from "./icons/google";
 type FormData = {
   firstName: string;
@@ -90,12 +91,9 @@ const SignupDialog = ({
     setIsSignUpDialogOpen(false);
     setIsLoginDialogOpen(true);
   };
-  const handleDialogOpenChange = (open: boolean) => {
-    setIsSignUpDialogOpen(open);
-  };
 
   return (
-    <Dialog open={isSignUpDialogOpen} onOpenChange={handleDialogOpenChange}>
+    <Dialog open={isSignUpDialogOpen} onOpenChange={setIsSignUpDialogOpen}>
       <DialogTrigger asChild>
         <Button variant={variant} className={className}>
           Sign Up
@@ -208,6 +206,25 @@ const SignupDialog = ({
                 <Button type="button" onClick={switchToLogin} variant={"link"}>
                   Login
                 </Button>
+              </div>
+              <div className="text-center text-xs text-muted-foreground">
+                By clicking Sign up, you agree to our{" "}
+                <Link
+                  onClick={() => setIsSignUpDialogOpen(false)}
+                  className="underline hover:text-primary"
+                  to="/terms-of-service"
+                >
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link
+                  onClick={() => setIsSignUpDialogOpen(false)}
+                  className="underline hover:text-primary"
+                  to="/privacy-policy"
+                >
+                  Privacy Policy
+                </Link>
+                .
               </div>
             </div>
           </form>

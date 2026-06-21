@@ -282,16 +282,18 @@ const Blogs = () => {
                   <SelectItem value="-views">Most Viewed</SelectItem>
                   <SelectItem value="title">Title: A to Z</SelectItem>
                   <SelectItem value="-title">Title: Z to A</SelectItem>
-                  <SelectItem value="createdAt">
+                  <SelectItem value="readTime">Read Time: Short to Long</SelectItem>
+                  <SelectItem value="-readTime">Read Time: Long to Short</SelectItem>
+                  <SelectItem value="-createdAt">
                     Date Created: New to Old
                   </SelectItem>
-                  <SelectItem value="-createdAt">
+                  <SelectItem value="createdAt">
                     Date Created: Old to New
                   </SelectItem>
-                  <SelectItem value="updatedAt">
+                  <SelectItem value="-updatedAt">
                     Date Updated: New to Old
                   </SelectItem>
-                  <SelectItem value="-updatedAt">
+                  <SelectItem value="updatedAt">
                     Date Updated: Old to New
                   </SelectItem>
                 </SelectContent>
