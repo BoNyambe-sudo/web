@@ -324,7 +324,7 @@ const Home = () => {
             </div>
             <div className="w-full max-w-2xl relative">
               <Input
-                className="placeholder:text-foreground"
+                className="placeholder:text-foreground pr-10"
                 list="messages"
                 placeholder="Your message"
                 autoFocus
