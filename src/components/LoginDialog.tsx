@@ -75,12 +75,8 @@ const LoginDialog = ({
     setIsSignUpDialogOpen(true);
   };
 
-  const handleDialogOpenChange = (open: boolean) => {
-    setIsLoginDialogOpen(open);
-  };
-
   return (
-    <Dialog open={isLoginDialogOpen} onOpenChange={handleDialogOpenChange}>
+    <Dialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}>
       <DialogTrigger asChild>
         <Button variant={variant} className={className}>
           Login
