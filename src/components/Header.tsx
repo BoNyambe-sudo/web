@@ -48,7 +48,7 @@ const Header = ({
           <Link
             to="/demos"
             className={cn(
-              `ml-4 hover:text-primary transition-color ${pathname === "/demos" ? "text-primary" : ""}`,
+              `hover:text-primary transition-color ${pathname === "/demos" ? "text-primary" : ""}`,
               textClassName,
             )}
           >
