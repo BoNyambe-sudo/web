@@ -21,6 +21,7 @@ import { useUserData } from "./hooks/serverState/useUserServer";
 import SideMenu from "./components/SideMenu";
 import { useToggleState } from "./hooks/clientState/useToggles";
 import AuthCallback from "./pages/user/AuthCallback";
+import Demos from "./pages/user/Demos";
 
 function App() {
   useTheme();
@@ -54,6 +55,7 @@ function AppWithQuery() {
             <Route path="/" element={<Home />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/blogs" element={<Blogs />} />
+            <Route path="/demos" element={<Demos />} />
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />

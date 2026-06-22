@@ -64,7 +64,6 @@ const SECTIONS = [
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444"] as const;
 const SECTION_DURATION = 5000;
 const CAROUSEL_INTERVAL = 2500;
-const CAROUSEL_TRANSITION_DURATION = 500;
 const ANIM_CLASSES = ["tech-anim", "demo-anim", "project-anim", "contact-anim"] as const;
 
 const Demos = () => {
@@ -73,9 +72,11 @@ const Demos = () => {
   const isMobile = useIsMobile();
   const reducedMotion = useRef(false);
 
-  if (typeof window !== "undefined" && !reducedMotion.current) {
-    reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  }
+  useEffect(() => {
+    if (typeof window !== "undefined" && !reducedMotion.current) {
+      reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+  }, []);
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(() => {
     const initial = searchParams.get("section") || "tech-stack";
@@ -85,25 +86,26 @@ const Demos = () => {
   const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
-  const allTechLogosRef = useRef<HTMLDivElement[]>([]);
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const sectionTimerRef = useRef<number | null>(null);
-  const carouselTimerRef = useRef<number | null>(null);
-  const isTransitioningRef = useRef(false);
-  const prevIndexRef = useRef(activeSectionIndex);
+   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+   const allTechLogosRef = useRef<HTMLDivElement[]>([]);
+   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+   const carouselTimelineRef = useRef<gsap.core.Timeline | null>(null);
+   const sectionTimerRef = useRef<number | null>(null);
+   const carouselTimerRef = useRef<number | null>(null);
+   const isCarouselTransitioningRef = useRef(false);
+   const prevIndexRef = useRef(activeSectionIndex);
 
   const clearTimers = () => {
     if (sectionTimerRef.current) { clearTimeout(sectionTimerRef.current); sectionTimerRef.current = null; }
     if (carouselTimerRef.current) { clearInterval(carouselTimerRef.current); carouselTimerRef.current = null; }
   };
 
-  // Section animation: runs whenever activeSectionIndex changes
-  useEffect(() => {
-    if (timelineRef.current) { timelineRef.current.kill(); }
+// Section animation: runs whenever activeSectionIndex changes
+   useEffect(() => {
+     if (timelineRef.current) { timelineRef.current.kill(); }
 
-    const el = sectionRefs.current[activeSectionIndex];
-    if (!el) return;
+     const el = sectionRefs.current[activeSectionIndex];
+     if (!el) return;
 
     const animClass = ANIM_CLASSES[activeSectionIndex] || "anim-child";
     const children = el.querySelectorAll(`.${animClass}`);
@@ -135,36 +137,79 @@ const Demos = () => {
     return () => { tl.kill(); };
   }, [activeSectionIndex]);
 
-  // Carousel timer: runs only when on demos (index 1) and isPlaying
-  useEffect(() => {
-    if (activeSectionIndex !== 1 || !isPlaying || isTransitioningRef.current) {
-      if (carouselTimerRef.current) { clearInterval(carouselTimerRef.current); carouselTimerRef.current = null; }
-      return;
-    }
-    carouselTimerRef.current = window.setInterval(() => {
-      setActiveCarouselIndex(i => (i + 1) % carouselItems.length);
-    }, CAROUSEL_INTERVAL);
-    return () => { if (carouselTimerRef.current) { clearInterval(carouselTimerRef.current); carouselTimerRef.current = null; } };
-  }, [activeSectionIndex, isPlaying]);
+// Carousel timer: runs only when on demos (index 1), isPlaying, and not at last item
+   useEffect(() => {
+     if (activeSectionIndex !== 1 || !isPlaying || isTransitioning) {
+       if (carouselTimerRef.current) { clearInterval(carouselTimerRef.current); carouselTimerRef.current = null; }
+       return;
+     }
+     // Only run timer if not at the last item (section will advance when carousel reaches last)
+     if (activeCarouselIndex >= carouselItems.length - 1) {
+       if (carouselTimerRef.current) { clearInterval(carouselTimerRef.current); carouselTimerRef.current = null; }
+       return;
+     }
+     carouselTimerRef.current = window.setInterval(() => {
+       setActiveCarouselIndex(i => i + 1);
+     }, CAROUSEL_INTERVAL);
+     return () => { if (carouselTimerRef.current) { clearInterval(carouselTimerRef.current); carouselTimerRef.current = null; } };
+   }, [activeSectionIndex, isPlaying, isTransitioning, activeCarouselIndex]);
 
-  // Section auto-advance timer
-  useEffect(() => {
-    if (!isPlaying || isTransitioningRef.current) {
-      if (sectionTimerRef.current) { clearTimeout(sectionTimerRef.current); sectionTimerRef.current = null; }
-      return;
-    }
-    sectionTimerRef.current = window.setTimeout(() => {
-      setActiveSectionIndex(i => (i + 1) % SECTIONS.length);
-    }, SECTION_DURATION);
-    return () => { if (sectionTimerRef.current) { clearTimeout(sectionTimerRef.current); sectionTimerRef.current = null; } };
-  }, [activeSectionIndex, isPlaying]);
+   // Carousel animation: animate items when activeCarouselIndex changes
+   useEffect(() => {
+     const el = sectionRefs.current[1];
+     if (!el || activeSectionIndex !== 1) return;
 
-  // Reset carousel when leaving demos section
-  useEffect(() => {
-    if (activeSectionIndex !== 1) {
-      setActiveCarouselIndex(0);
-    }
-  }, [activeSectionIndex]);
+     const fast = reducedMotion.current;
+     const tracks = el.querySelectorAll('[data-carousel-track]');
+     if (tracks.length === 0) return;
+
+     if (carouselTimelineRef.current) {
+       carouselTimelineRef.current.kill();
+     }
+
+     if (fast) {
+       tracks.forEach((track, i) => {
+         gsap.set(track, { opacity: i === activeCarouselIndex ? 1 : 0 });
+       });
+       return;
+     }
+
+      isCarouselTransitioningRef.current = true;
+      const tl = gsap.timeline({
+        onComplete: () => { isCarouselTransitioningRef.current = false; }
+     });
+     carouselTimelineRef.current = tl;
+     tl.to(tracks, {
+       opacity: (i: number) => i === activeCarouselIndex ? 1 : 0,
+       duration: 0.5,
+       ease: "power2.inOut"
+     });
+   }, [activeCarouselIndex, activeSectionIndex]);
+
+// Section auto-advance timer
+   useEffect(() => {
+     if (!isPlaying || isTransitioning) {
+       if (sectionTimerRef.current) { clearTimeout(sectionTimerRef.current); sectionTimerRef.current = null; }
+       return;
+     }
+     // When on demos section, wait for carousel to reach the last item before auto-advancing
+     const shouldWait = activeSectionIndex === 1 && activeCarouselIndex < carouselItems.length - 1;
+     if (shouldWait) {
+       if (sectionTimerRef.current) { clearTimeout(sectionTimerRef.current); sectionTimerRef.current = null; }
+       return;
+     }
+     sectionTimerRef.current = window.setTimeout(() => {
+       setActiveSectionIndex(i => (i + 1) % SECTIONS.length);
+     }, SECTION_DURATION);
+     return () => { if (sectionTimerRef.current) { clearTimeout(sectionTimerRef.current); sectionTimerRef.current = null; } };
+   }, [activeSectionIndex, isPlaying, isTransitioning, activeCarouselIndex]);
+
+// Reset carousel when leaving demos section
+   useEffect(() => {
+     if (activeSectionIndex !== 1 && activeCarouselIndex !== 0) {
+       setTimeout(() => setActiveCarouselIndex(0), 0);
+     }
+   }, [activeSectionIndex, activeCarouselIndex]);
 
   // Mount animation
   useEffect(() => {
@@ -181,12 +226,16 @@ const Demos = () => {
   }, [searchParams]);
 
   const switchTo = (newIndex: number) => {
-    if (isTransitioningRef.current) return;
+    if (isTransitioning) return;
     if (newIndex === activeSectionIndex) return;
     if (newIndex < 0 || newIndex >= SECTIONS.length) return;
 
     clearTimers();
-    isTransitioningRef.current = true;
+    setIsTransitioning(true);
+    isCarouselTransitioningRef.current = false;
+    if (carouselTimelineRef.current) {
+      carouselTimelineRef.current.kill();
+    }
 
     // Animate out current
     const oldEl = sectionRefs.current[activeSectionIndex];
@@ -196,7 +245,7 @@ const Demos = () => {
       const fast = reducedMotion.current;
       const tl = gsap.timeline({
         onComplete: () => {
-          isTransitioningRef.current = false;
+          setIsTransitioning(false);
         }
       });
       tl.to(children, { y: -30, opacity: 0, scale: 0.96, duration: fast ? 0.05 : 0.3, stagger: fast ? 0 : 0.03 });
@@ -204,7 +253,7 @@ const Demos = () => {
       if (timelineRef.current) { timelineRef.current.kill(); }
       timelineRef.current = tl;
     } else {
-      isTransitioningRef.current = false;
+      setIsTransitioning(false);
     }
 
     setActiveCarouselIndex(0);
@@ -235,6 +284,7 @@ const Demos = () => {
   };
 
   const handleCarouselNav = (dir: "prev" | "next") => {
+    if (isCarouselTransitioningRef.current) return;
     setActiveCarouselIndex(prev => {
       if (dir === "next") return Math.min(prev + 1, carouselItems.length - 1);
       return Math.max(prev - 1, 0);
@@ -318,12 +368,12 @@ const Demos = () => {
 
               <div className="relative w-full h-72 sm:h-80 demo-anim" aria-live="polite" aria-atomic="true" role="region" aria-label="Feature carousel">
                 <div className="relative w-full h-full rounded-xl overflow-hidden bg-muted border border-border shadow-lg">
-                  {carouselItems.map((item, index) => (
-                    <div
-                      key={item.id}
-                      data-carousel-track={index}
-                      className={`absolute inset-0 p-6 sm:p-8 flex flex-col justify-center transition-opacity duration-500 ${index === activeCarouselIndex ? "opacity-100 z-10" : "opacity-0 z-0"}`}
-                    >
+{carouselItems.map((item, index) => (
+                     <div
+                       key={item.id}
+                       data-carousel-track={index}
+                       className={`absolute inset-0 p-6 sm:p-8 flex flex-col justify-center ${index === activeCarouselIndex ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+                     >
                       <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">{item.title}</h3>
                       <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">{item.description}</p>
                       <div className="relative mt-4 h-32 sm:h-36 bg-secondary/50 rounded-lg overflow-hidden flex">

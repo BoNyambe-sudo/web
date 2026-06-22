@@ -16,6 +16,7 @@ const Footer = () => {
       </p>
       <div className="flex flex-col md:flex-row items-center gap-2 text-xs">
         <Link className="hover:text-primary" to="/">Home</Link>
+        <Link className="hover:text-primary" to="/demos">Demos</Link>
         <Link className="hover:text-primary" to="/blogs">Blogs</Link>
         <Link className="hover:text-primary" to="/faqs">FAQS</Link>
         <Link className="hover:text-primary" to="/privacy-policy">Privacy Policy</Link>
