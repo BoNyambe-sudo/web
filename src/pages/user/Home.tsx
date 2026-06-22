@@ -2,6 +2,7 @@ import heroImg from "@/assets/hero.jpg";
 import { format } from "date-fns";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
+import { DataList } from "@/components/ui/data-list";
 import {
   Dialog,
   DialogContent,
@@ -56,6 +57,36 @@ const STATEMENTS = [
   "Designing pixel-perfect, responsive interfaces",
 ];
 
+const MESSAGE_SUGGESTIONS = [
+  "I'd like to discuss my project idea with you",
+  "Could we schedule a consultation about my business needs?",
+  "I'm looking for expert advice on my tech stack",
+  "I need a professional website for my business",
+  "Can you help me build a high-performance web application?",
+  "I'm looking to redesign my current website",
+  "I need to build an e-commerce platform",
+  "Can you develop a SaaS application for my startup?",
+  "I want to create an online marketplace",
+  "I'm interested in developing a mobile app",
+  "Can you build a native or cross-platform mobile application?",
+  "I need to optimize my existing mobile app for better performance",
+  "I'd like to explore AI integration for my business",
+  "Can you help me build an intelligent chatbot or automation system?",
+  "I'm interested in custom AI solutions for my specific use case",
+  "I want to improve my website's SEO and performance",
+  "Can you migrate my website to a modern, scalable architecture?",
+  "I need help optimizing my site for better user experience",
+  "My current website isn't performing well. Can you help?",
+  "We need a complete digital transformation of our online presence",
+  "I'm struggling with scalability issues in my application",
+  "What's your experience with NestJS and Angular?",
+  "How do you approach building scalable web applications?",
+  "Can you tell me about your development process?",
+  "I need ongoing maintenance and support for my application",
+  "Can you help me with technical support and updates?",
+  "I'm looking for a dedicated development partner",
+];
+
 const Home = () => {
   const [isMessagDialogOpen, setIsMessageDialogOpen] = useState(false);
   const [isAppointmentDialogOpen, setIsAppointmentDialogOpen] = useState(false);
@@ -64,53 +95,6 @@ const Home = () => {
   const statementRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const paragraphRef = useRef<HTMLParagraphElement>(null);
-
-  const messages = [
-    // Professional Consultations
-    "I'd like to discuss my project idea with you",
-    "Could we schedule a consultation about my business needs?",
-    "I'm looking for expert advice on my tech stack",
-
-    // Web Development
-    "I need a professional website for my business",
-    "Can you help me build a high-performance web application?",
-    "I'm looking to redesign my current website",
-
-    // E-Commerce & SaaS
-    "I need to build an e-commerce platform",
-    "Can you develop a SaaS application for my startup?",
-    "I want to create an online marketplace",
-
-    // Mobile Development
-    "I'm interested in developing a mobile app",
-    "Can you build a native or cross-platform mobile application?",
-    "I need to optimize my existing mobile app for better performance",
-
-    // AI & Advanced Solutions
-    "I'd like to explore AI integration for my business",
-    "Can you help me build an intelligent chatbot or automation system?",
-    "I'm interested in custom AI solutions for my specific use case",
-
-    // Website Enhancement
-    "I want to improve my website's SEO and performance",
-    "Can you migrate my website to a modern, scalable architecture?",
-    "I need help optimizing my site for better user experience",
-
-    // Problem-Focused
-    "My current website isn't performing well. Can you help?",
-    "We need a complete digital transformation of our online presence",
-    "I'm struggling with scalability issues in my application",
-
-    // Questions & Discovery
-    "What's your experience with NestJS and Angular?",
-    "How do you approach building scalable web applications?",
-    "Can you tell me about your development process?",
-
-    // Ongoing Support
-    "I need ongoing maintenance and support for my application",
-    "Can you help me with technical support and updates?",
-    "I'm looking for a dedicated development partner",
-  ];
 
   const navigate = useNavigate();
   const setIsContactOpen = useToggleState((state) => state.toggleContactOpen);
@@ -323,24 +307,22 @@ const Home = () => {
               ></div>
             </div>
             <div className="w-full max-w-2xl relative">
-              <Input
-                className="placeholder:text-foreground pr-10"
-                list="messages"
-                placeholder="Your message"
-                autoFocus
+              <DataList
+                id="message-suggestion"
+                items={MESSAGE_SUGGESTIONS}
                 value={messageFormData.message}
-                onChange={(e) =>
+                onChange={(message) =>
                   setMessageFormData({
                     ...messageFormData,
-                    message: e.target.value,
+                    message,
                   })
                 }
+                label="Message"
+                helpText="Start typing to see suggested message templates."
+                placeholder="Your message"
+                autoFocus
+                inputClassName="placeholder:text-foreground pr-10"
               />
-              <datalist id="messages">
-                {messages.map((message, index) => (
-                  <option key={index} value={message} />
-                ))}
-              </datalist>
               <Dialog
                 open={isMessagDialogOpen}
                 onOpenChange={setIsMessageDialogOpen}
@@ -349,6 +331,7 @@ const Home = () => {
                   <Button
                     className="absolute right-0.5 top-1/2 -translate-y-1/2 rounded-lg h-9/10"
                     variant={"default"}
+                    aria-label="Send message"
                   >
                     <ArrowUp />
                   </Button>
