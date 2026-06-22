@@ -406,7 +406,6 @@ const Demos = () => {
       if (timelineRef.current) {
         timelineRef.current.kill();
       }
-      timelineRef.current = tl;
     } else {
       setIsTransitioning(false);
     }
