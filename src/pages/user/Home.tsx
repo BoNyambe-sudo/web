@@ -322,6 +322,12 @@ const Home = () => {
                 placeholder="Your message"
                 autoFocus
                 inputClassName="placeholder:text-foreground pr-10"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && messageFormData.message.trim()) {
+                    e.preventDefault();
+                    setIsMessageDialogOpen(true);
+                  }
+                }}
               />
               <Dialog
                 open={isMessagDialogOpen}
