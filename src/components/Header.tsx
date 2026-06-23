@@ -46,6 +46,15 @@ const Header = ({
             Home
           </Link>
           <Link
+            to="/demos"
+            className={cn(
+              `hover:text-primary transition-color ${pathname === "/demos" ? "text-primary" : ""}`,
+              textClassName,
+            )}
+          >
+            Demos
+          </Link>
+          <Link
             to="/blogs"
             className={cn(
               `hover:text-primary transition-color ${pathname === "/blogs" ? "text-primary" : ""}`,
@@ -53,6 +62,15 @@ const Header = ({
             )}
           >
             Blogs
+          </Link>
+          <Link
+            to="/faqs"
+            className={cn(
+              `hover:text-primary transition-color ${pathname === "/faqs" ? "text-primary" : ""}`,
+              textClassName,
+            )}
+          >
+            FAQS
           </Link>
           
         </div>
