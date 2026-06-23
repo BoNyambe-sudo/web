@@ -25,6 +25,7 @@ const BlogCard = ({
           src={blog.thumbnail}
           className="relative z-20 aspect-video w-full object-cover transition-transform group-hover:scale-[1.02]"
           alt={blog.title}
+          loading="lazy"
         />
       </Link>
 

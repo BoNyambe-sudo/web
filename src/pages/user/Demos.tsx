@@ -26,6 +26,12 @@ import MongoDB from "@/components/icons/MongoDB";
 import Angular from "@/components/icons/Angular";
 import NestJS from "@/components/icons/NestJS";
 import NodeJS from "@/components/icons/NodeJS";
+import adminPanelImg from "@/assets/admin-panel.webp";
+import seoImg from "@/assets/SEO.webp";
+import performanceImg from "@/assets/perfomance.webp";
+import accessibilityImg from "@/assets/accessiblity.webp";
+import themeImg from "@/assets/dark-and-light-mode.webp";
+import responsiveImg from "@/assets/responsive.webp";
 
 gsap.registerPlugin(SplitText);
 
@@ -67,6 +73,7 @@ type CarouselItem = {
   id: number;
   title: string;
   description: string;
+  image: string;
 };
 
 const carouselItems: CarouselItem[] = [
@@ -75,36 +82,42 @@ const carouselItems: CarouselItem[] = [
     title: "Custom Admin Panels",
     description:
       "Powerful dashboards with real-time data visualization, role-based access control, and intuitive management interfaces.",
+    image: adminPanelImg,
   },
   {
     id: 1,
     title: "SEO-Optimized Sites",
     description:
       "Built with semantic HTML, meta tags, structured data, and performance optimization for maximum search engine visibility.",
+    image: seoImg,
   },
   {
     id: 2,
     title: "Responsive Websites",
     description:
       "Mobile-first design approach ensuring perfect display on phones, tablets, and desktops with fluid layouts.",
+    image: responsiveImg,
   },
   {
     id: 3,
     title: "Dark/Light Mode",
     description:
       "Seamless theme switching with CSS custom properties, respecting user preferences and system settings.",
+    image: themeImg,
   },
   {
     id: 4,
     title: "Accessible Sites",
     description:
       "WCAG compliant interfaces with proper ARIA labels, keyboard navigation, screen reader support, and focus management.",
+    image: accessibilityImg,
   },
   {
     id: 5,
     title: "Performance First",
     description:
       "Optimized loading with code splitting, lazy loading, efficient caching, and Core Web Vitals optimization.",
+    image: performanceImg,
   },
 ];
 
@@ -538,7 +551,7 @@ const Demos = () => {
                 >
                   Technologies I Work With
                 </h2>
-                <p className="text-muted-foreground text-sm mt-4 tech-anim">
+                <p className="text-muted-foreground text-xs sm:text-sm mt-4 tech-anim">
                   I use the MANN stack - MongoDB, Angular, NestJS, and Node.js -
                   for end-to-end Typescript development. It gives me flexible,
                   scalable data, modular backend architecture, and responsive
@@ -575,7 +588,7 @@ const Demos = () => {
             aria-labelledby="demos-title"
           >
             <div className="w-full max-w-4xl mx-auto flex flex-col">
-              <div className="text-center mb-6">
+              <div className="text-center mb-2 md:mb-6">
                 <span className="text-xs font-semibold tracking-widest text-primary uppercase demo-anim block">
                   FEATURES & CAPABILITIES
                 </span>
@@ -594,51 +607,28 @@ const Demos = () => {
                 role="region"
                 aria-label="Feature carousel"
               >
-                <div className="relative w-full h-full rounded-xl overflow-hidden bg-muted border border-border shadow-lg">
+                <div className="relative w-full h-full overflow-hidden">
                   {carouselItems.map((item, index) => (
                     <div
                       key={item.id}
                       data-carousel-track={index}
-                      className={`absolute inset-0 p-6 sm:p-8 flex flex-col justify-center ${index === activeCarouselIndex ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+                      className={`absolute inset-0 md:p-8 flex flex-col md:flex-row gap-3 md:gap-8 justify-center ${index === activeCarouselIndex ? "opacity-100 z-10" : "opacity-0 z-0"}`}
                     >
-                      <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">
-                        {item.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                        {item.description}
-                      </p>
-                      <div className="relative mt-4 h-32 sm:h-36 bg-secondary/50 rounded-lg overflow-hidden flex">
-                        <div className="flex-1 relative bg-linear-to-br from-blue-50 to-indigo-100 rounded-l-lg overflow-hidden dark:from-slate-800 dark:to-slate-900">
-                          <div className="absolute inset-0 flex items-center justify-center opacity-30 dark:opacity-20">
-                            <div className="space-y-2 px-3">
-                              <div className="h-1.5 bg-blue-400 dark:bg-blue-500 rounded w-24"></div>
-                              <div className="h-1.5 bg-blue-300 dark:bg-blue-400 rounded w-20"></div>
-                              <div className="h-1.5 bg-blue-200 dark:bg-blue-300 rounded w-28"></div>
-                              <div className="h-1.5 bg-blue-300 dark:bg-blue-400 rounded w-16"></div>
-                            </div>
-                          </div>
-                          <span className="absolute bottom-2 left-3 text-xs text-blue-600 dark:text-blue-300 font-medium">
-                            Light Mode
-                          </span>
-                        </div>
-                        <div className="w-1/2 border-l border-border bg-linear-to-br from-slate-800 to-slate-900 dark:from-slate-900 dark:to-black relative overflow-hidden">
-                          <div className="absolute inset-0 flex items-center justify-center opacity-50">
-                            <div className="space-y-2 px-3">
-                              <div className="h-1.5 bg-emerald-400 rounded w-24"></div>
-                              <div className="h-1.5 bg-emerald-500 rounded w-20"></div>
-                              <div className="h-1.5 bg-emerald-600 rounded w-28"></div>
-                              <div className="h-1.5 bg-emerald-500 rounded w-16"></div>
-                            </div>
-                          </div>
-                          <span className="absolute bottom-2 left-3 text-xs text-emerald-400 font-medium">
-                            Dark Mode
-                          </span>
-                        </div>
+                      <div className="w-full md:w-1/2 relative rounded-lg overflow-hidden ">
+                        <img src={item.image} alt={`image of ${item.title}`} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex flex-col gap-1 md:gap-4 text-center md:text-start w-full md:w-1/2">
+                        <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+                          {item.description}
+                        </p>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                <div className="absolute -bottom-4 md:bottom-1 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                   {carouselItems.map((_, i) => (
                     <button
                       key={i}
@@ -672,15 +662,6 @@ const Demos = () => {
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
-              </div>
-
-              <div className="mt-6 space-y-1 demo-anim">
-                <h3 className="text-lg font-bold text-foreground">
-                  {carouselItems[activeCarouselIndex].title}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {carouselItems[activeCarouselIndex].description}
-                </p>
               </div>
             </div>
           </section>
@@ -772,7 +753,7 @@ const Demos = () => {
                 >
                   Let's Connect
                 </h2>
-                <p className="text-muted-foreground text-sm mt-4">
+                <p className="text-muted-foreground text-xs sm:text-sm mt-4">
                   Got an idea, a product, or a problem to solve? Let's talk. I'm
                   always open to new projects, collaborations, and conversations
                   about building scalable apps. Drop a message and I'll get back
