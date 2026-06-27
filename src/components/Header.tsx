@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useLocation } from "react-router";
 import Logo from "./Logo";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,6 @@ const Header = ({
   textClassName?: string;
 }) => {
   const isMobile = useIsMobile();
-  const navigate = useNavigate();
   const { data: user } = useUserData();
   const pathname = useLocation().pathname;
   return (
@@ -28,12 +27,12 @@ const Header = ({
       )}
     >
       <div className="container flex items-center justify-between">
-        <div className="cursor-pointer" onClick={() => navigate("/")}>
+        <Link to="/" className="cursor-pointer">
           <Logo
             size={32}
             className={cn("text-foreground font-semibold", textClassName)}
           />
-        </div>
+        </Link>
 
         <div className="hidden md:flex flex-1 justify-center items-center font-semibold gap-3">
           <Link

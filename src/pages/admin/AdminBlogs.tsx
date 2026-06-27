@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Plus,
@@ -134,6 +134,9 @@ const AdminBlogs = () => {
   const [newCommentText, setNewCommentText] = useState("");
   const [isCreatingComment, setIsCreatingComment] = useState(false);
   const [showDeleted, setShowDeleted] = useState<boolean>(false);
+  const previewScrollRef = useRef<HTMLDivElement>(null);
+  const createScrollRef = useRef<HTMLDivElement>(null);
+  const editScrollRef = useRef<HTMLDivElement>(null);
 
   const showReplies = useCommentReplyStore((state) => state.showReplies);
   const setShowReplies = useCommentReplyStore((state) => state.setShowReplies);
@@ -601,7 +604,7 @@ const AdminBlogs = () => {
                 Create Blog
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide">
+            <DialogContent ref={createScrollRef} className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide">
               <DialogHeader>
                 <DialogTitle>Create New Blog</DialogTitle>
                 <DialogDescription>
@@ -715,6 +718,7 @@ const AdminBlogs = () => {
                     onChange={(content) =>
                       setCreateFormData({ ...createFormData, content })
                     }
+                    scrollContainerRef={createScrollRef}
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -983,15 +987,16 @@ const AdminBlogs = () => {
                       <div className="flex gap-1">
                         {canEdit(blog) && (
                           <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleEditBlog(blog)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => handleEditBlog(blog)}
+                                  aria-label="Edit blog"
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
                             <TooltipContent>
                               <p>Edit</p>
                             </TooltipContent>
@@ -1004,6 +1009,7 @@ const AdminBlogs = () => {
                               variant="ghost"
                               size="icon"
                               onClick={() => handlePreviewBlog(blog)}
+                              aria-label="Preview blog"
                             >
                               <ExternalLink className="h-4 w-4" />
                             </Button>
@@ -1014,17 +1020,18 @@ const AdminBlogs = () => {
                         </Tooltip>
 
                         <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() =>
-                                handleViewComments(blog?.id as string)
-                              }
-                            >
-                              <MessageSquare className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() =>
+                              handleViewComments(blog?.id as string)
+                            }
+                            aria-label="View comments"
+                          >
+                            <MessageSquare className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
                           <TooltipContent>
                             <p>Comments</p>
                           </TooltipContent>
@@ -1037,6 +1044,7 @@ const AdminBlogs = () => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => toggleBlogVisibility(blog)}
+                                aria-label={blog.published ? "Unpublish blog" : "Publish blog"}
                               >
                                 {blog.published ? (
                                   <EyeOff className="h-4 w-4" />
@@ -1071,6 +1079,7 @@ const AdminBlogs = () => {
                                         openRestoreDialog(blog.id as string)
                                       }
                                       className="text-green-600 hover:text-green-700"
+                                      aria-label="Restore blog"
                                     >
                                       <RotateCcw className="h-4 w-4" />
                                     </Button>
@@ -1123,6 +1132,7 @@ const AdminBlogs = () => {
                                         openDeleteDialog(blog.id as string)
                                       }
                                       className="text-destructive hover:text-red-700"
+                                      aria-label="Delete blog"
                                     >
                                       <Trash2 className="h-4 w-4" />
                                     </Button>
@@ -1207,7 +1217,7 @@ const AdminBlogs = () => {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide">
+        <DialogContent ref={editScrollRef} className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide">
           <DialogHeader>
             <DialogTitle>Edit Blog</DialogTitle>
             <DialogDescription>
@@ -1323,6 +1333,7 @@ const AdminBlogs = () => {
                 onChange={(content) =>
                   setUpdateFormData({ ...updateFormData, content })
                 }
+                scrollContainerRef={editScrollRef}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -1534,7 +1545,7 @@ const AdminBlogs = () => {
 
       {/* Preview Dialog */}
       <Dialog open={isPreviewDialogOpen} onOpenChange={setIsPreviewDialogOpen}>
-        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide">
+        <DialogContent ref={previewScrollRef} className="sm:max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide">
           <DialogHeader>
             <DialogTitle>Blog Preview</DialogTitle>
             <DialogDescription>
@@ -1542,7 +1553,7 @@ const AdminBlogs = () => {
             </DialogDescription>
           </DialogHeader>
           {selectedBlog && (
-            <div className="space-y-4">
+            <div className="space-y-4 relative">
               <div className="border-b pb-4">
                 <h1 className="text-2xl font-bold mb-2">
                   {selectedBlog.title}
@@ -1557,7 +1568,7 @@ const AdminBlogs = () => {
                   <span>{selectedBlog.readTime} min read</span>
                 </div>
               </div>
-              <BlogRenderer htmlContent={selectedBlog.content} />
+              <BlogRenderer htmlContent={selectedBlog.content} scrollContainerRef={previewScrollRef} />
               {selectedBlog.tags.length > 0 && (
                 <div className="border-t pt-4">
                   <div className="flex gap-2 flex-wrap">

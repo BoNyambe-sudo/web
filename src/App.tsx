@@ -45,12 +45,13 @@ function AppWithQuery() {
 
   return (
     <TooltipProvider>
+      <a href="#main-content" className="sr-only focus:not-sr-only">Skip to main content</a>
       {user &&
       user.status === "ACTIVE" &&
       (user.role === "ADMIN" || user.role === "CONTRIBUTOR") ? (
         <AdminDashboard />
       ) : (
-        <>
+        <div id="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
@@ -69,7 +70,7 @@ function AppWithQuery() {
               onClose={() => toggleSidebarOpen(false)}
             />
           )}
-        </>
+        </div>
       )}
       <Toaster
         position="top-right"

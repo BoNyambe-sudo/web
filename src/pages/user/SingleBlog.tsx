@@ -212,20 +212,30 @@ const SingleBlog = () => {
             <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
               {blog.category}
             </span>
-            <div className="flex items-center gap-1 text-muted-foreground">
+            <div className="flex text-sm md:text-base items-center gap-1 text-muted-foreground">
               <Clock size={16} />
               <span>{blog.readTime} min read</span>
             </div>
             {blog.views !== undefined && (
-              <div className="flex items-center gap-1 text-muted-foreground">
+              <div className="flex text-sm md:text-base items-center gap-1 text-muted-foreground">
                 <Eye size={16} />
                 <span>{formatCompactNumber(blog.views)} {blog.views === 1 ? "view" : "views"}</span>
               </div>
             )}
             <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
               <DialogTrigger asChild>
-                <div className="flex items-center gap-2.5 text-muted-foreground hover:text-primary  cursor-pointer">
-                  <Share2 className="text-lg" />
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="flex text-sm md:text-base items-center gap-2.5 text-muted-foreground hover:text-primary cursor-pointer"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setShareDialogOpen(true);
+                    }
+                  }}
+                >
+                  <Share2 size={20} />
                   <p>Share</p>
                 </div>
               </DialogTrigger>
@@ -238,6 +248,7 @@ const SingleBlog = () => {
                     variant="outline"
                     className="flex flex-col items-center gap-2 p-4 h-auto hover:text-blue-600 hover:border-blue-200 transition-all"
                     onClick={() => handleShare("facebook")}
+                    aria-label="Share on Facebook"
                   >
                     <Facebook className="size-6" />
                     <span className="text-sm">Facebook</span>
@@ -246,6 +257,7 @@ const SingleBlog = () => {
                     variant="outline"
                     className="flex flex-col items-center gap-2 p-4 h-auto hover:text-blue-400 hover:border-blue-400 transition-all"
                     onClick={() => handleShare("twitter")}
+                    aria-label="Share on Twitter"
                   >
                     <Twitter className="size-6" />
                     <span className="text-sm">Twitter</span>
@@ -254,6 +266,7 @@ const SingleBlog = () => {
                     variant="outline"
                     className="flex flex-col items-center gap-2 p-4 h-auto hover:text-blue-700 hover:border-blue-700 transition-all"
                     onClick={() => handleShare("linkedin")}
+                    aria-label="Share on LinkedIn"
                   >
                     <LinkedIn className="size-6" />
                     <span className="text-sm">LinkedIn</span>
@@ -262,6 +275,7 @@ const SingleBlog = () => {
                     variant="outline"
                     className="flex flex-col items-center gap-2 p-4 h-auto hover:text-green-500 hover:border-green-500 transition-all"
                     onClick={() => handleShare("whatsapp")}
+                    aria-label="Share on WhatsApp"
                   >
                     <Whatsapp className="size-6" />
                     <span className="text-sm">WhatsApp</span>
@@ -270,6 +284,7 @@ const SingleBlog = () => {
                     variant="outline"
                     className="flex flex-col items-center gap-2 p-4 h-auto hover:text-pink-500 hover:border-pink-500 transition-all"
                     onClick={() => handleShare("instagram")}
+                    aria-label="Share on Instagram"
                   >
                     <Instagram className="size-6" />
                     <span className="text-sm">Instagram</span>
@@ -278,6 +293,7 @@ const SingleBlog = () => {
                     variant="outline"
                     className="flex flex-col items-center gap-2 p-4 h-auto hover:bg-muted hover:text-muted-foreground hover:border-gray-500 transition-all"
                     onClick={handleCopyLink}
+                    aria-label="Copy link"
                   >
                     <Copy className="size-6" />
                     <span className="text-sm">Copy Link</span>

@@ -17,7 +17,7 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
   const { data: user } = useUserData();
 
   return (
-    <aside aria-hidden={!isOpen} className="fixed inset-0 z-50 md:hidden">
+    <aside role="dialog" aria-modal="true" aria-hidden={!isOpen} className="fixed inset-0 z-50 md:hidden">
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
         onClick={onClose}
