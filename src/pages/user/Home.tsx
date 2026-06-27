@@ -99,9 +99,11 @@ const Home = () => {
   const navigate = useNavigate();
   const setIsContactOpen = useToggleState((state) => state.toggleContactOpen);
   const isMobile = useIsMobile();
+  const mounted = useRef(true);
 
   // GSAP animations using useEffect
   useEffect(() => {
+    mounted.current = true;
     let titleSplit = null;
     let paragraphSplit = null;
     const tl = gsap.timeline();
@@ -110,13 +112,12 @@ const Home = () => {
       titleSplit = SplitText.create(titleRef.current, { type: "words, chars" });
       tl.from(titleSplit.chars, {
         duration: 1,
-        y: -100, // animate from 100px above
-        autoAlpha: 0, // fade in from opacity: 0 and visibility: hidden
-        stagger: 0.05, // 0.05 seconds between each
+        y: -100,
+        autoAlpha: 0,
+        stagger: 0.05,
       });
     }
 
-    // Animate paragraph - whole element from top, fade in (no character split)
     if (paragraphRef.current) {
       paragraphSplit = SplitText.create(paragraphRef.current, {
         type: "words, lines",
@@ -125,18 +126,19 @@ const Home = () => {
         paragraphSplit.words,
         {
           duration: 1,
-          y: -100, // animate from 100px above
-          autoAlpha: 0, // fade in from opacity: 0 and visibility: hidden
+          y: -100,
+          autoAlpha: 0,
         },
-        0.5, // start 0.5 seconds after the timeline starts
+        0.5,
       );
     }
 
-    // Animate statements - typewriter effect with alternation after paragraph completes
     if (statementRef.current) {
       let currentStatementIndex = 0;
 
       const animateStatement = () => {
+        if (!mounted.current || !statementRef.current) return;
+
         const statement = STATEMENTS[currentStatementIndex];
 
         const statementTl = gsap.timeline();
@@ -179,6 +181,7 @@ const Home = () => {
 
     // Cleanup function to kill animations on unmount
     return () => {
+      mounted.current = false;
       tl.kill();
       if (titleSplit) {
         titleSplit.revert();

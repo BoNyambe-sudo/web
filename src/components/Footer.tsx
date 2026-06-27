@@ -22,16 +22,16 @@ const Footer = () => {
         <Link className="hover:text-primary" to="/privacy-policy">Privacy Policy</Link>
         <Link className="hover:text-primary" to="/terms-of-service">Terms of Service</Link>
         <div className="flex gap-2 items-center">
-          <Link to={facebookLink} target="_blank">
+          <Link to={facebookLink} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
             <Facebook size={12} />
           </Link>
-          <Link to={instagramLink} target="_blank">
+          <Link to={instagramLink} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <Instagram size={12} />
           </Link>
-          <Link to={xLink} target="_blank">
+          <Link to={xLink} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
             <Twitter size={12} />
           </Link>
-          <Link to={linkedinLink} target="_blank">
+          <Link to={linkedinLink} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
             <LinkedIn size={12} />
           </Link>
         </div>

@@ -32,6 +32,7 @@ import {
   Link,
   Image as ImageIcon,
   Trash2,
+  ArrowUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,12 +49,14 @@ interface BlogEditorProps {
   initialContent?: string;
   onChange?: (html: string) => void;
   placeholder?: string;
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
 }
 
 const BlogEditor = ({
   initialContent = "",
   onChange,
   placeholder = "Start writing your blog...",
+  scrollContainerRef,
 }: BlogEditorProps) => {
    const [imageUrl, setImageUrl] = useState<File>();
    const [imagePreview, setImagePreview] = useState<string>("");
@@ -63,10 +66,22 @@ const BlogEditor = ({
    const [imageAltText, setImageAltText] = useState<string>("");
    const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
    const [isDragging, setIsDragging] = useState(false);
+   const [showBackToTop, setShowBackToTop] = useState(false);
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const { mutate: uploadImage } = useUploadBlogImage();
   const { mutate: deleteImage } = useDeleteBlogImage();
+
+  useEffect(() => {
+    const target = scrollContainerRef?.current;
+    if (target) {
+      const handleScroll = () => {
+        setShowBackToTop(target.scrollTop > 300);
+      };
+      target.addEventListener("scroll", handleScroll);
+      return () => target.removeEventListener("scroll", handleScroll);
+    }
+  }, [scrollContainerRef]);
 
   const handleOnChange = useCallback((html: string) => {
     if (debounceTimer.current) {
@@ -234,7 +249,7 @@ const editor = useEditor({
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="relative border rounded-lg overflow-hidden">
       {/* Toolbar */}
       <div className="border-b p-3 flex flex-wrap gap-2 bg-popover text-popover-foreground">
         {/* Text Formatting */}
@@ -246,6 +261,7 @@ const editor = useEditor({
           className={
             editor.isActive("bold") ? "bg-primary/20 text-primary" : ""
           }
+          aria-label="Bold"
         >
           <Bold size={16} />
         </Button>
@@ -257,6 +273,7 @@ const editor = useEditor({
           className={
             editor.isActive("italic") ? "bg-primary/20 text-primary" : ""
           }
+          aria-label="Italic"
         >
           <Italic size={16} />
         </Button>
@@ -268,6 +285,7 @@ const editor = useEditor({
           className={
             editor.isActive("underline") ? "bg-primary/20 text-primary" : ""
           }
+          aria-label="Underline"
         >
           <Underline size={16} />
         </Button>
@@ -286,6 +304,7 @@ const editor = useEditor({
               ? "bg-primary/20 text-primary"
               : ""
           }
+          aria-label="Heading 1"
         >
           <Heading1 size={16} />
         </Button>
@@ -301,6 +320,7 @@ const editor = useEditor({
               ? "bg-primary/20 text-primary"
               : ""
           }
+          aria-label="Heading 2"
         >
           <Heading2 size={16} />
         </Button>
@@ -316,6 +336,7 @@ const editor = useEditor({
               ? "bg-primary/20 text-primary"
               : ""
           }
+          aria-label="Heading 3"
         >
           <Heading3 size={16} />
         </Button>
@@ -330,6 +351,7 @@ const editor = useEditor({
           className={
             editor.isActive("bulletList") ? "bg-primary/20 text-primary" : ""
           }
+          aria-label="Bullet list"
         >
           <List size={16} />
         </Button>
@@ -341,6 +363,7 @@ const editor = useEditor({
           className={
             editor.isActive("orderedList") ? "bg-primary/20 text-primary" : ""
           }
+          aria-label="Ordered list"
         >
           <ListOrdered size={16} />
         </Button>
@@ -355,6 +378,7 @@ const editor = useEditor({
           className={
             editor.isActive("blockquote") ? "bg-primary/20 text-primary" : ""
           }
+          aria-label="Blockquote"
         >
           <Quote size={16} />
         </Button>
@@ -366,6 +390,7 @@ const editor = useEditor({
           className={
             editor.isActive("codeBlock") ? "bg-primary/20 text-primary" : ""
           }
+          aria-label="Code block"
         >
           <Code size={16} />
         </Button>
@@ -380,6 +405,7 @@ const editor = useEditor({
           className={
             editor.isActive("link") ? "bg-primary/20 text-primary" : ""
           }
+          aria-label="Insert link"
         >
           <Link size={16} />
         </Button>
@@ -389,6 +415,7 @@ const editor = useEditor({
           size="sm"
           onClick={() => setShowImageInput(!showImageInput)}
           className={showImageInput ? "bg-primary/20 text-primary" : ""}
+          aria-label="Insert image"
         >
           <ImageIcon size={16} />
         </Button>
@@ -401,6 +428,7 @@ const editor = useEditor({
               size="sm"
               onClick={handleRemoveImage}
               className="text-red-500 hover:text-red-700 hover:bg-red-50"
+              aria-label="Remove selected image"
             >
               <Trash2 size={16} />
             </Button>
@@ -487,6 +515,7 @@ const editor = useEditor({
               onChange={(e) => setLinkUrl(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleLinkSubmit()}
               autoFocus
+              aria-label="Link URL"
             />
           </div>
           <DialogFooter>
@@ -533,6 +562,23 @@ const editor = useEditor({
           </div>
         )}
       </div>
+      {showBackToTop && (
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute bottom-4 right-4"
+          onClick={() => {
+            if (scrollContainerRef?.current) {
+              scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
+          aria-label="Back to top"
+        >
+          <ArrowUp />
+        </Button>
+      )}
     </div>
   );
 };

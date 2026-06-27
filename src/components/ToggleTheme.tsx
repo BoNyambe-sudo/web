@@ -73,17 +73,18 @@ const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({
-    x: window.innerWidth - 100,
+    x: window.innerWidth - 140,
     y: window.innerHeight - 70,
   });
   const toggleRef = useRef<HTMLDivElement>(null);
+  const dragHandleRef = useRef<HTMLDivElement>(null);
   const startPos = useRef({ x: 0, y: 0 });
 
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       setPosition((prev) => ({
-        x: Math.min(prev.x, window.innerWidth - 100),
+        x: Math.min(prev.x, window.innerWidth - 140),
         y: Math.min(prev.y, window.innerHeight - 70),
       }));
     };
@@ -92,12 +93,21 @@ const ThemeToggle = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleDragStart = (clientX: number, clientY: number) => {
     setIsDragging(true);
     startPos.current = {
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
+      x: clientX - position.x,
+      y: clientY - position.y,
     };
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    handleDragStart(e.clientX, e.clientY);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
   };
 
   const handleMouseMove = useCallback(
@@ -107,8 +117,25 @@ const ThemeToggle = () => {
       const newX = e.clientX - startPos.current.x;
       const newY = e.clientY - startPos.current.y;
 
-      // Boundaries
-      const maxX = window.innerWidth - 100;
+      const maxX = window.innerWidth - 140;
+      const maxY = window.innerHeight - 70;
+
+      setPosition({
+        x: Math.max(0, Math.min(newX, maxX)),
+        y: Math.max(0, Math.min(newY, maxY)),
+      });
+    },
+    [isDragging],
+  );
+
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      if (!isDragging) return;
+
+      const newX = e.touches[0].clientX - startPos.current.x;
+      const newY = e.touches[0].clientY - startPos.current.y;
+
+      const maxX = window.innerWidth - 140;
       const maxY = window.innerHeight - 70;
 
       setPosition({
@@ -123,31 +150,48 @@ const ThemeToggle = () => {
     setIsDragging(false);
   }, []);
 
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
   useEffect(() => {
     if (isDragging) {
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("touchmove", handleTouchMove);
+      window.addEventListener("touchend", handleTouchEnd);
       return () => {
         window.removeEventListener("mousemove", handleMouseMove);
         window.removeEventListener("mouseup", handleMouseUp);
+        window.removeEventListener("touchmove", handleTouchMove);
+        window.removeEventListener("touchend", handleTouchEnd);
       };
     }
-  }, [isDragging, handleMouseMove, handleMouseUp]);
+  }, [isDragging, handleMouseMove, handleTouchMove, handleMouseUp, handleTouchEnd]);
 
   return (
     <div
       ref={toggleRef}
-      className={`fixed z-50 flex items-center justify-center p-1 rounded-xl shadow-lg bg-background border border-border transition-all duration-200 ${
+      aria-roledescription="Theme picker"
+      className={`fixed z-50 flex items-center justify-center rounded-xl shadow-lg bg-background border border-border transition-all duration-200 ${
         isDragging
           ? "cursor-grabbing opacity-90"
-          : "cursor-grab hover:opacity-100"
+          : "cursor-default hover:opacity-100"
       }`}
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
+        userSelect: "none",
       }}
-      onMouseDown={handleMouseDown}
     >
+      <div
+        ref={dragHandleRef}
+        className="w-6 h-full flex items-center justify-center cursor-grab active:cursor-grabbing rounded-l-xl"
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+      >
+        <div className="w-1 h-6 bg-muted-foreground/30 rounded-full" />
+      </div>
       <ToggleGroup
         type="single"
         value={theme}

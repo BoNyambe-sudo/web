@@ -18,12 +18,12 @@ const ContactLinksCard = () => {
       ref={contactCardRef}
     >
       <div className="flex items-center gap-2">
-        <Whatsapp />
-        <Link to="https://wa.me/+260978000956" target="_blank" >WhatsApp</Link>
+        <Whatsapp aria-label="WhatsApp" />
+        <Link to="https://wa.me/+260978000956" target="_blank" rel="noopener noreferrer">WhatsApp</Link>
       </div>
       <Separator />
       <div className="flex items-center gap-2">
-        <Phone size={"16"} />
+        <Phone size={"16"} aria-label="Phone" />
         <Link to="tel:+260978000956">
           Call
         </Link>

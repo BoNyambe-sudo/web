@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import parse, {
   domToReact,
   Element,
@@ -6,14 +7,36 @@ import parse, {
 } from "html-react-parser";
 import { Link } from "react-router";
 import { cn } from "@/lib/utils";
+import { ArrowUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const BlogRenderer = ({
   htmlContent,
   className,
+  scrollContainerRef,
 }: {
   htmlContent: string;
   className?: string;
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
 }) => {
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const target = scrollContainerRef?.current;
+    if (target) {
+      const handleScroll = () => {
+        setShowBackToTop(target.scrollTop > 300);
+      };
+      target.addEventListener("scroll", handleScroll);
+      return () => target.removeEventListener("scroll", handleScroll);
+    } else {
+      const handleScroll = () => {
+        setShowBackToTop(window.scrollY > 300);
+      };
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
+  }, [scrollContainerRef]);
   const options: HTMLReactParserOptions = {
     replace(domNode: DOMNode) {
       // 1. Handle Images: Add lazy loading and responsive wrappers
@@ -66,14 +89,33 @@ const BlogRenderer = ({
   };
 
   return (
-    <article
-      className={cn(
-        "prose prose-blue dark:prose-invert lg:prose-xl mx-auto py-10",
-        className,
+    <div className="relative">
+      <article
+        className={cn(
+          "prose prose-blue dark:prose-invert lg:prose-xl mx-auto py-10",
+          className,
+        )}
+      >
+        {parse(htmlContent, options)}
+      </article>
+      {showBackToTop && (
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute bottom-4 right-4"
+          onClick={() => {
+            if (scrollContainerRef?.current) {
+              scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
+          aria-label="Back to top"
+        >
+          <ArrowUp />
+        </Button>
       )}
-    >
-      {parse(htmlContent, options)}
-    </article>
+    </div>
   );
 };
 
