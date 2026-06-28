@@ -52,6 +52,7 @@ const Blogs = () => {
   });
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
+  const [showPulse, setShowPulse] = useState(true);
   const { data: tagsResult } = useTopTags();
   const availableTags = tagsResult?.tags || [];
 
@@ -134,6 +135,14 @@ const Blogs = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      setShowPulse(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery);
     }, 500);
 
@@ -163,7 +172,7 @@ const Blogs = () => {
         <Header />
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background border-b">
           <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
+             <SidebarTrigger className={`-ml-1${showPulse ? " animate-trigger-pulse" : ""}`} />
             <span className="text-muted-foreground">|</span>
 
             {/* Filter Summary */}

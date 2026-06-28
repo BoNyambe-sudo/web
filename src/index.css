@@ -180,6 +180,23 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   opacity: 1;
 }
 
+@keyframes trigger-pulse {
+  0% {
+    box-shadow: 0 0 0 0 oklch(0.55 0.2 250 / 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px oklch(0.55 0.2 250 / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 oklch(0.55 0.2 250 / 0);
+  }
+}
+
+.animate-trigger-pulse {
+  animation: trigger-pulse 2.5s ease-out 3;
+  animation-fill-mode: forwards;
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
