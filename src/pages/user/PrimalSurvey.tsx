@@ -191,7 +191,7 @@ const PrimalSurvey = () => {
     tl.fromTo(
       questionRef.current,
       { x: direction === "forward" ? 60 : -60, autoAlpha: 0, opacity: 0 },
-      { x: 0, autoAlpha: 1, opacity: 1, duration: 0.5, ease: "power2.out" }
+      { x: 0, autoAlpha: 1, opacity: 1, duration: 0.5, ease: "power2.out" },
     );
     return () => {
       tl.kill();
@@ -213,7 +213,11 @@ const PrimalSurvey = () => {
       setShowValidationError(true);
       return;
     }
-    if (currentStep === 4 && responses.has_website === "Yes" && !tempWebsiteUrl) {
+    if (
+      currentStep === 4 &&
+      responses.has_website === "Yes" &&
+      !tempWebsiteUrl
+    ) {
       setShowValidationError(true);
       return;
     }
@@ -280,7 +284,14 @@ const PrimalSurvey = () => {
     if (currentStep === 2) {
       setResponse("missing_revenue", sliderValue);
     }
-  }, [tempEmail, tempPhone, tempWebsiteUrl, sliderValue, currentStep, setResponse]);
+  }, [
+    tempEmail,
+    tempPhone,
+    tempWebsiteUrl,
+    sliderValue,
+    currentStep,
+    setResponse,
+  ]);
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSliderValue(Number(e.target.value));
@@ -307,12 +318,15 @@ const PrimalSurvey = () => {
       };
     }
 
-    let urgency = "Without a website, you're invisible to 57% of buyers. This is your biggest growth opportunity.";
-    let cta = "Every day without a site is revenue left on the table. Let's fix that.";
+    let urgency =
+      "Without a website, you're invisible to 57% of buyers. This is your biggest growth opportunity.";
+    let cta =
+      "Every day without a site is revenue left on the table. Let's fix that.";
     const label = "Book a Call";
 
     if (budget === "Under K2,500" && goal === "Build credibility") {
-      urgency = "A strong online presence doesn't have to break the bank. We'll show you how to maximize ROI.";
+      urgency =
+        "A strong online presence doesn't have to break the bank. We'll show you how to maximize ROI.";
       cta = "Limited consultation slots available this week only.";
     }
 
@@ -326,7 +340,8 @@ const PrimalSurvey = () => {
     };
   };
 
-  const outcome = isLast && question.type === "outcome" ? getOutcomeDetails() : null;
+  const outcome =
+    isLast && question.type === "outcome" ? getOutcomeDetails() : null;
 
   const buildSurveyDescription = (): string => {
     const parts: string[] = [];
@@ -336,10 +351,16 @@ const PrimalSurvey = () => {
     parts.push(`=== SURVEY RESPONSES ===`);
     parts.push(`Has Website: ${responses.has_website || "Not answered"}`);
     if (responses.has_website === "Yes") {
-      parts.push(`Website URL: ${responses.website_url || tempWebsiteUrl || "Not provided"}`);
+      parts.push(
+        `Website URL: ${responses.website_url || tempWebsiteUrl || "Not provided"}`,
+      );
     }
-    parts.push(`Primary Business Goal: ${responses.business_goal || "Not answered"}`);
-    parts.push(`Estimated Missing Revenue: ZMW ${(responses.missing_revenue ?? sliderValue).toLocaleString()}/month`);
+    parts.push(
+      `Primary Business Goal: ${responses.business_goal || "Not answered"}`,
+    );
+    parts.push(
+      `Estimated Missing Revenue: ZMW ${(responses.missing_revenue ?? sliderValue).toLocaleString()}/month`,
+    );
     parts.push(`Industry: ${responses.industry || "Not answered"}`);
     parts.push(`Budget Range: ${responses.budget || "Not answered"}`);
     parts.push(`Email: ${email}`);
@@ -367,19 +388,30 @@ const PrimalSurvey = () => {
       >
         Skip to main content
       </a>
-      <div id="main-content" className="min-h-screen flex flex-col bg-background">
+      <div
+        id="main-content"
+        className="min-h-screen flex flex-col bg-background"
+      >
         <div className="flex-1 flex items-center justify-center px-4 py-8 sm:py-12">
           <div className="w-full max-w-xl space-y-6">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {isFirst ? "Let's get started" : isLast ? "You're almost done" : "Keep going"}
+                  {isFirst
+                    ? "Let's get started"
+                    : isLast
+                      ? "You're almost done"
+                      : "Keep going"}
                 </span>
                 <span className="text-xs font-medium text-primary tabular-nums">
                   {Math.round(progress)}%
                 </span>
               </div>
-              <Progress value={progress} max={100} label={`Question ${currentStep + 1} of ${TOTAL_STEPS}`} />
+              <Progress
+                value={progress}
+                max={100}
+                label={`Question ${currentStep + 1} of ${TOTAL_STEPS}`}
+              />
             </div>
             <div
               ref={questionRef}
@@ -399,7 +431,11 @@ const PrimalSurvey = () => {
                     {question.options?.map((option) => (
                       <Button
                         key={option}
-                        variant={responses.has_website === option ? "default" : "outline"}
+                        variant={
+                          responses.has_website === option
+                            ? "default"
+                            : "outline"
+                        }
                         className="w-full justify-start text-sm h-11"
                         onClick={() => handleAnswer("has_website", option)}
                       >
@@ -431,9 +467,12 @@ const PrimalSurvey = () => {
                           variant={selected ? "default" : "outline"}
                           className="w-full justify-start text-sm h-11"
                           onClick={() => {
-                            if (currentStep === 1) handleAnswer("business_goal", option);
-                            if (currentStep === 3) handleAnswer("industry", option);
-                            if (currentStep === 6) handleAnswer("budget", option);
+                            if (currentStep === 1)
+                              handleAnswer("business_goal", option);
+                            if (currentStep === 3)
+                              handleAnswer("industry", option);
+                            if (currentStep === 6)
+                              handleAnswer("budget", option);
                             setShowValidationError(false);
                           }}
                         >
@@ -459,10 +498,12 @@ const PrimalSurvey = () => {
                 >
                   <div className="space-y-4 pt-2">
                     <div className="flex items-baseline justify-center gap-1">
-                       <span className="text-3xl font-bold text-primary tabular-nums">
-                         ZMW {sliderValue.toLocaleString()}
-                       </span>
-                      <span className="text-sm text-muted-foreground">/month</span>
+                      <span className="text-3xl font-bold text-primary tabular-nums">
+                        ZMW {sliderValue.toLocaleString()}
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        /month
+                      </span>
                     </div>
                     <input
                       type="range"
@@ -476,7 +517,12 @@ const PrimalSurvey = () => {
                     <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
                       <span>ZMW 0</span>
                       <span>ZMW 50,000</span>
-                      <span>ZMW 100,000</span>
+                      <span>
+                        ZMW{" "}
+                        {String(question.max).substring(0, 3) +
+                          "," +
+                          String(question.max).substring(3) || "100,000"}
+                      </span>
                     </div>
                   </div>
                 </SurveyQuestion>
@@ -527,7 +573,8 @@ const PrimalSurvey = () => {
                       />
                       {showValidationError && !tempWebsiteUrl && (
                         <p className="text-xs text-destructive">
-                          Please enter your website URL so we can conduct the audit.
+                          Please enter your website URL so we can conduct the
+                          audit.
                         </p>
                       )}
                     </div>
@@ -577,11 +624,18 @@ const PrimalSurvey = () => {
                     </div>
                     <div className="space-y-2">
                       <p className="text-xs text-muted-foreground">
-                        We'll use <span className="font-medium">{responses.email || tempEmail}</span> to follow up.
+                        We'll use{" "}
+                        <span className="font-medium">
+                          {responses.email || tempEmail}
+                        </span>{" "}
+                        to follow up.
                       </p>
                       {responses.has_website === "Yes" && (
                         <p className="text-xs text-muted-foreground">
-                          Consultation slot: <span className="font-medium">{responses.phone || tempPhone}</span>
+                          Consultation slot:{" "}
+                          <span className="font-medium">
+                            {responses.phone || tempPhone}
+                          </span>
                         </p>
                       )}
                     </div>

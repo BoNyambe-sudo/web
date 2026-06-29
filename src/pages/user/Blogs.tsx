@@ -19,6 +19,7 @@ import {
   useInfiniteBlogs,
   useTopTags,
 } from "@/hooks/serverState/useBlogServer";
+import { BlogListSkeleton } from "@/components/BlogCardSkeleton";
 import { Loader2, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import SEOHelmet from "@/components/SEOHelmet";
@@ -313,9 +314,7 @@ const Blogs = () => {
             Found {blogs.length} {blogs.length === 1 ? "blog post" : "blog posts"}
           </div>
           {isLoading ? (
-            <div className=" flex items-center justify-center text-center h-full my-auto">
-              <Loader2 className="size-4 text-primary animate-spin" />
-            </div>
+            <BlogListSkeleton count={6} />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {blogs?.map((blog) => (
