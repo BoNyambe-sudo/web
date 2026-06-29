@@ -66,15 +66,15 @@ const AdminHome = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Blogs</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Blog Posts</CardTitle>
             <BookOpen className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{blogsMetrics?.totalBlogs}</div>
             <p className="text-xs text-muted-foreground">
               {blogsMetrics && blogsMetrics?.totalBlogs > 0
-                ? "Blogs"
-                : "No blogs"}
+                ? "Blog Posts"
+                : "No blog posts"}
             </p>
           </CardContent>
         </Card>
@@ -116,7 +116,7 @@ const AdminHome = () => {
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Latest Blogs</h2>
+            <h2 className="text-xl font-semibold">Latest Blog Posts</h2>
           </div>
         </CardHeader>
         <CardContent>
@@ -194,7 +194,7 @@ const AdminHome = () => {
                 blogs?.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center">
-                      No Blogs found
+                      No blog posts found
                     </TableCell>
                   </TableRow>
                 )

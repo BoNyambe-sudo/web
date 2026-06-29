@@ -1,5 +1,4 @@
 import heroImg from "@/assets/hero.jpg";
-import { format } from "date-fns";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { DataList } from "@/components/ui/data-list";
@@ -16,15 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, ArrowUp } from "lucide-react";
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router";
-import { Calendar } from "@/components/ui/calendar";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ChevronDownIcon } from "lucide-react";
-import {
-  useCreateAppointment,
   useSendInqiury,
 } from "@/hooks/serverState/userAppointmentServer";
 import toast from "react-hot-toast";
@@ -34,6 +25,7 @@ import Whatsapp from "@/components/icons/whatsapp";
 import { useToggleState } from "@/hooks/clientState/useToggles";
 import ContactLinksCard from "@/components/ContactLinksCard";
 import { Separator } from "@/components/ui/separator";
+import AppointmentDialog from "@/components/AppointmentDialog";
 import gsap from "gsap";
 import TextPlugin from "gsap/dist/TextPlugin";
 import { SplitText } from "gsap/SplitText";
@@ -199,25 +191,7 @@ const Home = () => {
     message: "",
   });
 
-  const [appointmentFormData, setAppointmentFormData] = useState<{
-    name: string;
-    email: string;
-    phoneNumber: string;
-    scheduledDate: undefined | Date;
-    scheduledTime: string;
-    description: string;
-  }>({
-    name: "",
-    email: "",
-    phoneNumber: "",
-    scheduledDate: undefined,
-    scheduledTime: "",
-    description: "",
-  });
-
   const { mutate: sendMessage, isPending: messageLoading } = useSendInqiury();
-  const { mutate: createAppointment, isPending: appointmentLoading } =
-    useCreateAppointment();
 
   const handleSendMessage = (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -239,33 +213,6 @@ const Home = () => {
           message: "",
         });
         setIsMessageDialogOpen(false);
-      },
-    });
-  };
-
-  const handleCreateAppointment = (e: React.SubmitEvent) => {
-    e.preventDefault();
-    if (
-      !appointmentFormData.name ||
-      !appointmentFormData.phoneNumber ||
-      !appointmentFormData.scheduledDate ||
-      !appointmentFormData.scheduledTime
-    ) {
-      toast.error("Some fields are missing");
-      return;
-    }
-    createAppointment(appointmentFormData, {
-      onSuccess: () => {
-        setAppointmentFormData({
-          name: "",
-          email: "",
-          phoneNumber: "",
-          scheduledDate: undefined,
-          scheduledTime: "",
-          description: "",
-        });
-        setIsAppointmentDialogOpen(false);
-        toast.success("Appointment created successfully");
       },
     });
   };
@@ -322,7 +269,7 @@ const Home = () => {
                 }
                 label="Message"
                 helpText="Start typing to see suggested message templates."
-                placeholder="Your message"
+                placeholder="Send a message"
                 autoFocus
                 inputClassName="placeholder:text-foreground pr-10"
                 onKeyDown={(e) => {
@@ -439,161 +386,18 @@ const Home = () => {
               </Dialog>
             </div>
             <div className="flex w-full flex-col sm:flex-row items-center gap-2 justify-between sm:justify-center sm:gap-4">
-              <Dialog
+              <Button
+                size={"lg"}
+                className="w-full sm:w-auto sm:px-10 md:px-12 sm:py-4 md:py-6 sm:text-xl text-lg sm:font-bold"
+                variant={"default"}
+                onClick={() => setIsAppointmentDialogOpen(true)}
+              >
+                Book a call
+              </Button>
+              <AppointmentDialog
                 open={isAppointmentDialogOpen}
                 onOpenChange={setIsAppointmentDialogOpen}
-              >
-                <DialogTrigger asChild>
-                  <Button
-                    size={"lg"}
-                    className="w-full sm:w-auto sm:px-10 md:px-12 sm:py-4 md:py-6 sm:text-xl text-lg sm:font-bold"
-                    variant={"default"}
-                  >
-                    Book a call
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="overflow-y-auto scrollbar-hide max-h-[90vh]">
-                  <DialogTitle>Book a call now</DialogTitle>
-                  <DialogDescription>
-                    <span className="sr-only">Schedule a call</span>Required
-                    fields <span className="text-destructive">*</span>
-                  </DialogDescription>
-                  <form
-                    onSubmit={handleCreateAppointment}
-                    className="space-y-4"
-                  >
-                    <div className="space-y-2">
-                      <Label htmlFor="phone-number">
-                        Name <span className="text-destructive">*</span>
-                      </Label>
-                      <Input
-                        type="text"
-                        required
-                        placeholder="Enter your name"
-                        value={appointmentFormData.name}
-                        onChange={(e) =>
-                          setAppointmentFormData({
-                            ...appointmentFormData,
-                            name: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone-number">
-                        Phone Number <span className="text-destructive">*</span>
-                      </Label>
-                      <Input
-                        type="tel"
-                        required
-                        placeholder="Enter phone number"
-                        value={appointmentFormData.phoneNumber}
-                        onChange={(e) =>
-                          setAppointmentFormData({
-                            ...appointmentFormData,
-                            phoneNumber: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>
-                        Date <span className="text-destructive">*</span>
-                      </Label>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            data-empty={!appointmentFormData.scheduledDate}
-                            className="w-full justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
-                          >
-                            {appointmentFormData.scheduledDate ? (
-                              format(appointmentFormData.scheduledDate, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <ChevronDownIcon />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={appointmentFormData.scheduledDate}
-                            onSelect={(date) =>
-                              setAppointmentFormData({
-                                ...appointmentFormData,
-                                scheduledDate: date,
-                              })
-                            }
-                            defaultMonth={appointmentFormData.scheduledDate}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>
-                        Time <span className="text-destructive">*</span>
-                      </Label>
-                      <Input
-                        required
-                        type="time"
-                        formTarget=""
-                        value={appointmentFormData.scheduledTime}
-                        onChange={(e) =>
-                          setAppointmentFormData({
-                            ...appointmentFormData,
-                            scheduledTime: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Email</Label>
-                      <Input
-                        type="email"
-                        placeholder="Enter your email"
-                        value={appointmentFormData.email}
-                        onChange={(e) =>
-                          setAppointmentFormData({
-                            ...appointmentFormData,
-                            email: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>
-                        Description <span className="text-destructive">*</span>
-                      </Label>
-                      <Textarea
-                        required
-                        value={appointmentFormData.description}
-                        onChange={(e) =>
-                          setAppointmentFormData({
-                            ...appointmentFormData,
-                            description: e.target.value,
-                          })
-                        }
-                        placeholder="Description"
-                      />
-                    </div>
-                    <div className="flex justify-end">
-                      <div className="flex items-center gap-3">
-                        <Button
-                          onClick={() => setIsAppointmentDialogOpen(false)}
-                          type="button"
-                          variant={"outline"}
-                        >
-                          Cancel
-                        </Button>
-                        <Button disabled={appointmentLoading} type="submit">
-                          Book Call
-                        </Button>
-                      </div>
-                    </div>
-                  </form>
-                </DialogContent>
-              </Dialog>
+              />
               <Button
                 size="lg"
                 className="w-full sm:w-auto sm:px-10 md:px-12 sm:py-4 md:py-6 sm:text-xl text-lg sm:font-bold"

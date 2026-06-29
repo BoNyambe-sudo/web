@@ -593,7 +593,7 @@ const AdminBlogs = () => {
     <div className="p-6">
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Blogs</h1>
+          <h1 className="text-2xl font-bold">Blog Posts</h1>
           <Dialog
             open={isCreateDialogOpen}
             onOpenChange={setIsCreateDialogOpen}
@@ -601,12 +601,12 @@ const AdminBlogs = () => {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Create Blog
+                Add New
               </Button>
             </DialogTrigger>
             <DialogContent ref={createScrollRef} className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide">
               <DialogHeader>
-                <DialogTitle>Create New Blog</DialogTitle>
+                <DialogTitle>Add A New Blog Post</DialogTitle>
                 <DialogDescription>
                   <span className="sr-only">
                     Write and publish a new blog post.
@@ -746,7 +746,7 @@ const AdminBlogs = () => {
                 </Button>
                 <Button disabled={creatingBlog} onClick={handleCreateBlog}>
                   <Save className="mr-2 h-4 w-4" />
-                  Create Blog
+                  Add New
                 </Button>
               </div>
             </DialogContent>
@@ -774,7 +774,7 @@ const AdminBlogs = () => {
                       pressed={showDeleted}
                       onPressedChange={setShowDeleted}
                       variant="outline"
-                      aria-label="Toggle deleted blogs"
+                      aria-label="Toggle deleted blog posts"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Toggle>
@@ -845,15 +845,15 @@ const AdminBlogs = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Blogs</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Blog Posts</CardTitle>
             <BookOpen className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{blogsMetrics?.totalBlogs}</div>
             <p className="text-xs text-muted-foreground">
               {blogsMetrics && blogsMetrics.totalBlogs > 0
-                ? "Total blogs"
-                : "No blogs"}
+                ? "Total blog posts"
+                : "No blog posts"}
             </p>
           </CardContent>
         </Card>
@@ -861,7 +861,7 @@ const AdminBlogs = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
-              Published Blogs
+              Published Blog Posts
             </CardTitle>
             <Eye className="h-4 w-4 text-primary" />
           </CardHeader>
@@ -871,22 +871,22 @@ const AdminBlogs = () => {
             </div>
             <p className="text-xs text-muted-foreground">
               {blogsMetrics && blogsMetrics.publishedBlogs > 0
-                ? "Published blogs"
-                : "No published blogs"}
+                ? "Published blog posts"
+                : "No published blog posts"}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Draft Blogs</CardTitle>
+            <CardTitle className="text-sm font-medium">Draft Blog Posts</CardTitle>
             <EyeOff className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{blogsMetrics?.draftBlogs}</div>
             <p className="text-xs text-muted-foreground">
               {blogsMetrics && blogsMetrics.draftBlogs > 0
-                ? "Draft blogs"
-                : "No draft blogs"}
+                ? "Draft blog posts"
+                : "No draft blog posts"}
             </p>
           </CardContent>
         </Card>
@@ -908,7 +908,7 @@ const AdminBlogs = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Deleted Blogs</CardTitle>
+            <CardTitle className="text-sm font-medium">Deleted Blog Posts</CardTitle>
             <Trash2 className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
@@ -917,8 +917,8 @@ const AdminBlogs = () => {
             </div>
             <p className="text-xs text-muted-foreground">
               {blogsMetrics && blogsMetrics.deletedBlogs > 0
-                ? "Deleted blogs"
-                : "No deleted blogs"}
+                ? "Deleted blog posts"
+                : "No deleted blog posts"}
             </p>
           </CardContent>
         </Card>
@@ -931,7 +931,7 @@ const AdminBlogs = () => {
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">All Blogs</h2>
+            <h2 className="text-xl font-semibold">All Blog Posts</h2>
           </div>
         </CardHeader>
         <CardContent>
@@ -1188,7 +1188,7 @@ const AdminBlogs = () => {
                         Loading...
                       </>
                     ) : (
-                      "Load More Blogs"
+                      "Load More"
                     )}
                   </Button>
                 </div>
@@ -1205,7 +1205,7 @@ const AdminBlogs = () => {
                 blogs?.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center">
-                      No Blogs found
+                      No blog posts found
                     </TableCell>
                   </TableRow>
                 )
@@ -1219,7 +1219,7 @@ const AdminBlogs = () => {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent ref={editScrollRef} className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide">
           <DialogHeader>
-            <DialogTitle>Edit Blog</DialogTitle>
+            <DialogTitle>Update Blog Post</DialogTitle>
             <DialogDescription>
               <span className="sr-only">Update the blog post content.</span>
               Requied fields <span className="text-destructive">*</span>
@@ -1625,7 +1625,7 @@ const AdminBlogs = () => {
                 Loading more...
               </>
             ) : (
-              "Load More Blogs"
+              "Load More"
             )}
           </Button>
         </div>

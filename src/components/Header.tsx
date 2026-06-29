@@ -35,15 +35,7 @@ const Header = ({
         </Link>
 
         <div className="hidden md:flex flex-1 justify-center items-center font-semibold gap-3">
-          <Link
-            to="/"
-            className={cn(
-              `ml-4 hover:text-primary transition-color ${pathname === "/" ? "text-primary" : ""}`,
-              textClassName,
-            )}
-          >
-            Home
-          </Link>
+          
           <Link
             to="/demos"
             className={cn(
@@ -54,13 +46,13 @@ const Header = ({
             Demos
           </Link>
           <Link
-            to="/blogs"
+            to="/blog"
             className={cn(
-              `hover:text-primary transition-color ${pathname === "/blogs" ? "text-primary" : ""}`,
+              `hover:text-primary transition-color ${pathname === "/blog" ? "text-primary" : ""}`,
               textClassName,
             )}
           >
-            Blogs
+            Blog
           </Link>
           <Link
             to="/faqs"

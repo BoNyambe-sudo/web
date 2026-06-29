@@ -51,11 +51,11 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
             Demos
           </Link>
           <Link
-            to="/blogs"
+            to="/blog"
             onClick={onClose}
             className={`hover:primary border-b hoverEffect ${pathname === "/blogs" ? "text-primary" : ""}`}
           >
-            Blogs
+            Blog
           </Link>
           <Link
             to="/faqs"

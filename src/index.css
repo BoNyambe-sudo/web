@@ -200,3 +200,48 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+@keyframes survey-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes survey-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+
+.animate-survey-in {
+  animation: survey-fade-in 0.45s ease-out both;
+}
+
+.animate-survey-out {
+  animation: survey-fade-out 0.3s ease-in both;
+}
+
+@keyframes sidebar-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 oklch(0.55 0.2 250 / 0);
+    border-color: var(--border);
+  }
+  50% {
+    box-shadow: 0 0 16px 3px oklch(0.55 0.2 250 / 0.25);
+    border-color: oklch(0.55 0.2 250 / 0.6);
+  }
+}
+
+.animate-sidebar-pulse {
+  animation: sidebar-glow 3s ease-in-out infinite;
+}

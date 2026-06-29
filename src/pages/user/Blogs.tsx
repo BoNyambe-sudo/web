@@ -19,6 +19,7 @@ import {
   useInfiniteBlogs,
   useTopTags,
 } from "@/hooks/serverState/useBlogServer";
+import { BlogListSkeleton } from "@/components/BlogCardSkeleton";
 import { Loader2, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import SEOHelmet from "@/components/SEOHelmet";
@@ -80,8 +81,8 @@ const Blogs = () => {
 
   // Generate SEO metadata based on selected category
   const pageTitle = selectedFilters.category
-    ? `${selectedFilters.category} Blogs`
-    : "Explore Blogs";
+    ? `${selectedFilters.category} Blog Posts`
+    : "Explore Blog";
 
   const pageDescription = selectedFilters.category
     ? getDescriptionForCategory(selectedFilters.category)
@@ -155,8 +156,8 @@ const Blogs = () => {
         title={pageTitle}
         description={pageDescription}
         keywords={pageKeywords}
-        url={`${SITE_URL}/blogs`}
-        canonicalUrl={`${SITE_URL}/blogs`}
+        url={`${SITE_URL}/blog`}
+        canonicalUrl={`${SITE_URL}/blog`}
       >
         <script type="application/ld+json">
           {JSON.stringify(blogListSchema)}
@@ -224,7 +225,7 @@ const Blogs = () => {
                   {/* Latest */}
                   {selectedFilters.latest && (
                     <span className="inline-flex items-center gap-1 bg-background px-2 py-1 rounded-full text-xs border shrink-0">
-                      Latest Blogs
+                      Latest Blog Posts
                       <button
                         onClick={() => handleFilterRemove("latest", "latest")}
                         className="hover:text-red-500"
@@ -254,7 +255,7 @@ const Blogs = () => {
                 </div>
               </div>
             ) : (
-              <h1 className="text-sm text-muted-foreground">Blogs</h1>
+              <h1 className="text-sm text-muted-foreground">Blog</h1>
             )}
           </div>
         </header>
@@ -310,12 +311,10 @@ const Blogs = () => {
             </div>
           </div>
           <div className="text-sm text-muted-foreground mb-4">
-            Found {blogs.length} {blogs.length === 1 ? "blog" : "blogs"}
+            Found {blogs.length} {blogs.length === 1 ? "blog post" : "blog posts"}
           </div>
           {isLoading ? (
-            <div className=" flex items-center justify-center text-center h-full my-auto">
-              <Loader2 className="size-4 text-primary animate-spin" />
-            </div>
+            <BlogListSkeleton count={6} />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {blogs?.map((blog) => (
@@ -337,7 +336,7 @@ const Blogs = () => {
                     Loading...
                   </>
                 ) : (
-                  "Load More Blogs"
+                  "Load More"
                 )}
               </Button>
             </div>
@@ -345,7 +344,7 @@ const Blogs = () => {
 
           {blogs.length === 0 && !isLoading && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <h3 className="text-lg font-medium mb-2">No blogs found</h3>
+              <h3 className="text-lg font-medium mb-2">No blog posts found</h3>
               <p className="text-muted-foreground mb-4">
                 Try adjusting your filters to find what you're looking for.
               </p>

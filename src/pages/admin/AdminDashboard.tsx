@@ -40,7 +40,7 @@ const AdminDashboard = () => {
         </header>
         <Routes>
           {<Route path="/" element={<AdminHome />} />}
-          <Route path="/blogs" element={<AdminBlogs />} />
+          <Route path="/blog" element={<AdminBlogs />} />
 
           <Route
             path="/appointments"

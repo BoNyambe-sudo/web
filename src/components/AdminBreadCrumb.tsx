@@ -14,7 +14,7 @@ import { Link } from "react-router";
 const routeNames: Record<string, string> = {
   "/": "Dashboard",
   "/appointments": "Appointments",
-  "/blogs": "Blogs",
+  "/blog": "Blog",
   "/users": "Users",
   "/manage": "Manage",
 };
