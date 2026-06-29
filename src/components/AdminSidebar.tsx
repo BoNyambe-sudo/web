@@ -19,8 +19,8 @@ const data = {
       isActive: true,
     },
     {
-      title: "Blogs",
-      url: "/blogs",
+      title: "Blog",
+      url: "/blog",
       icon: BookOpen,
     },
     {

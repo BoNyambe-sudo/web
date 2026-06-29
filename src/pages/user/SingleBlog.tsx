@@ -376,7 +376,7 @@ const SingleBlog = () => {
               <div className="mt-12">
                 <div className="flex items-center gap-2 mb-6">
                   <Tag size={20} className="text-primary" />
-                  <h2 className="text-2xl font-bold">Similar Blogs</h2>
+                  <h2 className="text-2xl font-bold">Similar Blog Posts</h2>
                 </div>
                 {loadingSimilarBlogs ? (
                   <div className="text-center my-auto">

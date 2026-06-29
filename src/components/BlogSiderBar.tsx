@@ -146,7 +146,7 @@ export function BlogSidebar({
               }
             />
             <Label htmlFor="latest" className="text-sm cursor-pointer">
-              Latest Blogs
+              Latest Blog Posts
             </Label>
           </div>
         </div>
@@ -165,7 +165,7 @@ export function BlogSidebar({
       </SidebarContent>
       <SidebarFooter>
         <p className="text-xs text-muted-foreground">
-          Use the filter to find your desired blogs
+          Use the filter to find your desired blog posts
         </p>
       </SidebarFooter>
       <SidebarRail />

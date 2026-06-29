@@ -25,7 +25,7 @@ const UserCard = () => {
   };
 
   return (
-    <Card
+    <Card size="sm"
       className={`absolute right-4 top-8 ${isUserOpen ? "flex" : "hidden"} flex-col gap-2 p-4`}
       ref={userCardRef}
     >
