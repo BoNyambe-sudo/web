@@ -22,6 +22,8 @@ import SideMenu from "./components/SideMenu";
 import { useToggleState } from "./hooks/clientState/useToggles";
 import AuthCallback from "./pages/user/AuthCallback";
 import Demos from "./pages/user/Demos";
+import PrimalSurvey from "./pages/user/PrimalSurvey";
+import WebsiteBenefits from "./pages/user/WebsiteBenefits";
 
 function App() {
   useTheme();
@@ -53,14 +55,16 @@ function AppWithQuery() {
       ) : (
         <div id="main-content">
           <Routes>
+            <Route path="/website-survey" element={<PrimalSurvey />} />
+            <Route path="/website-benefits" element={<WebsiteBenefits />} />
             <Route path="/" element={<Home />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/blog" element={<Blogs />} />
             <Route path="/demos" element={<Demos />} />
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/blogs/:id" element={<SingleBlog />} />
+            <Route path="/blog/:id" element={<SingleBlog />} />
             <Route path="/manage-account" element={<ManageAccount />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

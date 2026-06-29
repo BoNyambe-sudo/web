@@ -30,8 +30,8 @@ const BlogsPerCategory = () => {
               {category.count === 1
                 ? "Blog"
                 : category.count > 1
-                  ? "Blogs"
-                  : "No Blogs"}
+                  ? "Blog Posts"
+                  : "No Blog Posts"}
             </p>
             <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
               <Eye size={14} />
