@@ -45,7 +45,6 @@ import {
   CardFooter,
   CardDescription,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 
 const BLOG_VIEWED_KEY_PREFIX = "blog-viewed-";
 
@@ -467,7 +466,6 @@ const SingleBlog = () => {
           </div>
         )}
       </div>
-      <Separator className="my-2" />
       <Footer />
     </>
   );
