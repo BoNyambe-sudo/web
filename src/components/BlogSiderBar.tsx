@@ -165,7 +165,7 @@ export function BlogSidebar({
       </SidebarContent>
       <SidebarFooter>
         <p className="text-xs text-muted-foreground">
-          Use the filter to find your desired blog posts
+          Scroll for more filters
         </p>
       </SidebarFooter>
       <SidebarRail />
