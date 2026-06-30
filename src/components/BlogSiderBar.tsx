@@ -164,7 +164,7 @@ export function BlogSidebar({
         </Button>
       </SidebarContent>
       <SidebarFooter>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-center text-muted-foreground">
           Scroll for more filters
         </p>
       </SidebarFooter>
