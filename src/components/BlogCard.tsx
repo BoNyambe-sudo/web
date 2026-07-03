@@ -20,7 +20,7 @@ const BlogCard = ({
         className,
       )}
     >
-      <Link to={`/blog/${blog.id}`} className=" hoverEffect group">
+      <Link to={`/blog/${blog.slug}`} className=" hoverEffect group">
         <img
           src={blog.thumbnail}
           className="relative z-20 aspect-video w-full object-cover transition-transform group-hover:scale-[1.02]"
@@ -47,7 +47,7 @@ const BlogCard = ({
         </CardAction>
       </CardHeader>
       <CardContent>
-        <Link className="text-lg font-semibold" to={`/blog/${blog.id}`}>
+        <Link className="text-lg font-semibold" to={`/blog/${blog.slug}`}>
           {blog.title}
         </Link>
       </CardContent>

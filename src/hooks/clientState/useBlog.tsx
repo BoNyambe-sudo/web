@@ -15,6 +15,7 @@ export interface BlogType {
   author: Author;
   tags: string[];
   category: string;
+  slug: string;
   thumbnail: string;
   readTime: number;
   views?: number;

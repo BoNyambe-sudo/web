@@ -59,11 +59,11 @@ const markBlogAsViewed = (id: string): void => {
 };
 
 const SingleBlog = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
 
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
-  const { data: blog, isLoading: blogLoading } = useBlog(id as string);
+  const { data: blog, isLoading: blogLoading } = useBlog(slug as string);
 
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
   const shareMessage = `Check out this amazing blog: ${blog?.title}!`;
@@ -78,15 +78,15 @@ const SingleBlog = () => {
   const { data: similarBlogsData, isLoading: loadingSimilarBlogs } =
     useBlogs(queryParams);
   const similarBlogs =
-    similarBlogsData?.data.filter((blg) => blg?.id !== id) || [];
+    similarBlogsData?.data.filter((blg) => blg?.id !== blog?.id) || [];
 
   useEffect(() => {
-    if (!id || !blog?.id || blogLoading) return;
-    if (!hasBlogBeenViewed(id)) {
-      addView(id).catch(() => {});
-      markBlogAsViewed(id);
+    if (!blog?.id || blogLoading) return;
+    if (!hasBlogBeenViewed(blog.id)) {
+      addView(blog.id).catch(() => {});
+      markBlogAsViewed(blog.id);
     }
-  }, [id, blog?.id, blogLoading]);
+  }, [blog?.id, blogLoading]);
 
   const handleShare = async (platform: string) => {
     const encodedUrl = encodeURIComponent(currentUrl);
