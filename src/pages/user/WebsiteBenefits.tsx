@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useEffect, useRef, /* useState */ } from "react";
+import { /* Link, */ useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { BenefitCard } from "@/components/BenefitCard";
 import SEOHelmet from "@/components/SEOHelmet";
 import { SITE_URL } from "@/lib/seoConfig";
 import gsap from "gsap";
-import AppointmentDialog from "@/components/AppointmentDialog";
+//import AppointmentDialog from "@/components/AppointmentDialog";
 import {
   ShieldCheck,
   TrendingUp,
@@ -46,7 +46,7 @@ const CLIENT_LOGOS = ["Acme", "Vertex", "Novus", "Prism", "Forge", "Lumen"];
 
 const WebsiteBenefits = () => {
   const navigate = useNavigate();
-  const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
+  //const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const costRef = useRef<HTMLDivElement>(null);
   const driversRef = useRef<HTMLDivElement>(null);
@@ -149,18 +149,17 @@ const WebsiteBenefits = () => {
               <Button
                 size="lg"
                 className="h-12 px-8 text-base font-semibold shadow-lg"
-                onClick={() => setIsAppointmentOpen(true)}
-              >
-                Book a Call
+                onClick={() => navigate("/website-survey")}
+              >Book a Call
               </Button>
-              <Button
+              {/* <Button
                 variant="outline"
                 size="lg"
                 className="h-12 px-8 text-base"
                 asChild
               >
                 <Link to="/website-survey">Take the Survey</Link>
-              </Button>
+              </Button> */}
             </div>
             <p className="text-xs text-muted-foreground">
               Limited consultation slots — early adopters win.
@@ -302,15 +301,15 @@ const WebsiteBenefits = () => {
                 <Button
                   size="lg"
                   className="h-14 px-10 text-lg font-bold shadow-xl"
-                  onClick={() => setIsAppointmentOpen(true)}
+                  onClick={() => navigate("/website-survey")}
                 >
                   Book a Call
                 </Button>
               </div>
-              <AppointmentDialog
+              {/* <AppointmentDialog
                 open={isAppointmentOpen}
                 onOpenChange={setIsAppointmentOpen}
-              />
+              /> */}
               <p className="text-xs text-muted-foreground">
                 No commitment. No pitch. Just actionable insights delivered in
                 48 hours.

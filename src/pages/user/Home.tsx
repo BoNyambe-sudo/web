@@ -15,9 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, ArrowUp } from "lucide-react";
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router";
-import {
-  useSendInqiury,
-} from "@/hooks/serverState/userAppointmentServer";
+import { useSendInqiury } from "@/hooks/serverState/userAppointmentServer";
 import toast from "react-hot-toast";
 import SEOHelmet from "@/components/SEOHelmet";
 import { SITE_URL, getOrganizationSchema } from "@/lib/seoConfig";
@@ -25,7 +23,7 @@ import Whatsapp from "@/components/icons/whatsapp";
 import { useToggleState } from "@/hooks/clientState/useToggles";
 import ContactLinksCard from "@/components/ContactLinksCard";
 import { Separator } from "@/components/ui/separator";
-import AppointmentDialog from "@/components/AppointmentDialog";
+//import AppointmentDialog from "@/components/AppointmentDialog";
 import gsap from "gsap";
 import TextPlugin from "gsap/dist/TextPlugin";
 import { SplitText } from "gsap/SplitText";
@@ -81,7 +79,7 @@ const MESSAGE_SUGGESTIONS = [
 
 const Home = () => {
   const [isMessagDialogOpen, setIsMessageDialogOpen] = useState(false);
-  const [isAppointmentDialogOpen, setIsAppointmentDialogOpen] = useState(false);
+  //const [isAppointmentDialogOpen, setIsAppointmentDialogOpen] = useState(false);
 
   // GSAP animation refs
   const statementRef = useRef<HTMLDivElement>(null);
@@ -390,14 +388,14 @@ const Home = () => {
                 size={"lg"}
                 className="w-full sm:w-auto sm:px-10 md:px-12 sm:py-4 md:py-6 sm:text-xl text-lg sm:font-bold"
                 variant={"default"}
-                onClick={() => setIsAppointmentDialogOpen(true)}
+                onClick={() => navigate("/website-survey")}
               >
                 Book a call
               </Button>
-              <AppointmentDialog
+              {/* <AppointmentDialog
                 open={isAppointmentDialogOpen}
                 onOpenChange={setIsAppointmentDialogOpen}
-              />
+              /> */}
               <Button
                 size="lg"
                 className="w-full sm:w-auto sm:px-10 md:px-12 sm:py-4 md:py-6 sm:text-xl text-lg sm:font-bold"
