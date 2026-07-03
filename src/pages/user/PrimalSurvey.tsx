@@ -516,7 +516,7 @@ const PrimalSurvey = () => {
                     />
                     <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
                       <span>ZMW 0</span>
-                      <span>ZMW 50,000</span>
+                      <span>ZMW 100,000</span>
                       <span>
                         ZMW{" "}
                         {String(question.max).substring(0, 3) +
