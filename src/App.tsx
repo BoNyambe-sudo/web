@@ -64,7 +64,7 @@ function AppWithQuery() {
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/blog/:id" element={<SingleBlog />} />
+            <Route path="/blog/:slug" element={<SingleBlog />} />
             <Route path="/manage-account" element={<ManageAccount />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

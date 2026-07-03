@@ -63,9 +63,9 @@ const uploadImage = async (image: File): Promise<{ url: string }> => {
   });
 };
 
-const fetchBlog = async (id: string): Promise<BlogType> => {
+const fetchBlog = async (slug: string): Promise<BlogType> => {
   return await request<BlogType>({
-    url: `/blogs/${id}`,
+    url: `/blogs/${slug}`,
     method: "GET",
   });
 };
@@ -346,14 +346,14 @@ const flagComment = async (
   });
 };
 
-// Use query for blog by ID
-export const useBlog = (id: string) => {
+// Use query for blog by slug
+export const useBlog = (slug: string) => {
   return useQuery({
-    queryKey: ["blog", id],
-    queryFn: () => fetchBlog(id),
+    queryKey: ["blog", slug],
+    queryFn: () => fetchBlog(slug),
     staleTime: 1000 * 60 * 15,
     gcTime: 1000 * 60 * 60,
-    enabled: !!id,
+    enabled: !!slug,
   });
 };
 
