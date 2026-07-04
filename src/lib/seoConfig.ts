@@ -88,6 +88,10 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "marketing",
     "sales",
     "business development",
+    "website security",
+    "custom web development",
+    "digital business asset",
+    "platform risk mitigation",
   ],
   Religious: [
     "faith",
@@ -415,12 +419,7 @@ export const getOrganizationSchema = () => {
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.svg`,
     description: SITE_DESCRIPTION,
-    sameAs: [
-      facebookLink,
-      xLink,
-      linkedinLink,
-      instagramLink,
-    ],
+    sameAs: [facebookLink, xLink, linkedinLink, instagramLink],
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Support",
