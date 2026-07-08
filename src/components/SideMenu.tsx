@@ -136,7 +136,7 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
             </>
           )}
           {isStaff && (
-            <Button
+            <Button className="w-full"
               variant="outline"
               onClick={() => {
                 navigate("/admin");
