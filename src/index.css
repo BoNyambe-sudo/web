@@ -163,7 +163,7 @@
 }
 
 .container {
-  @apply mx-auto px-2 sm:px-4 lg:px-6;
+  @apply mx-auto px-2 sm:px-3 lg:px-6;
 }
 
 .lightText {
@@ -244,4 +244,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .animate-sidebar-pulse {
   animation: sidebar-glow 3s ease-in-out infinite;
+}
+
+.hoverEffect {
+  @apply transition-all duration-300 ease-in-out;
 }

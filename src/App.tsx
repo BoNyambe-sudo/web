@@ -15,15 +15,21 @@ import PrivacyPolicy from "./pages/user/PrivacyPolicy";
 import TermsOfService from "./pages/user/TermsOfService";
 import NotFoundPage from "./pages/NotFoundPage";
 import ManageAccount from "./pages/user/ManageAccount";
-import AdminDashboard from "./pages/admin/AdminDashboard";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useUserData } from "./hooks/serverState/useUserServer";
 import SideMenu from "./components/SideMenu";
 import { useToggleState } from "./hooks/clientState/useToggles";
 import AuthCallback from "./pages/user/AuthCallback";
 import Demos from "./pages/user/Demos";
 import PrimalSurvey from "./pages/user/PrimalSurvey";
 import WebsiteBenefits from "./pages/user/WebsiteBenefits";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminHome from "./pages/admin/AdminHome";
+import AdminBlogs from "./pages/admin/AdminBlogs";
+import AdminAppointments from "./pages/admin/AdminAppointments";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminManage from "./pages/admin/AdminManage";
+import ScrollToTop from "./components/ScrollToTop";
+import { AdminRoute, AdminOnlyRoute } from "./components/AdminGuard";
 
 function App() {
   useTheme();
@@ -41,41 +47,47 @@ function App() {
 }
 
 function AppWithQuery() {
-  const { data: user } = useUserData();
   const sidebarOpen = useToggleState((state) => state.sidebarOpen);
-    const toggleSidebarOpen = useToggleState((state) => state.toggleSidebarOpen);
+  const toggleSidebarOpen = useToggleState((state) => state.toggleSidebarOpen);
 
   return (
     <TooltipProvider>
-      <a href="#main-content" className="sr-only focus:not-sr-only">Skip to main content</a>
-      {user &&
-      user.status === "ACTIVE" &&
-      (user.role === "ADMIN" || user.role === "CONTRIBUTOR") ? (
-        <AdminDashboard />
-      ) : (
-        <div id="main-content">
-          <Routes>
-            <Route path="/website-survey" element={<PrimalSurvey />} />
-            <Route path="/website-benefits" element={<WebsiteBenefits />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route path="/blog" element={<Blogs />} />
-            <Route path="/demos" element={<Demos />} />
-            <Route path="/faqs" element={<FAQs />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/blog/:slug" element={<SingleBlog />} />
-            <Route path="/manage-account" element={<ManageAccount />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-          {sidebarOpen && (
-            <SideMenu
-              isOpen={sidebarOpen}
-              onClose={() => toggleSidebarOpen(false)}
-            />
-          )}
-        </div>
-      )}
+      <ScrollToTop />
+      <a href="#main-content" className="sr-only focus:not-sr-only">
+        Skip to main content
+      </a>
+      <div id="main-content">
+        <Routes>
+          <Route path="/website-survey" element={<PrimalSurvey />} />
+          <Route path="/website-benefits" element={<WebsiteBenefits />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/blog" element={<Blogs />} />
+          <Route path="/demos" element={<Demos />} />
+          <Route path="/faqs" element={<FAQs />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/blog/:slug" element={<SingleBlog />} />
+          <Route path="/manage-account" element={<ManageAccount />} />
+
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminDashboard />}>
+              <Route index element={<AdminHome />} />
+              <Route path="blog" element={<AdminBlogs />} />
+              <Route element={<AdminOnlyRoute />}>
+                <Route path="appointments" element={<AdminAppointments />} />
+                <Route path="users" element={<AdminUsers />} />
+              </Route>
+              <Route path="manage" element={<AdminManage />} />
+            </Route>
+          </Route>
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+        {sidebarOpen && (
+          <SideMenu isOpen={sidebarOpen} onClose={() => toggleSidebarOpen(false)} />
+        )}
+      </div>
       <Toaster
         position="top-right"
         toastOptions={{

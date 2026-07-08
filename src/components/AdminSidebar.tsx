@@ -5,7 +5,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { BookOpen, Calendar, LayoutDashboard, Users } from "lucide-react";
+import { BookOpen, Calendar, Globe, LayoutDashboard, Users } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import Logo from "./Logo";
@@ -14,25 +14,30 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/admin",
       icon: LayoutDashboard,
       isActive: true,
     },
     {
       title: "Blog",
-      url: "/blog",
+      url: "/admin/blog",
       icon: BookOpen,
     },
     {
       title: "Users",
-      url: "/users",
+      url: "/admin/users",
       icon: Users,
     },
 
     {
       title: "Appointments",
-      url: "/appointments",
+      url: "/admin/appointments",
       icon: Calendar,
+    },
+    {
+      title: "View Site",
+      url: "/",
+      icon: Globe,
     },
   ],
 };

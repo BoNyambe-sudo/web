@@ -7,7 +7,6 @@ import {
   Share2,
   Tag,
   Copy,
-  Loader2,
   Eye,
   ArrowRight,
   TrendingUp,
@@ -37,6 +36,7 @@ import SEOHelmet from "@/components/SEOHelmet";
 import { getBlogPostSchema } from "@/lib/seoConfig";
 import { formatCompactNumber } from "@/lib/utils";
 import Whatsapp from "@/components/icons/whatsapp";
+import {BlogListSkeleton} from "@/components/BlogCardSkeleton";
 import {
   Card,
   CardHeader,
@@ -377,17 +377,11 @@ const SingleBlog = () => {
                   <Tag size={20} className="text-primary" />
                   <h2 className="text-2xl font-bold">Similar Blog Posts</h2>
                 </div>
-                {loadingSimilarBlogs ? (
-                  <div className="text-center my-auto">
-                    <Loader2 className="text-primary size-4 animate-spin" />
-                  </div>
-                ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {similarBlogs?.map((blog) => (
+                    {loadingSimilarBlogs ? <BlogListSkeleton count={3} /> : similarBlogs?.map((blog) => (
                       <BlogCard key={blog.id} blog={blog} />
                     ))}
                   </div>
-                )}
               </div>
             </div>
 
