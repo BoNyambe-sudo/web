@@ -79,7 +79,7 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => navigate("/manage")}>
+              <DropdownMenuItem onClick={() => navigate("/admin/manage")}>
                 <Settings />
                 Account Settings
               </DropdownMenuItem>

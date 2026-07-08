@@ -12,11 +12,11 @@ import { Link } from "react-router";
 
 // Map route paths to human-readable names for breadcrumb display
 const routeNames: Record<string, string> = {
-  "/": "Dashboard",
-  "/appointments": "Appointments",
-  "/blog": "Blog",
-  "/users": "Users",
-  "/manage": "Manage",
+  "/admin": "Dashboard",
+  "/admin/appointments": "Appointments",
+  "/admin/blog": "Blog",
+  "/admin/users": "Users",
+  "/admin/manage": "Manage",
 };
 
 export function AdminBreadcrumb() {
@@ -30,9 +30,9 @@ export function AdminBreadcrumb() {
 
   // Add home/dashboard as first item
   breadcrumbItems.push({
-    path: "/",
-    name: routeNames["/"],
-    isCurrent: location.pathname === "/",
+    path: "/admin",
+    name: routeNames["/admin"],
+    isCurrent: location.pathname === "/admin",
   });
 
   // Add additional path segments

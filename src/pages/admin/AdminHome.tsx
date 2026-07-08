@@ -39,6 +39,7 @@ import { useBlogAnalytics, useBlogs } from "@/hooks/serverState/useBlogServer";
 import { useFetchUserAnalytics } from "@/hooks/serverState/useUserServer";
 import type { BlogQueryParams } from "../user/Blogs";
 import { useAppointmentMetrics } from "@/hooks/serverState/userAppointmentServer";
+import { formatCompactNumber } from "@/lib/utils";
 
 const AdminHome = () => {
   const [selectedBlog, setSelectedBlog] = useState<BlogType | null>(null);
@@ -66,7 +67,9 @@ const AdminHome = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Blog Posts</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Blog Posts
+            </CardTitle>
             <BookOpen className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
@@ -126,6 +129,7 @@ const AdminHome = () => {
                 <TableHead>Title</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Views</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead>Read Time</TableHead>
                 <TableHead className="w-24">Actions</TableHead>
@@ -134,7 +138,9 @@ const AdminHome = () => {
             <TableBody>
               {blogs?.map((blog) => (
                 <TableRow key={blog.id}>
-                  <TableCell className="font-medium">{blog.title.substring(0, 30)}...</TableCell>
+                  <TableCell className="font-medium">
+                    {blog.title.substring(0, 30)}...
+                  </TableCell>
                   <TableCell>
                     <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
                       {blog.category}
@@ -152,6 +158,10 @@ const AdminHome = () => {
                         Draft
                       </span>
                     )}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    <Eye className="inline h-4 w-4 mr-1" />
+                    {formatCompactNumber(blog.views ?? 0)}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {formatDate(blog.createdAt)}
@@ -184,7 +194,7 @@ const AdminHome = () => {
               ))}
               {blogsLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center">
+                  <TableCell colSpan={7} className="text-center">
                     <div className="flex justify-center">
                       <Loader2 className="size-4 animate-spin text-primary" />
                     </div>
@@ -193,7 +203,7 @@ const AdminHome = () => {
               ) : (
                 blogs?.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center">
+                    <TableCell colSpan={7} className="text-center">
                       No blog posts found
                     </TableCell>
                   </TableRow>

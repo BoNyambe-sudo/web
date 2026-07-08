@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Card } from "./ui/card";
 import { Separator } from "./ui/separator";
-import { LogOut, Settings } from "lucide-react";
+import { Settings, Power } from "lucide-react";
 import { Button } from "./ui/button";
 import { useOutsideClick } from "@/hooks/clickAway";
 import { useNavigate } from "react-router";
@@ -24,56 +24,60 @@ const UserCard = () => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
   };
 
-  return (
-    <Card size="sm"
-      className={`absolute right-4 top-8 ${isUserOpen ? "flex" : "hidden"} flex-col gap-2 p-4`}
+  return isUserOpen ? (
+    <Card
+      size="sm"
+      className={`absolute right-6 top-3 gap-0 !p-0`}
       ref={userCardRef}
     >
-      <div className="flex items-center gap-2">
-        <Avatar size="lg">
-          <AvatarImage src={user?.profilePicture} />
-          <AvatarFallback>
-            {getInitials(user?.firstName, user?.lastName)}
-          </AvatarFallback>
-        </Avatar>
+      <div className="flex flex-col gap-0">
+        <div className="p-2 flex items-center gap-2 ">
+          <Avatar>
+            <AvatarImage src={user?.profilePicture} />
+            <AvatarFallback>
+              {getInitials(user?.firstName, user?.lastName)}
+            </AvatarFallback>
+          </Avatar>
 
-        <div>
-          <p>
-            {user?.firstName as string} {user?.lastName as string}
-          </p>
-          <p className="text-muted-foreground text-sm">
-            {user?.email as string}
-          </p>
+          <div>
+            <p className="text-sm font-medium">
+              {user?.firstName as string} {user?.lastName as string}
+            </p>
+            <p className="text-muted-foreground text-xs">
+              {user?.email as string}
+            </p>
+          </div>
         </div>
+        <Separator className="my-0" />
+        <Button
+          variant="ghost"
+          className="w-full justify-start"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={() => {
+            navigate("/manage-account");
+            setIsUserOpen(false);
+          }}
+        >
+          <Settings />
+          <p>Manage Account</p>
+        </Button>
+        <Separator className="my-0" />
+        <Button
+          className="w-full justify-start"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={() => {
+            logout();
+            setIsUserOpen(false);
+            navigate("/");
+          }}
+          variant={"ghost"}
+        >
+          <Power />
+          Logout
+        </Button>
       </div>
-      <Separator />
-      <Button
-        variant="ghost"
-        className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-primary transition-colors"
-        onMouseDown={(e) => e.stopPropagation()}
-        onClick={() => {
-          navigate("/manage-account");
-          setIsUserOpen(false);
-        }}
-      >
-        <Settings />
-        <p>Manage Account</p>
-      </Button>
-      <Separator />
-      <Button
-        onMouseDown={(e) => e.stopPropagation()}
-        onClick={() => {
-          logout();
-          setIsUserOpen(false);
-          navigate("/");
-        }}
-        variant={"secondary"}
-      >
-        <LogOut />
-        Logout
-      </Button>
     </Card>
-  );
+  ) : null;
 };
 
 export default UserCard;
