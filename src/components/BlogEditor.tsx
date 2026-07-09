@@ -7,6 +7,7 @@ import { Table } from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
 import TableRow from "@tiptap/extension-table-row";
 import TableHeader from "@tiptap/extension-table-header";
+import TextAlign from "@tiptap/extension-text-align";
 import {
   Bold,
   Italic,
@@ -29,6 +30,9 @@ import {
   Combine,
   Split,
   Wrench,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -188,6 +192,9 @@ const BlogEditor = ({
       TableRow,
       TableHeader,
       TableCell,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
     ],
     content: initialContent,
     immediatelyRender: true,
@@ -379,6 +386,45 @@ const BlogEditor = ({
           aria-label="Heading 3"
         >
           <Heading3 size={16} />
+        </Button>
+
+        {/* Alignment */}
+        <div className="w-px bg-accent text-accent-foreground mx-1" />
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().setTextAlign("left").run()}
+          className={
+            editor.isActive({ textAlign: "left" }) ? "bg-primary/20 text-primary" : ""
+          }
+          aria-label="Align left"
+        >
+          <AlignLeft size={16} />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().setTextAlign("center").run()}
+          className={
+            editor.isActive({ textAlign: "center" }) ? "bg-primary/20 text-primary" : ""
+          }
+          aria-label="Align center"
+        >
+          <AlignCenter size={16} />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().setTextAlign("right").run()}
+          className={
+            editor.isActive({ textAlign: "right" }) ? "bg-primary/20 text-primary" : ""
+          }
+          aria-label="Align right"
+        >
+          <AlignRight size={16} />
         </Button>
 
         {/* Lists */}

@@ -9,6 +9,14 @@ import { Link } from "react-router";
 import { cn } from "@/lib/utils";
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Table as ShadcnTable,
+  TableHeader as ShadcnTableHeader,
+  TableBody as ShadcnTableBody,
+  TableRow as ShadcnTableRow,
+  TableHead as ShadcnTableHead,
+  TableCell as ShadcnTableCell,
+} from "@/components/ui/table";
 
 const BlogRenderer = ({
   htmlContent,
@@ -39,6 +47,62 @@ const BlogRenderer = ({
   }, [scrollContainerRef]);
   const options: HTMLReactParserOptions = {
     replace(domNode: DOMNode) {
+      if (domNode instanceof Element && domNode.tagName === "table") {
+        const compatibleChildren = domNode.children.filter(
+          (child): child is DOMNode => "type" in child,
+        );
+        return (
+          <div className="my-6">
+            <ShadcnTable>{domToReact(compatibleChildren)}</ShadcnTable>
+          </div>
+        );
+      }
+
+      if (domNode instanceof Element && domNode.tagName === "thead") {
+        const compatibleChildren = domNode.children.filter(
+          (child): child is DOMNode => "type" in child,
+        );
+        return (
+          <ShadcnTableHeader>{domToReact(compatibleChildren)}</ShadcnTableHeader>
+        );
+      }
+
+      if (domNode instanceof Element && domNode.tagName === "tbody") {
+        const compatibleChildren = domNode.children.filter(
+          (child): child is DOMNode => "type" in child,
+        );
+        return (
+          <ShadcnTableBody>{domToReact(compatibleChildren)}</ShadcnTableBody>
+        );
+      }
+
+      if (domNode instanceof Element && domNode.tagName === "tr") {
+        const compatibleChildren = domNode.children.filter(
+          (child): child is DOMNode => "type" in child,
+        );
+        return (
+          <ShadcnTableRow>{domToReact(compatibleChildren)}</ShadcnTableRow>
+        );
+      }
+
+      if (domNode instanceof Element && domNode.tagName === "th") {
+        const compatibleChildren = domNode.children.filter(
+          (child): child is DOMNode => "type" in child,
+        );
+        return (
+          <ShadcnTableHead>{domToReact(compatibleChildren)}</ShadcnTableHead>
+        );
+      }
+
+      if (domNode instanceof Element && domNode.tagName === "td") {
+        const compatibleChildren = domNode.children.filter(
+          (child): child is DOMNode => "type" in child,
+        );
+        return (
+          <ShadcnTableCell>{domToReact(compatibleChildren)}</ShadcnTableCell>
+        );
+      }
+
       // 1. Handle Images: Add lazy loading and responsive wrappers
       if (domNode instanceof Element && domNode.tagName === "img") {
         const { src, alt } = domNode.attribs;
