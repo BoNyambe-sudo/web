@@ -52,7 +52,7 @@ const BlogRenderer = ({
           (child): child is DOMNode => "type" in child,
         );
         return (
-          <div className="my-6">
+          <div className="my-4">
             <ShadcnTable>{domToReact(compatibleChildren)}</ShadcnTable>
           </div>
         );
