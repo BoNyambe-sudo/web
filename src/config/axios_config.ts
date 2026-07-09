@@ -31,7 +31,7 @@ export const request = async <T>(options: AxiosRequestConfig): Promise<T> => {
       const axiosError: AxiosError = error;
       if (axiosError.response?.status === 401) {
         localStorage.removeItem("token");
-        toast.error("Session expired. Please login again.");
+        toast.error("Invalid credentials or session expired. Please login again.");
       } else if (axiosError.response?.status === 403) {
         toast.error("You are not authorized to perform this action.");
       } else if (axiosError.response?.status === 404) {

@@ -232,7 +232,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 @keyframes sidebar-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 oklch(0.55 0.2 250 / 0);
     border-color: var(--border);
   }
@@ -248,4 +249,67 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .hoverEffect {
   @apply transition-all duration-300 ease-in-out;
+}
+
+.tiptap .tableWrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.tiptap table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.tiptap table td,
+.tiptap table th {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  min-width: 4rem;
+  vertical-align: top;
+  background-color: var(--background);
+  position: relative;
+  word-break: break-word;
+}
+
+.tiptap table th {
+  background-color: var(--muted);
+  color: var(--foreground);
+  font-weight: 600;
+  text-align: left;
+}
+
+.tiptap table td {
+  text-align: left;
+}
+
+.tiptap table .selectedCell {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.tiptap table .selectedCell::after {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.tiptap table .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: var(--primary);
+  pointer-events: none;
 }

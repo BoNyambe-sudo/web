@@ -3,21 +3,10 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import FileHandler from "@tiptap/extension-file-handler";
-
-const ExtendedImage = Image.extend({
-  addAttributes() {
-    return {
-      ...this.parent?.(),
-      alt: {
-        default: null,
-        parseHTML: element => element.getAttribute('alt'),
-        renderHTML: attributes => ({
-          alt: attributes.alt,
-        }),
-      },
-    };
-  },
-});
+import { Table } from "@tiptap/extension-table";
+import TableCell from "@tiptap/extension-table-cell";
+import TableRow from "@tiptap/extension-table-row";
+import TableHeader from "@tiptap/extension-table-header";
 import {
   Bold,
   Italic,
@@ -33,10 +22,29 @@ import {
   Image as ImageIcon,
   Trash2,
   ArrowUp,
+  Table as TableIcon,
+  Columns,
+  Rows,
+  Heading,
+  Combine,
+  Split,
+  Wrench,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useUploadBlogImage, useDeleteBlogImage } from "@/hooks/serverState/useBlogServer";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown-menu";
+import {
+  useUploadBlogImage,
+  useDeleteBlogImage,
+} from "@/hooks/serverState/useBlogServer";
 import {
   Dialog,
   DialogContent,
@@ -44,6 +52,21 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+
+const ExtendedImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      alt: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("alt"),
+        renderHTML: (attributes) => ({
+          alt: attributes.alt,
+        }),
+      },
+    };
+  },
+});
 
 interface BlogEditorProps {
   initialContent?: string;
@@ -58,15 +81,15 @@ const BlogEditor = ({
   placeholder = "Start writing your blog...",
   scrollContainerRef,
 }: BlogEditorProps) => {
-   const [imageUrl, setImageUrl] = useState<File>();
-   const [imagePreview, setImagePreview] = useState<string>("");
-   const [showImageInput, setShowImageInput] = useState(false);
-   const [showLinkDialog, setShowLinkDialog] = useState(false);
-   const [linkUrl, setLinkUrl] = useState("");
-   const [imageAltText, setImageAltText] = useState<string>("");
-   const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
-   const [isDragging, setIsDragging] = useState(false);
-   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [imageUrl, setImageUrl] = useState<File>();
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [showImageInput, setShowImageInput] = useState(false);
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  const [imageAltText, setImageAltText] = useState<string>("");
+  const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const { mutate: uploadImage } = useUploadBlogImage();
@@ -83,16 +106,19 @@ const BlogEditor = ({
     }
   }, [scrollContainerRef]);
 
-  const handleOnChange = useCallback((html: string) => {
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
-    debounceTimer.current = setTimeout(() => {
-      if (onChange) {
-        onChange(html);
+  const handleOnChange = useCallback(
+    (html: string) => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
       }
-    }, 150);
-  }, [onChange]);
+      debounceTimer.current = setTimeout(() => {
+        if (onChange) {
+          onChange(html);
+        }
+      }, 150);
+    },
+    [onChange],
+  );
 
   useEffect(() => {
     return () => {
@@ -102,61 +128,67 @@ const BlogEditor = ({
     };
   }, []);
 
-const editor = useEditor({
-  extensions: [
-    StarterKit.configure({
-      heading: {
-        levels: [1, 2, 3],
-      },
-      link: {
-        openOnClick: false,
-        HTMLAttributes: {
-          rel: "noopener noreferrer",
-          target: "_blank",
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2, 3],
         },
-      },
-    }),
-    ExtendedImage.configure({
-      inline: false,
-      allowBase64: true,
-      HTMLAttributes: {
-        class: "max-w-full h-auto cursor-pointer",
-      },
-    }),
-    FileHandler.configure({
-      onPaste: (currentEditor, files, htmlContent) => {
-        files.forEach((file) => {
-          if (htmlContent) {
-            return false;
-          }
+        link: {
+          openOnClick: false,
+          HTMLAttributes: {
+            rel: "noopener noreferrer",
+            target: "_blank",
+          },
+        },
+      }),
+      ExtendedImage.configure({
+        inline: false,
+        allowBase64: true,
+        HTMLAttributes: {
+          class: "max-w-full h-auto cursor-pointer",
+        },
+      }),
+      FileHandler.configure({
+        onPaste: (currentEditor, files, htmlContent) => {
+          files.forEach((file) => {
+            if (htmlContent) {
+              return false;
+            }
 
-          uploadImage(file, {
-            onSuccess: (data) => {
-              currentEditor
-                .chain()
-                .focus()
-                .setImage({ src: data.url, alt: file.name })
-                .run();
-            },
+            uploadImage(file, {
+              onSuccess: (data) => {
+                currentEditor
+                  .chain()
+                  .focus()
+                  .setImage({ src: data.url, alt: file.name })
+                  .run();
+              },
+            });
           });
-        });
-      },
-      onDrop: (currentEditor, files) => {
-        files.forEach((file) => {
-          uploadImage(file, {
-            onSuccess: (data) => {
-              currentEditor
-                .chain()
-                .focus()
-                .setImage({ src: data.url, alt: file.name })
-                .run();
-            },
+        },
+        onDrop: (currentEditor, files) => {
+          files.forEach((file) => {
+            uploadImage(file, {
+              onSuccess: (data) => {
+                currentEditor
+                  .chain()
+                  .focus()
+                  .setImage({ src: data.url, alt: file.name })
+                  .run();
+              },
+            });
           });
-        });
-      },
-      allowedMimeTypes: ["image/jpeg", "image/png", "image/gif"],
-    }),
-  ],
+        },
+        allowedMimeTypes: ["image/jpeg", "image/png", "image/gif"],
+      }),
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
+    ],
     content: initialContent,
     immediatelyRender: true,
     onUpdate: ({ editor }) => {
@@ -183,7 +215,11 @@ const editor = useEditor({
     if (imageUrl && editor) {
       uploadImage(imageUrl, {
         onSuccess: (data) => {
-          editor.chain().focus().setImage({ src: data.url, alt: imageAltText || imageUrl.name }).run();
+          editor
+            .chain()
+            .focus()
+            .setImage({ src: data.url, alt: imageAltText || imageUrl.name })
+            .run();
         },
         onError: (error) => {
           console.error("Error uploading image:", error);
@@ -200,12 +236,16 @@ const editor = useEditor({
     if (editor && selectedImageSrc) {
       const { state } = editor;
       const { doc } = state;
-      
+
       let found = false;
       doc.descendants((node, pos) => {
         if (found) return;
         if (node.type.name === "image" && node.attrs.src === selectedImageSrc) {
-          editor.chain().focus().deleteRange({ from: pos, to: pos + node.nodeSize }).run();
+          editor
+            .chain()
+            .focus()
+            .deleteRange({ from: pos, to: pos + node.nodeSize })
+            .run();
           deleteImage(selectedImageSrc, {
             onError: (error) => {
               console.error("Error deleting image from Cloudinary:", error);
@@ -395,6 +435,109 @@ const editor = useEditor({
           <Code size={16} />
         </Button>
 
+        {/* Tables */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className={
+                editor.isActive("table") ? "bg-primary/20 text-primary" : ""
+              }
+              aria-label="Table"
+            >
+              <TableIcon size={16} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                onClick={() =>
+                  editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+                }
+              >
+                <TableIcon size={14} />
+                Insert Table
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            {editor.isActive("table") && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Columns</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().addColumnBefore().run()}>
+                    <Columns size={14} />
+                    Add Column Before
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().addColumnAfter().run()}>
+                    <Columns size={14} />
+                    Add Column After
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().deleteColumn().run()}>
+                    <Trash2 size={14} />
+                    Delete Column
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Rows</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().addRowBefore().run()}>
+                    <Rows size={14} />
+                    Add Row Before
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().addRowAfter().run()}>
+                    <Rows size={14} />
+                    Add Row After
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().deleteRow().run()}>
+                    <Trash2 size={14} />
+                    Delete Row
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Header</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().toggleHeaderRow().run()}>
+                    <Heading size={14} />
+                    Toggle Header Row
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().toggleHeaderColumn().run()}>
+                    <Heading size={14} />
+                    Toggle Header Column
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Cell</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().mergeCells().run()}>
+                    <Combine size={14} />
+                    Merge Cells
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().splitCell().run()}>
+                    <Split size={14} />
+                    Split Cell
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => editor.chain().focus().toggleHeaderCell().run()}>
+                    <Heading size={14} />
+                    Toggle Header Cell
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => editor.chain().focus().fixTables().run()}>
+                  <Wrench size={14} />
+                  Fix Table
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => editor.chain().focus().deleteTable().run()}>
+                  <Trash2 size={14} />
+                  Delete Table
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         {/* Links and Images */}
         <div className="w-px bg-accent text-accent-foreground mx-1" />
         <Button
@@ -427,7 +570,7 @@ const editor = useEditor({
               variant="ghost"
               size="sm"
               onClick={handleRemoveImage}
-              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+              className="text-destructive hover:text-red-700 hover:bg-red-50"
               aria-label="Remove selected image"
             >
               <Trash2 size={16} />
@@ -488,7 +631,9 @@ const editor = useEditor({
             </Button>
           </div>
           <div className="w-full">
-            <label className="text-xs text-muted-foreground mb-1 block">Alt Text (optional)</label>
+            <label className="text-xs text-muted-foreground mb-1 block">
+              Alt Text (optional)
+            </label>
             <Input
               type="text"
               placeholder="Describe the image for accessibility"
@@ -548,7 +693,11 @@ const editor = useEditor({
             if (file.type.startsWith("image/")) {
               uploadImage(file, {
                 onSuccess: (data) => {
-                  editor.chain().focus().setImage({ src: data.url, alt: file.name }).run();
+                  editor
+                    .chain()
+                    .focus()
+                    .setImage({ src: data.url, alt: file.name })
+                    .run();
                 },
               });
             }
@@ -569,7 +718,10 @@ const editor = useEditor({
           className="absolute bottom-4 right-4"
           onClick={() => {
             if (scrollContainerRef?.current) {
-              scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+              scrollContainerRef.current.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
             } else {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
