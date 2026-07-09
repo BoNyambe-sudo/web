@@ -604,7 +604,10 @@ const AdminBlogs = () => {
                 Add New
               </Button>
             </DialogTrigger>
-            <DialogContent ref={createScrollRef} className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide">
+            <DialogContent
+              ref={createScrollRef}
+              className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide"
+            >
               <DialogHeader>
                 <DialogTitle>Add A New Blog Post</DialogTitle>
                 <DialogDescription>
@@ -845,7 +848,9 @@ const AdminBlogs = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Blog Posts</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Blog Posts
+            </CardTitle>
             <BookOpen className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
@@ -878,7 +883,9 @@ const AdminBlogs = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Draft Blog Posts</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Draft Blog Posts
+            </CardTitle>
             <EyeOff className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
@@ -908,7 +915,9 @@ const AdminBlogs = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Deleted Blog Posts</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Deleted Blog Posts
+            </CardTitle>
             <Trash2 className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
@@ -948,45 +957,60 @@ const AdminBlogs = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {blogs?.map((blog) => (
-                <TableRow key={blog.id}>
-                  <TableCell className="font-medium">
-                    {blog.title.substring(0, 30)}...
+              {blogsLoading ? (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center">
+                    <div className="flex justify-center">
+                      <Loader2 className="size-4 animate-spin text-primary" />
+                    </div>
                   </TableCell>
-                  <TableCell>
-                    <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
-                      {blog.category}
-                    </span>
+                </TableRow>
+              ) : blogs?.length === 0 && !blogsLoading ? (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center">
+                    No blog posts found
                   </TableCell>
-                  <TableCell>
-                    {blog.published ? (
-                      <span className="flex items-center text-green-600">
-                        <Eye className="mr-1 h-4 w-4" />
-                        Published
+                </TableRow>
+              ) : (
+                blogs?.map((blog) => (
+                  <TableRow key={blog.id}>
+                    <TableCell className="font-medium">
+                      {blog.title.substring(0, 30)}...
+                    </TableCell>
+                    <TableCell>
+                      <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
+                        {blog.category}
                       </span>
-                    ) : (
-                      <span className="flex items-center text-yellow-600">
-                        <EyeOff className="mr-1 h-4 w-4" />
-                        Draft
-                      </span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    <Eye className="inline h-4 w-4 mr-1" />
-                    {formatCompactNumber(blog.views ?? 0)}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {formatDate(blog.createdAt)}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    <Clock className="inline h-4 w-4 mr-1" />
-                    {blog.readTime} min
-                  </TableCell>
-                  <TableCell>
-                    <TooltipProvider>
-                      <div className="flex gap-1">
-                        {canEdit(blog) && (
-                          <Tooltip>
+                    </TableCell>
+                    <TableCell>
+                      {blog.published ? (
+                        <span className="flex items-center text-green-600">
+                          <Eye className="mr-1 h-4 w-4" />
+                          Published
+                        </span>
+                      ) : (
+                        <span className="flex items-center text-yellow-600">
+                          <EyeOff className="mr-1 h-4 w-4" />
+                          Draft
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      <Eye className="inline h-4 w-4 mr-1" />
+                      {formatCompactNumber(blog.views ?? 0)}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {formatDate(blog.createdAt)}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      <Clock className="inline h-4 w-4 mr-1" />
+                      {blog.readTime} min
+                    </TableCell>
+                    <TableCell>
+                      <TooltipProvider>
+                        <div className="flex gap-1">
+                          {canEdit(blog) && (
+                            <Tooltip>
                               <TooltipTrigger asChild>
                                 <Button
                                   variant="ghost"
@@ -997,218 +1021,189 @@ const AdminBlogs = () => {
                                   <Edit className="h-4 w-4" />
                                 </Button>
                               </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Edit</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        )}
+                              <TooltipContent>
+                                <p>Edit</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handlePreviewBlog(blog)}
-                              aria-label="Preview blog"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Preview</p>
-                          </TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() =>
-                              handleViewComments(blog?.id as string)
-                            }
-                            aria-label="View comments"
-                          >
-                            <MessageSquare className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Comments</p>
-                          </TooltipContent>
-                        </Tooltip>
-
-                        {canToggle(blog) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => toggleBlogVisibility(blog)}
-                                aria-label={blog.published ? "Unpublish blog" : "Publish blog"}
+                                onClick={() => handlePreviewBlog(blog)}
+                                aria-label="Preview blog"
                               >
-                                {blog.published ? (
-                                  <EyeOff className="h-4 w-4" />
-                                ) : (
-                                  <Eye className="h-4 w-4" />
-                                )}
+                                <ExternalLink className="h-4 w-4" />
                               </Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p>{blog.published ? "Unpublish" : "Publish"}</p>
+                              <p>Preview</p>
                             </TooltipContent>
                           </Tooltip>
-                        )}
 
-                        {/* Delete or Restore Button */}
-                        {canDelete &&
-                          (blog.deleted && showDeleted ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() =>
+                                  handleViewComments(blog?.id as string)
+                                }
+                                aria-label="View comments"
+                              >
+                                <MessageSquare className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Comments</p>
+                            </TooltipContent>
+                          </Tooltip>
+
+                          {canToggle(blog) && (
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <Dialog
-                                  open={
-                                    isRestoreDialogOpen &&
-                                    blogToRestore === blog.id
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => toggleBlogVisibility(blog)}
+                                  aria-label={
+                                    blog.published
+                                      ? "Unpublish blog"
+                                      : "Publish blog"
                                   }
-                                  onOpenChange={setIsRestoreDialogOpen}
                                 >
-                                  <DialogTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      onClick={() =>
-                                        openRestoreDialog(blog.id as string)
-                                      }
-                                      className="text-green-600 hover:text-green-700"
-                                      aria-label="Restore blog"
-                                    >
-                                      <RotateCcw className="h-4 w-4" />
-                                    </Button>
-                                  </DialogTrigger>
-                                  <DialogContent>
-                                    <DialogHeader>
-                                      <DialogTitle>Restore Blog</DialogTitle>
-                                      <DialogDescription>
-                                        Are you sure you want to restore this
-                                        blog? It will become visible to readers
-                                        again.
-                                      </DialogDescription>
-                                    </DialogHeader>
-                                    <DialogFooter>
-                                      <Button
-                                        variant="outline"
-                                        onClick={() => setBlogToRestore(null)}
-                                      >
-                                        Cancel
-                                      </Button>
-                                      <Button
-                                        variant="default"
-                                        onClick={confirmRestoreBlog}
-                                      >
-                                        Restore
-                                      </Button>
-                                    </DialogFooter>
-                                  </DialogContent>
-                                </Dialog>
+                                  {blog.published ? (
+                                    <EyeOff className="h-4 w-4" />
+                                  ) : (
+                                    <Eye className="h-4 w-4" />
+                                  )}
+                                </Button>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Restore</p>
+                                <p>
+                                  {blog.published ? "Unpublish" : "Publish"}
+                                </p>
                               </TooltipContent>
                             </Tooltip>
-                          ) : (
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Dialog
-                                  open={
-                                    isDeleteDialogOpen &&
-                                    blogToDelete === blog.id
-                                  }
-                                  onOpenChange={setIsDeleteDialogOpen}
-                                >
-                                  <DialogTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      onClick={() =>
-                                        openDeleteDialog(blog.id as string)
-                                      }
-                                      className="text-destructive hover:text-red-700"
-                                      aria-label="Delete blog"
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  </DialogTrigger>
-                                  <DialogContent>
-                                    <DialogHeader>
-                                      <DialogTitle>Delete Blog</DialogTitle>
-                                      <DialogDescription>
-                                        Are you sure you want to delete this
-                                        blog? This will mark it as deleted. You
-                                        can restore it later from the deleted
-                                        view.
-                                      </DialogDescription>
-                                    </DialogHeader>
-                                    <DialogFooter>
+                          )}
+
+                          {/* Delete or Restore Button */}
+                          {canDelete &&
+                            (blog.deleted && showDeleted ? (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Dialog
+                                    open={
+                                      isRestoreDialogOpen &&
+                                      blogToRestore === blog.id
+                                    }
+                                    onOpenChange={setIsRestoreDialogOpen}
+                                  >
+                                    <DialogTrigger asChild>
                                       <Button
-                                        variant="outline"
-                                        onClick={() => setBlogToDelete(null)}
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() =>
+                                          openRestoreDialog(blog.id as string)
+                                        }
+                                        className="text-green-600 hover:text-green-700"
+                                        aria-label="Restore blog"
                                       >
-                                        Cancel
+                                        <RotateCcw className="h-4 w-4" />
                                       </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                      <DialogHeader>
+                                        <DialogTitle>Restore Blog</DialogTitle>
+                                        <DialogDescription>
+                                          Are you sure you want to restore this
+                                          blog? It will become visible to
+                                          readers again.
+                                        </DialogDescription>
+                                      </DialogHeader>
+                                      <DialogFooter>
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => setBlogToRestore(null)}
+                                        >
+                                          Cancel
+                                        </Button>
+                                        <Button
+                                          variant="default"
+                                          onClick={confirmRestoreBlog}
+                                        >
+                                          Restore
+                                        </Button>
+                                      </DialogFooter>
+                                    </DialogContent>
+                                  </Dialog>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Restore</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            ) : (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Dialog
+                                    open={
+                                      isDeleteDialogOpen &&
+                                      blogToDelete === blog.id
+                                    }
+                                    onOpenChange={setIsDeleteDialogOpen}
+                                  >
+                                    <DialogTrigger asChild>
                                       <Button
-                                        variant="destructive"
-                                        onClick={handleDeleteBlog}
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() =>
+                                          openDeleteDialog(blog.id as string)
+                                        }
+                                        className="text-destructive hover:text-red-700"
+                                        aria-label="Delete blog"
                                       >
-                                        Delete
+                                        <Trash2 className="h-4 w-4" />
                                       </Button>
-                                    </DialogFooter>
-                                  </DialogContent>
-                                </Dialog>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Delete</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          ))}
-                      </div>
-                    </TooltipProvider>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {hasNextPage && (
-                <div className="mt-6 text-center">
-                  <Button
-                    variant="outline"
-                    onClick={() => fetchNextPage()}
-                    disabled={isFetchingNextPage}
-                    className="h-10"
-                  >
-                    {isFetchingNextPage ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin mr-2 text-primary" />
-                        Loading...
-                      </>
-                    ) : (
-                      "Load More"
-                    )}
-                  </Button>
-                </div>
-              )}
-              {blogsLoading ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center">
-                    <div className="flex justify-center">
-                      <Loader2 className="size-4 animate-spin text-primary" />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                blogs?.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      No blog posts found
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                      <DialogHeader>
+                                        <DialogTitle>Delete Blog</DialogTitle>
+                                        <DialogDescription>
+                                          Are you sure you want to delete this
+                                          blog? This will mark it as deleted.
+                                          You can restore it later from the
+                                          deleted view.
+                                        </DialogDescription>
+                                      </DialogHeader>
+                                      <DialogFooter>
+                                        <Button
+                                          variant="outline"
+                                          onClick={() => setBlogToDelete(null)}
+                                        >
+                                          Cancel
+                                        </Button>
+                                        <Button
+                                          variant="destructive"
+                                          onClick={handleDeleteBlog}
+                                        >
+                                          Delete
+                                        </Button>
+                                      </DialogFooter>
+                                    </DialogContent>
+                                  </Dialog>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Delete</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            ))}
+                        </div>
+                      </TooltipProvider>
                     </TableCell>
                   </TableRow>
-                )
+                ))
               )}
             </TableBody>
           </Table>
@@ -1217,7 +1212,10 @@ const AdminBlogs = () => {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent ref={editScrollRef} className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide">
+        <DialogContent
+          ref={editScrollRef}
+          className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide"
+        >
           <DialogHeader>
             <DialogTitle>Update Blog Post</DialogTitle>
             <DialogDescription>
@@ -1545,7 +1543,10 @@ const AdminBlogs = () => {
 
       {/* Preview Dialog */}
       <Dialog open={isPreviewDialogOpen} onOpenChange={setIsPreviewDialogOpen}>
-        <DialogContent ref={previewScrollRef} className="sm:max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide">
+        <DialogContent
+          ref={previewScrollRef}
+          className="sm:max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide"
+        >
           <DialogHeader>
             <DialogTitle>Blog Preview</DialogTitle>
             <DialogDescription>
@@ -1568,7 +1569,10 @@ const AdminBlogs = () => {
                   <span>{selectedBlog.readTime} min read</span>
                 </div>
               </div>
-              <BlogRenderer htmlContent={selectedBlog.content} scrollContainerRef={previewScrollRef} />
+              <BlogRenderer
+                htmlContent={selectedBlog.content}
+                scrollContainerRef={previewScrollRef}
+              />
               {selectedBlog.tags.length > 0 && (
                 <div className="border-t pt-4">
                   <div className="flex gap-2 flex-wrap">
@@ -1622,7 +1626,7 @@ const AdminBlogs = () => {
             {isFetchingNextPage ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Loading more...
+                Loading...
               </>
             ) : (
               "Load More"
