@@ -71,6 +71,7 @@ const SingleBlog = () => {
     limit: 3,
     deleted: false,
     published: true,
+    sortBy: "-views",
   };
   if (blog) {
     queryParams.category = blog.category;
