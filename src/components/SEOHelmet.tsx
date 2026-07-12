@@ -31,6 +31,8 @@ export default function SEOHelmet({
   const fullTitle = title.includes(SITE_NAME)
     ? title
     : `${title} - ${SITE_NAME}`;
+  const canonicalHref = canonicalUrl || url || SITE_URL;
+  const resolvedImage = image || "/favicon.svg";
 
   return (
     <Helmet>
@@ -43,14 +45,14 @@ export default function SEOHelmet({
       <meta charSet="utf-8" />
 
       {/* Canonical URL */}
-      {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+      <link rel="canonical" href={canonicalHref} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={resolvedImage} />
       <meta property="og:site_name" content={SITE_NAME} />
       {publishedDate && (
         <meta property="article:published_time" content={publishedDate} />
@@ -64,7 +66,7 @@ export default function SEOHelmet({
       <meta property="twitter:url" content={url} />
       <meta property="twitter:title" content={fullTitle} />
       <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content={image} />
+      <meta property="twitter:image" content={resolvedImage} />
       <meta name="twitter:creator" content="@franknyambe213" />
 
       {/* Additional SEO */}
@@ -74,6 +76,7 @@ export default function SEOHelmet({
 
       {/* Favicon */}
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <meta name="theme-color" content="#0f172a" />
 
       {children}
     </Helmet>

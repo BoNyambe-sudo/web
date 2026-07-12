@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, useIsFetching } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HelmetProvider } from "react-helmet-async";
@@ -30,6 +30,19 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminManage from "./pages/admin/AdminManage";
 import ScrollToTop from "./components/ScrollToTop";
 import { AdminRoute, AdminOnlyRoute } from "./components/AdminGuard";
+import { useEffect } from "react";
+
+function AppReadySignal() {
+  const isFetching = useIsFetching();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    (window as Window & { __APP_READY__?: boolean }).__APP_READY__ =
+      isFetching === 0;
+  }, [isFetching]);
+
+  return null;
+}
 
 function App() {
   useTheme();
@@ -39,6 +52,7 @@ function App() {
     <HelmetProvider>
       <Router basename="/web">
         <QueryClientProvider client={queryClient}>
+          <AppReadySignal />
           <AppWithQuery />
         </QueryClientProvider>
       </Router>
@@ -85,7 +99,10 @@ function AppWithQuery() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         {sidebarOpen && (
-          <SideMenu isOpen={sidebarOpen} onClose={() => toggleSidebarOpen(false)} />
+          <SideMenu
+            isOpen={sidebarOpen}
+            onClose={() => toggleSidebarOpen(false)}
+          />
         )}
       </div>
       <Toaster

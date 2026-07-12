@@ -3,7 +3,7 @@
 
 User-agent: *
 Allow: /
-Allow: /blogs
+Allow: /blog
 Allow: /faqs
 Disallow: /admin
 Disallow: /*.json$
