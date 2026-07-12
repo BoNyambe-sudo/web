@@ -17,6 +17,8 @@ import {
   Edit,
   RotateCcw,
   ArrowLeft,
+  CheckCircle2,
+  FilePen,
 } from "lucide-react";
 import {
   Dialog,
@@ -606,7 +608,7 @@ const AdminBlogs = () => {
             </DialogTrigger>
             <DialogContent
               ref={createScrollRef}
-              className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide"
+              className="sm:max-w-4xl max-h-[95vh] overflow-y-auto"
             >
               <DialogHeader>
                 <DialogTitle>Add A New Blog Post</DialogTitle>
@@ -868,7 +870,7 @@ const AdminBlogs = () => {
             <CardTitle className="text-sm font-medium">
               Published Blog Posts
             </CardTitle>
-            <Eye className="h-4 w-4 text-primary" />
+            <CheckCircle2 className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -886,7 +888,7 @@ const AdminBlogs = () => {
             <CardTitle className="text-sm font-medium">
               Draft Blog Posts
             </CardTitle>
-            <EyeOff className="h-4 w-4 text-primary" />
+            <FilePen className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{blogsMetrics?.draftBlogs}</div>
@@ -1214,7 +1216,7 @@ const AdminBlogs = () => {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent
           ref={editScrollRef}
-          className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide"
+          className="sm:max-w-4xl max-h-[95vh] overflow-y-auto"
         >
           <DialogHeader>
             <DialogTitle>Update Blog Post</DialogTitle>
@@ -1545,7 +1547,7 @@ const AdminBlogs = () => {
       <Dialog open={isPreviewDialogOpen} onOpenChange={setIsPreviewDialogOpen}>
         <DialogContent
           ref={previewScrollRef}
-          className="sm:max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide"
+          className="sm:max-w-4xl max-h-[90vh] overflow-y-auto"
         >
           <DialogHeader>
             <DialogTitle>Blog Preview</DialogTitle>

@@ -42,18 +42,18 @@ const Header = ({
 
         <div className="hidden md:flex flex-1 justify-center items-center font-semibold gap-3">
           <Link
-            to="/demos"
+            to="/services"
             className={cn(
-              `relative group hover:text-primary transition-color ${pathname === "/demos" ? "text-primary" : ""}`,
+              `relative group hover:text-primary transition-color ${pathname === "/services" ? "text-primary" : ""}`,
               textClassName,
             )}
           >
-            Demos
+            Services
             <span
-              className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/demos" ? "w-1/2" : ""}`}
+              className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/services" ? "w-1/2" : ""}`}
             ></span>
             <span
-              className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/demos" ? "w-1/2" : ""}`}
+              className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/services" ? "w-1/2" : ""}`}
             ></span>
           </Link>
           <Link
