@@ -400,9 +400,9 @@ const Home = () => {
                 size="lg"
                 className="w-full sm:w-auto sm:px-10 md:px-12 sm:py-4 md:py-6 sm:text-xl text-lg sm:font-bold"
                 variant={"outline"}
-                onClick={() => navigate("/demos")}
+                onClick={() => navigate("/services")}
               >
-                Demos
+                Services
               </Button>
             </div>
           </div>

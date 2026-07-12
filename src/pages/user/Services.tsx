@@ -154,7 +154,7 @@ const projectItems = [
 
 const SECTIONS = [
   { id: "tech-stack", label: "Tech Stack" },
-  { id: "demos", label: "Demos" },
+  { id: "services", label: "Services" },
   { id: "projects", label: "Projects" },
   { id: "contact", label: "Contact" },
 ];
@@ -169,7 +169,7 @@ const ANIM_CLASSES = [
   "contact-anim",
 ] as const;
 
-const Demos = () => {
+const Services = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isMobile = useIsMobile();
@@ -263,7 +263,7 @@ const Demos = () => {
     };
   }, [activeSectionIndex]);
 
-  // Carousel timer: runs only when on demos (index 1), isPlaying, and not at last item
+  // Carousel timer: runs only when on services (index 1), isPlaying, and not at last item
   useEffect(() => {
     if (activeSectionIndex !== 1 || !isPlaying || isTransitioning) {
       if (carouselTimerRef.current) {
@@ -334,7 +334,7 @@ const Demos = () => {
       }
       return;
     }
-    // When on demos section, wait for carousel to reach the last item before auto-advancing
+    // When on services section, wait for carousel to reach the last item before auto-advancing
     const shouldWait =
       activeSectionIndex === 1 &&
       activeCarouselIndex < carouselItems.length - 1;
@@ -356,7 +356,7 @@ const Demos = () => {
     };
   }, [activeSectionIndex, isPlaying, isTransitioning, activeCarouselIndex]);
 
-  // Reset carousel when leaving demos section
+  // Reset carousel when leaving services section
   useEffect(() => {
     if (activeSectionIndex !== 1 && activeCarouselIndex !== 0) {
       setTimeout(() => setActiveCarouselIndex(0), 0);
@@ -490,11 +490,11 @@ const Demos = () => {
   return (
     <>
       <SEOHelmet
-        title="Demos & Tech Stack - Bo Nyambe"
-        description="Explore my tech stack, demos, projects, and contact information. See examples of custom admin panels, SEO-optimized sites, responsive designs, and more."
-        keywords="tech stack, demos, projects, Angular, Nest JS, MongoDB, Node.js, contact, portfolio"
-        url={`${SITE_URL}demos`}
-        canonicalUrl={`${SITE_URL}demos`}
+        title="Services & Tech Stack - Bo Nyambe"
+        description="Explore my tech stack, services, projects, and contact information. See examples of custom admin panels, SEO-optimized sites, responsive designs, and more."
+        keywords="tech stack, services, projects, Angular, Nest JS, MongoDB, Node.js, contact, portfolio"
+        url={`${SITE_URL}services`}
+        canonicalUrl={`${SITE_URL}services`}
         type="website"
       >
         <script type="application/ld+json">
@@ -583,9 +583,9 @@ const Demos = () => {
             ref={(el) => {
               if (el) sectionRefs.current[1] = el;
             }}
-            id="demos"
+            id="services"
             className="absolute inset-0 items-center justify-center p-4 sm:p-8 bg-background hidden"
-            aria-labelledby="demos-title"
+            aria-labelledby="services-title"
           >
             <div className="w-full max-w-4xl mx-auto flex flex-col">
               <div className="text-center mb-2 md:mb-6">
@@ -593,7 +593,7 @@ const Demos = () => {
                   FEATURES & CAPABILITIES
                 </span>
                 <h2
-                  id="demos-title"
+                  id="services-title"
                   className="text-3xl sm:text-4xl font-bold text-foreground mt-3 demo-anim"
                 >
                   What I Deliver
@@ -885,4 +885,4 @@ const Demos = () => {
   );
 };
 
-export default Demos;
+export default Services;

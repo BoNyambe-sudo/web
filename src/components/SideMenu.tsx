@@ -61,16 +61,16 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
               ></span>
             </Link>
             <Link
-              to="/demos"
+              to="/services"
               onClick={onClose}
-              className={`relative group hover:primary  hoverEffect ${pathname === "/demos" ? "text-primary" : ""}`}
+              className={`relative group hover:primary  hoverEffect ${pathname === "/services" ? "text-primary" : ""}`}
             >
-              Demos
+              Services
               <span
-                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/demos" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/services" ? "w-1/2" : ""}`}
               ></span>
               <span
-                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/demos" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/services" ? "w-1/2" : ""}`}
               ></span>
             </Link>
             <Link

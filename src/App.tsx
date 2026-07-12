@@ -19,7 +19,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import SideMenu from "./components/SideMenu";
 import { useToggleState } from "./hooks/clientState/useToggles";
 import AuthCallback from "./pages/user/AuthCallback";
-import Demos from "./pages/user/Demos";
+import Services from "./pages/user/Services";
 import PrimalSurvey from "./pages/user/PrimalSurvey";
 import WebsiteBenefits from "./pages/user/WebsiteBenefits";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -77,7 +77,7 @@ function AppWithQuery() {
           <Route path="/" element={<Home />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/blog" element={<Blogs />} />
-          <Route path="/demos" element={<Demos />} />
+          <Route path="/services" element={<Services />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
