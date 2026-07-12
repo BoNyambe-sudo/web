@@ -1,25 +1,25 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
+import { useLocation } from "react-router";
 import {
   Popover,
   PopoverAnchor,
   PopoverContent,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
-interface DataListProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    "onChange" | "value" | "list"
-  > {
-  id: string
-  items: readonly string[]
-  value: string
-  onChange: (value: string) => void
-  label?: React.ReactNode
-  helpText?: React.ReactNode
-  inputClassName?: string
-  listClassName?: string
+interface DataListProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "value" | "list"
+> {
+  id: string;
+  items: readonly string[];
+  value: string;
+  onChange: (value: string) => void;
+  label?: React.ReactNode;
+  helpText?: React.ReactNode;
+  inputClassName?: string;
+  listClassName?: string;
 }
 
 const DataList = React.forwardRef<HTMLInputElement, DataListProps>(
@@ -38,102 +38,114 @@ const DataList = React.forwardRef<HTMLInputElement, DataListProps>(
       onFocus,
       ...props
     },
-    ref
+    ref,
   ) => {
-    const inputId = `${id}-input`
-    const helpId = `${id}-help`
-    const listboxId = `${id}-listbox`
-    const describedBy = [props["aria-describedby"], helpText ? helpId : undefined]
-      .filter(Boolean)
-      .join(" ") || undefined
-    const inputRef = React.useRef<HTMLInputElement>(null)
-    const [open, setOpen] = React.useState(false)
-    const [activeIndex, setActiveIndex] = React.useState(-1)
+    const inputId = `${id}-input`;
+    const helpId = `${id}-help`;
+    const listboxId = `${id}-listbox`;
+    const location = useLocation();
+    const describedBy =
+      [props["aria-describedby"], helpText ? helpId : undefined]
+        .filter(Boolean)
+        .join(" ") || undefined;
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const [open, setOpen] = React.useState(false);
+    const [activeIndex, setActiveIndex] = React.useState(-1);
 
     const filteredItems = React.useMemo(() => {
-      const query = value.trim().toLowerCase()
+      const query = value.trim().toLowerCase();
 
-      if (!query) return items
+      if (!query) return items;
 
-      return items.filter((item) => item.toLowerCase().includes(query))
-    }, [items, value])
+      return items.filter((item) => item.toLowerCase().includes(query));
+    }, [items, value]);
 
-    React.useImperativeHandle(
-      ref,
-      () => inputRef.current as HTMLInputElement
-    )
+    React.useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
     React.useEffect(() => {
       if (filteredItems.length === 0) {
-        setActiveIndex(-1)
+        setActiveIndex(-1);
       }
-    }, [filteredItems.length])
+    }, [filteredItems.length]);
+
+    React.useEffect(() => {
+      setOpen(false);
+      setActiveIndex(-1);
+    }, [location.pathname]);
+
+    React.useEffect(() => {
+      return () => {
+        setOpen(false);
+        setActiveIndex(-1);
+      };
+    }, []);
 
     const selectItem = (item: string) => {
-      onChange(item)
-      setOpen(false)
-      setActiveIndex(-1)
-      inputRef.current?.focus()
-    }
+      onChange(item);
+      setOpen(false);
+      setActiveIndex(-1);
+      inputRef.current?.focus();
+    };
 
     const moveActiveIndex = (direction: 1 | -1) => {
-      if (!filteredItems.length) return
+      if (!filteredItems.length) return;
 
-      setOpen(true)
+      setOpen(true);
       setActiveIndex((currentIndex) => {
         if (currentIndex === -1) {
-          return direction === 1 ? 0 : filteredItems.length - 1
+          return direction === 1 ? 0 : filteredItems.length - 1;
         }
 
         return (
-          (currentIndex + direction + filteredItems.length) % filteredItems.length
-        )
-      })
-    }
+          (currentIndex + direction + filteredItems.length) %
+          filteredItems.length
+        );
+      });
+    };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      onKeyDown?.(event)
+      onKeyDown?.(event);
 
-      if (event.defaultPrevented) return
+      if (event.defaultPrevented) return;
 
       if (event.key === "ArrowDown") {
-        event.preventDefault()
-        moveActiveIndex(1)
-        return
+        event.preventDefault();
+        moveActiveIndex(1);
+        return;
       }
 
       if (event.key === "ArrowUp") {
-        event.preventDefault()
-        moveActiveIndex(-1)
-        return
+        event.preventDefault();
+        moveActiveIndex(-1);
+        return;
       }
 
       if (event.key === "Enter" && open && activeIndex >= 0) {
-        event.preventDefault()
-        selectItem(filteredItems[activeIndex])
-        return
+        event.preventDefault();
+        selectItem(filteredItems[activeIndex]);
+        return;
       }
 
       if (event.key === "Escape" && open) {
-        event.preventDefault()
-        setOpen(false)
+        event.preventDefault();
+        setOpen(false);
       }
-    }
+    };
 
     const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-      onFocus?.(event)
+      onFocus?.(event);
 
       if (!event.defaultPrevented) {
-        setOpen(true)
+        setOpen(true);
       }
-    }
+    };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = event.target.value
-      onChange(newValue)
-      setActiveIndex(-1)
-      setOpen(true)
-    }
+      const newValue = event.target.value;
+      onChange(newValue);
+      setActiveIndex(-1);
+      setOpen(true);
+    };
 
     return (
       <div className={cn("relative w-full", className)} data-slot="data-list">
@@ -160,7 +172,7 @@ const DataList = React.forwardRef<HTMLInputElement, DataListProps>(
               autoComplete="off"
               className={cn(
                 "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base text-foreground transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 md:text-sm",
-                inputClassName
+                inputClassName,
               )}
             />
           </PopoverAnchor>
@@ -181,7 +193,7 @@ const DataList = React.forwardRef<HTMLInputElement, DataListProps>(
             sideOffset={8}
             className={cn(
               "w-[var(--radix-popover-trigger-width)] p-1",
-              listClassName
+              listClassName,
             )}
             onOpenAutoFocus={(event) => event.preventDefault()}
             onPointerDownOutside={() => setOpen(false)}
@@ -217,9 +229,9 @@ const DataList = React.forwardRef<HTMLInputElement, DataListProps>(
           </PopoverContent>
         </Popover>
       </div>
-    )
-  }
-)
-DataList.displayName = "DataList"
+    );
+  },
+);
+DataList.displayName = "DataList";
 
-export { DataList }
+export { DataList };
