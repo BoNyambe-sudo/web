@@ -8,7 +8,31 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postbuild": "node scripts/postbuild.mjs"
+  },
+  "reactSnap": {
+    "source": "dist",
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+      "--disable-extensions",
+      "--remote-debugging-port=0"
+    ],
+    "include": [
+      "/",
+      "/blog",
+      "/website-survey",
+      "/website-benefits",
+      "/demos",
+      "/faqs",
+      "/privacy-policy",
+      "/terms-of-service"
+    ],
+    "crawl": true,
+    "skipThirdPartyRequests": true
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.8",
@@ -57,6 +81,8 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "puppeteer": "24.20.0",
+    "react-snap": "^1.23.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",
     "vite": "^8.0.1"
