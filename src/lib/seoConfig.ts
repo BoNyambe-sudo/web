@@ -433,8 +433,9 @@ export const getDescriptionForCategory = (category: string): string => {
 export const getOrganizationSchema = () => {
   return {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "Person",
     name: SITE_NAME,
+    image: `${SITE_URL}/favicon.svg`,
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.svg`,
     description: SITE_DESCRIPTION,
