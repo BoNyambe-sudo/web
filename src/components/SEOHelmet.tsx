@@ -32,7 +32,7 @@ export default function SEOHelmet({
     ? title
     : `${title} - ${SITE_NAME}`;
   const canonicalHref = canonicalUrl || url || SITE_URL;
-  const resolvedImage = image || "/favicon.svg";
+  const resolvedImage = image || `${SITE_URL}/favicon.svg`;
 
   return (
     <Helmet>
