@@ -6,7 +6,7 @@
 import { facebookLink, instagramLink, linkedinLink, xLink } from "./constants";
 
 export const SITE_NAME = "Bo Nyambe";
-export const SITE_URL = "https://bonyambe-sudo.github.io/web/";
+export const SITE_URL = "https://bonyambe-sudo.github.io/web";
 export const SITE_DESCRIPTION =
   "Professional web, mobile, and AI development services. Expert in technology solutions for modern businesses.";
 
