@@ -75,7 +75,8 @@ export default function SEOHelmet({
       <meta name="revisit-after" content="7 days" />
 
       {/* Favicon */}
-      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="icon" type="image/svg+xml" href={`${SITE_URL}/favicon.svg`} />
+      <link rel="apple-touch-icon" href={`${SITE_URL}/favicon.svg`} />
       <meta name="theme-color" content="#0f172a" />
 
       {children}
