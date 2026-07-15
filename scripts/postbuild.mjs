@@ -36,6 +36,7 @@ async function runPrerender() {
       "/website-survey",
       "/website-benefits",
       "/services",
+      "/contact",
       "/faqs",
       "/privacy-policy",
       "/terms-of-service",
