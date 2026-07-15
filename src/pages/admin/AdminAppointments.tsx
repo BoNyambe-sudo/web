@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import AppointmentsByStatus from "@/components/AppointmentsByStatus";
 import { Button } from "@/components/ui/button";
-import { ChevronDownIcon, Edit, Loader2, Save, Trash2 } from "lucide-react";
+import { ChevronDownIcon, Edit, Eye, Loader2, Save, Trash2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -81,6 +81,10 @@ const AdminAppointments = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
     useState<AppointmentResponse | null>(null);
+
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [viewingAppointment, setViewingAppointment] =
+    useState<AppointmentResponse | null>(null);
   const { data: appointments, isLoading: appointmentsLoading } =
     useGetAppointments();
   const { mutate: deleteAppointment } = useDeleteAppointment();
@@ -103,6 +107,11 @@ const AdminAppointments = () => {
   function openDeleteDialog(appointmentId: string): void {
     setAppointmentToDelete(appointmentId);
     setIsDeleteDialogOpen(true);
+  }
+
+  function handleViewAppointment(appointment: AppointmentResponse): void {
+    setViewingAppointment(appointment);
+    setIsViewDialogOpen(true);
   }
 
   function handleDeleteAppointment(): void {
@@ -219,6 +228,22 @@ const AdminAppointments = () => {
                                   variant="ghost"
                                   size="icon"
                                   onClick={() =>
+                                    handleViewAppointment(appointment)
+                                  }
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>View details</p>
+                              </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() =>
                                     handleEditAppointment(appointment)
                                   }
                                 >
@@ -247,7 +272,7 @@ const AdminAppointments = () => {
                                           appointment.id as string,
                                         )
                                       }
-                                      className="text-red-600 hover:text-red-700"
+                                      className="text-destructive hover:text-red-700"
                                     >
                                       <Trash2 className="h-4 w-4" />
                                     </Button>
@@ -394,9 +419,121 @@ const AdminAppointments = () => {
                 </Button>
                 <Button onClick={handleUpdateAppointment}>
                   <Save className="mr-2 h-4 w-4" />
-                  Update Appointment
+                  Update
                 </Button>
               </div>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+            <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar-hide">
+              <DialogHeader>
+                <DialogTitle>Appointment Details</DialogTitle>
+                <DialogDescription>
+                  Full information for this appointment.
+                </DialogDescription>
+              </DialogHeader>
+              {viewingAppointment && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Name</span>
+                    <span className="col-span-2 font-medium">
+                      {viewingAppointment.name}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Phone</span>
+                    <span className="col-span-2">
+                      {viewingAppointment.phoneNumber}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Email</span>
+                    <span className="col-span-2">
+                      {viewingAppointment.email || "—"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Date</span>
+                    <span className="col-span-2">
+                      {new Date(
+                        viewingAppointment.scheduledDate,
+                      ).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Time</span>
+                    <span className="col-span-2">
+                      {viewingAppointment.scheduledTime}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Status</span>
+                    <span className="col-span-2">
+                      <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
+                        {viewingAppointment.status}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Retry count</span>
+                    <span className="col-span-2">
+                      {viewingAppointment.retryCount}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Description</span>
+                    <span className="col-span-2 whitespace-pre-wrap">
+                      {viewingAppointment.description || "—"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Notes</span>
+                    <span className="col-span-2 whitespace-pre-wrap">
+                      {viewingAppointment.notes || "—"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Created at</span>
+                    <span className="col-span-2">
+                      {new Date(
+                        viewingAppointment.createdAt,
+                      ).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="text-muted-foreground">Updated at</span>
+                    <span className="col-span-2">
+                      {new Date(
+                        viewingAppointment.updatedAt,
+                      ).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                </div>
+              )}
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsViewDialogOpen(false)}
+                >
+                  Close
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
