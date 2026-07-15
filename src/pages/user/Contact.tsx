@@ -21,7 +21,7 @@ const Contact = () => {
 
   const { mutate: sendMessage, isPending } = useSendInqiury();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!formData.name || !formData.email || !formData.message) {
@@ -55,13 +55,14 @@ const Contact = () => {
       <main className="min-h-screen bg-background text-foreground">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
-            <section className="space-y-6">
-              <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+            <section className="space-y-6 text-center sm:text-start">
+              <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary ">
                 Contact & Project Intake
               </span>
-              <div className="space-y-4">
+              <div className="space-y-4 ">
                 <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
-                  Let’s turn your product idea into a high-performing website.
+                  Let’s turn your product idea into a{" "}
+                  <span className="text-primary">high-performing</span> website.
                 </h1>
                 <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
                   Share your goals, timeline, and challenge. I’ll respond with a
@@ -69,7 +70,7 @@ const Contact = () => {
                   NestJS, Angular, and modern best practices.
                 </p>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2 text-start">
                 <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
                   <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
                     Email
@@ -87,7 +88,7 @@ const Contact = () => {
                   </p>
                 </div>
               </div>
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+              <div className="rounded-3xl border border-border bg-card p-6 shadow-sm text-start">
                 <div className="flex items-center gap-3 text-sm font-semibold text-foreground">
                   <Mail size={18} />
                   <span>Preferred contact channels</span>
@@ -114,7 +115,7 @@ const Contact = () => {
                   </a>
                 </div>
               </div>
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+              <div className="rounded-3xl border border-border bg-card p-6 shadow-sm text-start">
                 <h2 className="text-xl font-semibold">What to include</h2>
                 <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
                   <li>• Your current website or app (if any)</li>

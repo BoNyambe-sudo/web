@@ -192,7 +192,7 @@ const Home = () => {
                 together to convert visitors into customers.
               </p>
             </div>
-            <div className="rounded-3xl border border-border bg-card p-3 md:p-6 shadow-sm">
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
               <div className="space-y-5">
                 <div>
                   <h3 className="text-xl font-semibold">What you get</h3>
