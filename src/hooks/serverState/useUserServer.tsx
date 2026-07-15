@@ -247,7 +247,7 @@ export const useUpdateUser = () => {
 };
 
 export const useUserData = () => {
-  const token = useToken((state) => state.token);
+  const token = localStorage.getItem("token")
   return useQuery<UserDataResponse>({
     queryKey: ["user"],
     queryFn: fetchUserData,

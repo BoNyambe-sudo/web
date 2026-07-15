@@ -8,7 +8,7 @@ import { facebookLink, instagramLink, linkedinLink, xLink } from "./constants";
 export const SITE_NAME = "Bo Nyambe";
 export const SITE_URL = "https://bonyambe-sudo.github.io/web";
 export const SITE_DESCRIPTION =
-  "Professional web, mobile, and AI development services. Expert in technology solutions for modern businesses.";
+  "Bo Nyambe builds fast, SEO-optimized NestJS and Angular websites and web apps that rank well and convert visitors into customers.";
 
 export const BLOG_CATEGORIES = [
   "Technology",

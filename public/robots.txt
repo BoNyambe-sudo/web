@@ -3,6 +3,10 @@
 
 User-agent: *
 Allow: /
+Allow: /contact
+Allow: /website-survey
+Allow: /website-benefits
+Allow: /services
 Allow: /blog
 Allow: /faqs
 Disallow: /admin

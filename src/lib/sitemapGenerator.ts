@@ -19,7 +19,7 @@ interface BlogPost {
 export const getBlogSitemapEntry = (blog: BlogPost): string => {
   const lastmod = blog.updatedAt || blog.createdAt;
   return `  <url>
-    <loc>${SITE_URL}/blogs/${blog.id}</loc>
+    <loc>${SITE_URL}/blog/${blog.id}</loc>
     <lastmod>${new Date(lastmod).toISOString().split("T")[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -34,10 +34,10 @@ export const generateSitemap = (blogs: BlogPost[]): string => {
 
   const categoryEntries = BLOG_CATEGORIES.map(
     (category) => `  <url>
-    <loc>${SITE_URL}/blogs?category=${encodeURIComponent(category)}</loc>
+    <loc>${SITE_URL}/blog?category=${encodeURIComponent(category)}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>`
+  </url>`,
   ).join("\n");
 
   const staticPages = `  <url>
@@ -46,14 +46,44 @@ export const generateSitemap = (blogs: BlogPost[]): string => {
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>${SITE_URL}/blogs</loc>
-    <changefreq>daily</changefreq>
+    <loc>${SITE_URL}/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/website-survey</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/website-benefits</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/blog</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>${SITE_URL}/faqs</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/privacy-policy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/terms-of-service</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>`;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -67,15 +97,13 @@ ${blogEntries}
 /**
  * Generate sitemap index for large sites (if you have multiple sitemaps)
  */
-export const generateSitemapIndex = (
-  sitemapUrls: string[]
-): string => {
+export const generateSitemapIndex = (sitemapUrls: string[]): string => {
   const entries = sitemapUrls
     .map(
       (url) => `  <sitemap>
     <loc>${url}</loc>
     <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>
-  </sitemap>`
+  </sitemap>`,
     )
     .join("\n");
 
