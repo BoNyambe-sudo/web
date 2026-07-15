@@ -100,6 +100,19 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
               ></span>
             </Link>
             <Link
+              to="/contact"
+              onClick={onClose}
+              className={`relative group hover:primary  hoverEffect ${pathname === "/contact" ? "text-primary" : ""}`}
+            >
+              Contact
+              <span
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/contact" ? "w-1/2" : ""}`}
+              ></span>
+              <span
+                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/contact" ? "w-1/2" : ""}`}
+              ></span>
+            </Link>
+            <Link
               to="/privacy-policy"
               onClick={onClose}
               className={`relative group hover:primary  hoverEffect ${pathname === "/privacy-policy" ? "text-primary" : ""}`}
@@ -136,7 +149,8 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
             </>
           )}
           {isStaff && (
-            <Button className="w-full"
+            <Button
+              className="w-full"
               variant="outline"
               onClick={() => {
                 navigate("/admin");

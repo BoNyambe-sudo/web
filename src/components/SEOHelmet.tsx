@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { SITE_NAME, SITE_URL } from "@/lib/seoConfig";
+import { getOrganizationSchema, SITE_NAME, SITE_URL } from "@/lib/seoConfig";
 
 interface SEOHelmetProps {
   title: string;
@@ -73,6 +73,11 @@ export default function SEOHelmet({
       <meta name="robots" content="index, follow" />
       <meta name="language" content="English" />
       <meta name="revisit-after" content="7 days" />
+
+      {/* Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify(getOrganizationSchema())}
+      </script>
 
       {/* Favicon */}
       <link rel="icon" type="image/svg+xml" href={`${SITE_URL}/favicon.svg`} />
