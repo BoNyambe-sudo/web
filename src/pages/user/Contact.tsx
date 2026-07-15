@@ -125,7 +125,7 @@ const Contact = () => {
               </div>
             </section>
 
-            <section className="rounded-3xl border border-border bg-card p-8 shadow-sm">
+            <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">

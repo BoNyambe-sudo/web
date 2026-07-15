@@ -99,7 +99,7 @@ const Home = () => {
       />
 
       <div className="bg-background text-foreground">
-        <Header textClassName="lightText" />
+        <Header />
 
         <section
           className="relative overflow-hidden bg-cover bg-center text-foreground"
@@ -107,13 +107,14 @@ const Home = () => {
         >
           <div className="absolute inset-0 bg-background/70" />
           <div className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6 lg:px-8">
-            <div className="max-w-3xl space-y-8">
-              <span className="inline-flex rounded-full bg-primary/20 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-primary">
+            <div className="max-w-3xl space-y-8 text-center sm:text-start">
+              <span className="inline-flex rounded-full bg-primary/30 px-4 py-2 text-xs md:text-sm font-semibold uppercase tracking-[0.3em] text-primary">
                 High-growth web ecosystems
               </span>
               <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-                Architecting premium, high-performance web ecosystems that rank
-                and convert.
+                Architecting premium,{" "}
+                <span className="text-primary">high-performance</span> web
+                ecosystems that rank and convert
               </h1>
               <p className="text-base leading-8 text-muted-foreground sm:text-xl sm:leading-9">
                 I build scalable NestJS + Angular applications with fast
@@ -123,7 +124,7 @@ const Home = () => {
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <Button
                   size="lg"
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto h-14 px-10 text-lg font-bold shadow-xl"
                   onClick={() => navigate("/website-survey")}
                 >
                   Book a strategy call
@@ -131,29 +132,29 @@ const Home = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto h-14 px-10 text-lg font-bold shadow-xl"
                   asChild
                 >
                   <Link to="/services">See my work</Link>
                 </Button>
               </div>
 
-              <div className="rounded-3xl border border-border/20 bg-card/10 p-4 text-sm text-foreground shadow-xl shadow-border/10 backdrop-blur-md">
+              <div className="rounded-3xl border border-border/20 bg-card/20 p-6 text-sm text-foreground shadow-xl shadow-border/10 backdrop-blur-md">
                 <p className="font-semibold">Built with:</p>
                 <div className="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                  <span className="rounded-full bg-card/10 px-3 py-2">
+                  <span className="rounded-full bg-card/30 px-3 py-2">
                     NestJS
                   </span>
-                  <span className="rounded-full bg-card/10 px-3 py-2">
+                  <span className="rounded-full bg-card/30 px-3 py-2">
                     Angular
                   </span>
-                  <span className="rounded-full bg-card/10 px-3 py-2">
+                  <span className="rounded-full bg-card/30 px-3 py-2">
                     React
                   </span>
-                  <span className="rounded-full bg-card/10 px-3 py-2">
+                  <span className="rounded-full bg-card/30 px-3 py-2">
                     Lighthouse 95+
                   </span>
-                  <span className="rounded-full bg-card/10 px-3 py-2">
+                  <span className="rounded-full bg-card/30 px-3 py-2">
                     Mobile first
                   </span>
                 </div>
@@ -164,7 +165,7 @@ const Home = () => {
             <div className="flex items-center justify-center">
               <a
                 href="#problem"
-                className="inline-flex items-center gap-2 rounded-full border border-border/30 bg-card/10 px-4 py-2 text-sm uppercase tracking-[0.3em] text-foreground transition hover:bg-card/20"
+                className="inline-flex items-center gap-2 rounded-full border border-border/30 bg-card/20 px-4 py-2 text-xs md:text-sm uppercase tracking-[0.3em] text-foreground transition hover:bg-card/30"
               >
                 Scroll to learn more <ArrowRight className="h-4 w-4" />
               </a>
@@ -191,7 +192,7 @@ const Home = () => {
                 together to convert visitors into customers.
               </p>
             </div>
-            <div className="rounded-3xl border border-border bg-card p-10 shadow-sm">
+            <div className="rounded-3xl border border-border bg-card p-3 md:p-6 shadow-sm">
               <div className="space-y-5">
                 <div>
                   <h3 className="text-xl font-semibold">What you get</h3>
@@ -202,7 +203,7 @@ const Home = () => {
                 </div>
                 <div className="grid gap-4">
                   <div className="rounded-2xl bg-card/80 p-5">
-                    <p className="text-sm uppercase tracking-[0.25em] text-primary">
+                    <p className="text-sm uppercase tracking-[0.25em] text-primary font-medium">
                       Speed
                     </p>
                     <p className="mt-3 text-base text-foreground">
@@ -211,7 +212,7 @@ const Home = () => {
                     </p>
                   </div>
                   <div className="rounded-2xl bg-card/80 p-5">
-                    <p className="text-sm uppercase tracking-[0.25em] text-primary">
+                    <p className="text-sm uppercase tracking-[0.25em] text-primary font-medium">
                       Visibility
                     </p>
                     <p className="mt-3 text-base text-foreground">
@@ -220,7 +221,7 @@ const Home = () => {
                     </p>
                   </div>
                   <div className="rounded-2xl bg-card/80 p-5">
-                    <p className="text-sm uppercase tracking-[0.25em] text-primary">
+                    <p className="text-sm uppercase tracking-[0.25em] text-primary font-medium">
                       Conversion
                     </p>
                     <p className="mt-3 text-base text-foreground">
@@ -335,7 +336,7 @@ const Home = () => {
             ].map((item) => (
               <div
                 key={item.step}
-                className="rounded-3xl border border-border bg-card p-8 shadow-sm"
+                className="rounded-3xl border border-border bg-card p-6 shadow-sm"
               >
                 <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">
                   {item.step}
@@ -367,7 +368,7 @@ const Home = () => {
                 </p>
                 <Button
                   size="lg"
-                  className="mt-8"
+                  className="mt-8 h-14 px-10 text-lg font-bold shadow-xl"
                   onClick={() => navigate("/services")}
                 >
                   Explore services
@@ -424,7 +425,7 @@ const Home = () => {
               {FAQS.map((item) => (
                 <div
                   key={item.question}
-                  className="rounded-3xl border border-border bg-card p-8 shadow-sm"
+                  className="rounded-3xl border border-border bg-card p-6 shadow-sm"
                 >
                   <h3 className="text-lg font-semibold">{item.question}</h3>
                   <p className="mt-4 text-sm leading-7 text-muted-foreground">
@@ -444,10 +445,18 @@ const Home = () => {
               helps your business win online.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center">
-              <Button size="lg" onClick={() => navigate("/website-survey")}>
+              <Button
+                size="lg"
+                className="h-14 px-10 text-lg font-bold shadow-xl"
+                onClick={() => navigate("/website-survey")}
+              >
                 Book a call
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button
+                className="h-14 px-10 text-lg font-bold shadow-xl"
+                variant="outline"
+                asChild
+              >
                 <Link to="/contact">Send a message</Link>
               </Button>
             </div>

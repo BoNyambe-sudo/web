@@ -1,11 +1,10 @@
-import { useEffect, useRef, /* useState */ } from "react";
-import { /* Link, */ useNavigate } from "react-router";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { BenefitCard } from "@/components/BenefitCard";
 import SEOHelmet from "@/components/SEOHelmet";
 import { SITE_URL } from "@/lib/seoConfig";
 import gsap from "gsap";
-//import AppointmentDialog from "@/components/AppointmentDialog";
 import {
   ShieldCheck,
   TrendingUp,
@@ -150,16 +149,9 @@ const WebsiteBenefits = () => {
                 size="lg"
                 className="h-12 px-8 text-base font-semibold shadow-lg"
                 onClick={() => navigate("/website-survey")}
-              >Book a Call
-              </Button>
-              {/* <Button
-                variant="outline"
-                size="lg"
-                className="h-12 px-8 text-base"
-                asChild
               >
-                <Link to="/website-survey">Take the Survey</Link>
-              </Button> */}
+                Book a Call
+              </Button>
             </div>
             <p className="text-xs text-muted-foreground">
               Limited consultation slots — early adopters win.
@@ -306,10 +298,6 @@ const WebsiteBenefits = () => {
                   Book a Call
                 </Button>
               </div>
-              {/* <AppointmentDialog
-                open={isAppointmentOpen}
-                onOpenChange={setIsAppointmentOpen}
-              /> */}
               <p className="text-xs text-muted-foreground">
                 No commitment. No pitch. Just actionable insights delivered in
                 48 hours.
