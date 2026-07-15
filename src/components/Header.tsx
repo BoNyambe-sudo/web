@@ -86,6 +86,21 @@ const Header = ({
               className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/faqs" ? "w-1/2" : ""}`}
             ></span>
           </Link>
+          <Link
+            to="/contact"
+            className={cn(
+              `relative group hover:text-primary transition-color ${pathname === "/contact" ? "text-primary" : ""}`,
+              textClassName,
+            )}
+          >
+            Contact
+            <span
+              className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/contact" ? "w-1/2" : ""}`}
+            ></span>
+            <span
+              className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/contact" ? "w-1/2" : ""}`}
+            ></span>
+          </Link>
           {isStaff && !onAdmin && (
             <Button
               variant="outline"

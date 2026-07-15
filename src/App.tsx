@@ -22,6 +22,7 @@ import AuthCallback from "./pages/user/AuthCallback";
 import Services from "./pages/user/Services";
 import PrimalSurvey from "./pages/user/PrimalSurvey";
 import WebsiteBenefits from "./pages/user/WebsiteBenefits";
+import Contact from "./pages/user/Contact";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminHome from "./pages/admin/AdminHome";
 import AdminBlogs from "./pages/admin/AdminBlogs";
@@ -74,6 +75,7 @@ function AppWithQuery() {
         <Routes>
           <Route path="/website-survey" element={<PrimalSurvey />} />
           <Route path="/website-benefits" element={<WebsiteBenefits />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/" element={<Home />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/blog" element={<Blogs />} />
