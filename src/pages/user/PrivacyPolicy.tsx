@@ -10,8 +10,8 @@ const PrivacyPolicy = () => {
         title="Privacy Policy"
         description="Learn how Bo Nyambe collects, uses, and protects your personal information. Your privacy is important to us."
         keywords="privacy policy, data protection, personal information, Bo Nyambe, contact form privacy"
-        url={`${SITE_URL}/privacy-policy`}
-        canonicalUrl={`${SITE_URL}/privacy-policy`}
+        url={`${SITE_URL}privacy-policy`}
+        canonicalUrl={`${SITE_URL}privacy-policy`}
       />
       <Header className="backdrop-blur-xl" />
       <div className="container py-10 flex-1">

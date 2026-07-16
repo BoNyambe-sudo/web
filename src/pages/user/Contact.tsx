@@ -48,8 +48,8 @@ const Contact = () => {
         title="Contact Bo Nyambe"
         description="Get in touch to discuss your website, app, or SEO strategy. Book a strategy call or send a message to start your project."
         keywords="contact web developer, contact software engineer, website development inquiry, angular developer contact"
-        url={`${SITE_URL}/contact`}
-        canonicalUrl={`${SITE_URL}/contact`}
+        url={`${SITE_URL}contact`}
+        canonicalUrl={`${SITE_URL}contact`}
       />
 
       <main className="min-h-screen bg-background text-foreground">

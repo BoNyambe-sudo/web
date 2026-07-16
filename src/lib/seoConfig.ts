@@ -6,7 +6,7 @@
 import { facebookLink, instagramLink, linkedinLink, xLink } from "./constants";
 
 export const SITE_NAME = "Bo Nyambe";
-export const SITE_URL = "https://bonyambe-sudo.github.io/web";
+export const SITE_URL = "https://bonyambe-sudo.github.io/web/";
 export const SITE_DESCRIPTION =
   "Bo Nyambe builds fast, SEO-optimized NestJS and Angular websites and web apps that rank well and convert visitors into customers.";
 
@@ -450,9 +450,9 @@ export const getOrganizationSchema = () => {
     "@context": "https://schema.org",
     "@type": "Person",
     name: SITE_NAME,
-    image: `${SITE_URL}/favicon.svg`,
+    image: `${SITE_URL}favicon.svg`,
     url: SITE_URL,
-    logo: `${SITE_URL}/favicon.svg`,
+    logo: `${SITE_URL}favicon.svg`,
     description: SITE_DESCRIPTION,
     sameAs: [facebookLink, xLink, linkedinLink, instagramLink],
     contactPoint: {
@@ -474,7 +474,7 @@ export const getBlogListSchema = (category?: string, blogCount: number = 0) => {
     description: category
       ? getDescriptionForCategory(category)
       : SITE_DESCRIPTION,
-    url: SITE_URL + "/blogs",
+    url: SITE_URL + "blogs",
     isPartOf: {
       "@type": "WebSite",
       name: SITE_NAME,
@@ -487,7 +487,7 @@ export const getBlogListSchema = (category?: string, blogCount: number = 0) => {
         .map((_, i) => ({
           "@type": "ListItem",
           position: i + 1,
-          url: SITE_URL + "/blogs",
+          url: SITE_URL + "blogs",
         })),
     },
   };
@@ -555,12 +555,12 @@ export const getBlogPostSchema = (blog: {
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/logo.svg`,
+        url: `${SITE_URL}logo.svg`,
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${SITE_URL}/blogs/${blog.id}`,
+      "@id": `${SITE_URL}blogs/${blog.id}`,
     },
     articleSection: blog.category,
     keywords: blog.tags?.join(", "),

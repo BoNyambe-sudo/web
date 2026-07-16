@@ -32,7 +32,7 @@ export default function SEOHelmet({
     ? title
     : `${title} - ${SITE_NAME}`;
   const canonicalHref = canonicalUrl || url || SITE_URL;
-  const resolvedImage = image || `${SITE_URL}/favicon.svg`;
+  const resolvedImage = image || `${SITE_URL}favicon.svg`;
 
   return (
     <Helmet>
@@ -80,8 +80,8 @@ export default function SEOHelmet({
       </script>
 
       {/* Favicon */}
-      <link rel="icon" type="image/svg+xml" href={`${SITE_URL}/favicon.svg`} />
-      <link rel="apple-touch-icon" href={`${SITE_URL}/favicon.svg`} />
+      <link rel="icon" type="image/svg+xml" href={`${SITE_URL}favicon.svg`} />
+      <link rel="apple-touch-icon" href={`${SITE_URL}favicon.svg`} />
       <meta name="theme-color" content="#0f172a" />
 
       {children}
