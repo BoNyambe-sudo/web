@@ -93,7 +93,7 @@ const Home = () => {
       <SEOHelmet
         title="High-Performance Web Development"
         description="Build fast, SEO-optimized NestJS and Angular applications designed to convert visitors into customers. Book a strategy call or explore services."
-        keywords="NestJS Angular developer, web development, SEO web design, performance optimization, Zambia web developer"
+        keywords="NestJS Angular developer, web development, Web development services in Zambia,SEO web design, performance optimization, Zambia web developer, website development Zambia, website design Zambia, software development Zambia, web developer Lusaka, responsive web design, ecommerce website Zambia, SEO services Zambia, custom software development, WordPress development Zambia"
         url={SITE_URL}
         canonicalUrl={SITE_URL}
       />

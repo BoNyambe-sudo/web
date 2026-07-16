@@ -492,7 +492,7 @@ const Services = () => {
       <SEOHelmet
         title="Services & Tech Stack - Bo Nyambe"
         description="Explore my tech stack, services, projects, and contact information. See examples of custom admin panels, SEO-optimized sites, responsive designs, and more."
-        keywords="tech stack, services, projects, Angular, Nest JS, MongoDB, Node.js, contact, portfolio"
+        keywords="tech stack, services, projects, Angular, Nest JS, MongoDB, Node.js, contact, portfolio, NestJS Angular developer, web development, Web development services in Zambia,SEO web design, performance optimization, Zambia web developer, website development Zambia, website design Zambia, software development Zambia, web developer Lusaka, responsive web design, ecommerce website Zambia, SEO services Zambia, custom software development, WordPress development Zambia"
         url={`${SITE_URL}services`}
         canonicalUrl={`${SITE_URL}services`}
         type="website"
@@ -615,7 +615,11 @@ const Services = () => {
                       className={`absolute inset-0 md:p-8 flex flex-col md:flex-row gap-3 md:gap-8 justify-center ${index === activeCarouselIndex ? "opacity-100 z-10" : "opacity-0 z-0"}`}
                     >
                       <div className="w-full md:w-1/2 relative rounded-lg overflow-hidden ">
-                        <img src={item.image} alt={`image of ${item.title}`} className="w-full h-full object-cover" />
+                        <img
+                          src={item.image}
+                          alt={`image of ${item.title}`}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                       <div className="flex flex-col gap-1 md:gap-4 text-center md:text-start w-full md:w-1/2">
                         <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">

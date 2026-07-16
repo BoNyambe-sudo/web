@@ -96,6 +96,21 @@ const Blogs = () => {
         "articles",
         "latest posts",
         "expert insights",
+        "NestJS Angular developer",
+        "web development",
+        "Web development services in Zambia",
+        "SEO web design",
+        "performance optimization",
+        "Zambia web developer",
+        "website development Zambia",
+        "website design Zambia",
+        "software development Zambia",
+        "web developer Lusaka",
+        "responsive web design",
+        "ecommerce website Zambia",
+        "SEO services Zambia",
+        "custom software development",
+        "WordPress development Zambia",
       ].join(", ");
 
   const blogListSchema = getBlogListSchema(
@@ -173,7 +188,9 @@ const Blogs = () => {
         <Header />
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background border-b">
           <div className="flex items-center gap-2 px-4">
-             <SidebarTrigger className={`-ml-1${showPulse ? " animate-trigger-pulse" : ""}`} />
+            <SidebarTrigger
+              className={`-ml-1${showPulse ? " animate-trigger-pulse" : ""}`}
+            />
             <span className="text-muted-foreground">|</span>
 
             {/* Filter Summary */}
@@ -292,8 +309,12 @@ const Blogs = () => {
                   <SelectItem value="-views">Most Viewed</SelectItem>
                   <SelectItem value="title">Title: A to Z</SelectItem>
                   <SelectItem value="-title">Title: Z to A</SelectItem>
-                  <SelectItem value="readTime">Read Time: Short to Long</SelectItem>
-                  <SelectItem value="-readTime">Read Time: Long to Short</SelectItem>
+                  <SelectItem value="readTime">
+                    Read Time: Short to Long
+                  </SelectItem>
+                  <SelectItem value="-readTime">
+                    Read Time: Long to Short
+                  </SelectItem>
                   <SelectItem value="-createdAt">
                     Date Created: New to Old
                   </SelectItem>
@@ -311,7 +332,8 @@ const Blogs = () => {
             </div>
           </div>
           <div className="text-sm text-muted-foreground mb-4">
-            Found {blogs.length} {blogs.length === 1 ? "blog post" : "blog posts"}
+            Found {blogs.length}{" "}
+            {blogs.length === 1 ? "blog post" : "blog posts"}
           </div>
           {isLoading ? (
             <BlogListSkeleton count={6} />
