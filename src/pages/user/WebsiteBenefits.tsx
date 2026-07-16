@@ -105,8 +105,8 @@ const WebsiteBenefits = () => {
         title="Claim Your Digital Dominance - Free Consultation"
         description="Stop bleeding customers to competitors. Book a free consultation and discover how to unlock 24/7 automated revenue with a high-performance website."
         keywords="website consultation, digital dominance, business growth, free consultation, web development, NestJS Angular developer, web development, Web development services in Zambia,SEO web design, performance optimization, Zambia web developer, website development Zambia, website design Zambia, software development Zambia, web developer Lusaka, responsive web design, ecommerce website Zambia, SEO services Zambia, custom software development, WordPress development Zambia"
-        url={`${SITE_URL}/website-benefits`}
-        canonicalUrl={`${SITE_URL}/website-benefits`}
+        url={`${SITE_URL}website-benefits`}
+        canonicalUrl={`${SITE_URL}website-benefits`}
         type="website"
       />
       <div className="min-h-screen bg-background">
