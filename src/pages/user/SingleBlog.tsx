@@ -200,7 +200,7 @@ const SingleBlog = () => {
           description={blog.description || blog.title}
           keywords={`${blog.category}, ${blog.tags?.join(", ") || ""}, blog, article`}
           url={currentUrl}
-          canonicalUrl={currentUrl}
+          canonicalUrl={currentUrl + "/"}
           type="article"
           author={`${blog.author.firstName} ${blog.author.lastName}`}
           publishedDate={new Date(blog.createdAt).toISOString()}
@@ -408,7 +408,7 @@ const SingleBlog = () => {
                   </CardContent>
                   <CardFooter>
                     <Button asChild className="w-full" variant="default">
-                      <Link to="/website-benefits">
+                      <Link to="/website-benefits/">
                         Explore Website Benefits{" "}
                         <ArrowRight size={16} className="ml-2" />
                       </Link>
@@ -435,7 +435,7 @@ const SingleBlog = () => {
                   </CardContent>
                   <CardFooter>
                     <Button asChild className="w-full" variant="outline">
-                      <Link to="/website-survey">
+                      <Link to="/website-survey/">
                         Take the Survey{" "}
                         <ArrowRight size={16} className="ml-2" />
                       </Link>

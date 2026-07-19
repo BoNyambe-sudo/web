@@ -83,8 +83,8 @@ const FAQs = () => {
         title="Frequently Asked Questions - Bo Nyambe"
         description="Get answers to common questions about our web development, mobile app development, AI solutions, and design services. Learn about our process, pricing, and expertise."
         keywords="FAQs, frequently asked questions, web development services, mobile app development, AI development, custom software"
-        url={`${SITE_URL}faqs`}
-        canonicalUrl={`${SITE_URL}faqs`}
+        url={`${SITE_URL}faqs/`}
+        canonicalUrl={`${SITE_URL}faqs/`}
       >
         <script type="application/ld+json">
           {JSON.stringify(getFAQSchema(faqs))}

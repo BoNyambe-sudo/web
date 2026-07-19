@@ -231,7 +231,7 @@ const PrimalSurvey = () => {
     }
 
     if (currentStep === TOTAL_STEPS - 1) {
-      navigate("/website-benefits");
+      navigate("/website-benefits/");
       return;
     }
 
@@ -377,8 +377,8 @@ const PrimalSurvey = () => {
         title="Website Intelligence Survey - Are You Missing Revenue?"
         description="Take our 60-second survey to discover how much revenue you're missing without a professional website. Get a free personalized audit."
         keywords="website survey, business growth, digital presence, free website audit, lead generation"
-        url={`${SITE_URL}website-survey`}
-        canonicalUrl={`${SITE_URL}website-survey`}
+        url={`${SITE_URL}website-survey/`}
+        canonicalUrl={`${SITE_URL}website-survey/`}
         type="website"
       />
       <a
