@@ -1,4 +1,4 @@
-const API_BASE_URL = "/api/v1";
+import { API_BASE_URL } from "./api";
 
 export const sendInquiry = async (data: {
   name: string;

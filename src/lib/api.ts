@@ -1,7 +1,13 @@
-/* const API_BASE_URL =
-  "https://mysite-backend-rtck.onrender.com/api/v1"; */
-const API_BASE_URL =
-  "http://localhost:3000/api/v1";
+export const API_BASE_URL =
+  import.meta.env.PUBLIC_API_BASE_URL?.replace(/\/$/, "") ||
+  (import.meta.env.DEV
+    ? "http://localhost:3000/api/v1"
+    : "https://mysite-backend-rtck.onrender.com/api/v1");
+
+export const buildApiUrl = (path: string) => {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${API_BASE_URL}${normalizedPath}`;
+};
 
 export interface Author {
   firstName: string;
@@ -45,7 +51,7 @@ export interface TopTagsResponse {
 export const fetchBlogs = async (
   params: Record<string, string | number | boolean | undefined> = {},
 ): Promise<BlogsResponse> => {
-  const url = new URL(`${API_BASE_URL}/blogs`);
+  const url = new URL(buildApiUrl("/blogs"));
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined && value !== "") {
       url.searchParams.set(key, String(value));
@@ -59,7 +65,7 @@ export const fetchBlogs = async (
 };
 
 export const fetchBlog = async (slug: string): Promise<BlogType> => {
-  const res = await fetch(`${API_BASE_URL}/blogs/${slug}`, {
+  const res = await fetch(buildApiUrl(`/blogs/${slug}`), {
     headers: { Accept: "application/json" },
   });
   if (!res.ok) {
@@ -69,7 +75,7 @@ export const fetchBlog = async (slug: string): Promise<BlogType> => {
 };
 
 export const fetchTopTags = async (): Promise<TopTagsResponse> => {
-  const res = await fetch(`${API_BASE_URL}/blogs/top-tags`, {
+  const res = await fetch(buildApiUrl("/blogs/top-tags"), {
     headers: { Accept: "application/json" },
   });
   if (!res.ok) {
