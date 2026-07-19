@@ -1,13 +1,15 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
-import react from '@astrojs/react';
+import react from "@astrojs/react";
 
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://bonyambe-sudo.github.io",
   base: "/web/",
+  trailingSlash: "always",
 
   integrations: [react()],
 
@@ -15,11 +17,11 @@ export default defineConfig({
     plugins: [tailwindcss()],
     server: {
       proxy: {
-        '/api': {
-          target: 'http://localhost:3000',
+        "/api": {
+          target: "http://localhost:3000",
           changeOrigin: true,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 });
