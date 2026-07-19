@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -248,4 +249,57 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .hoverEffect {
   @apply transition-all duration-300 ease-in-out;
+}
+
+.prose {
+  text-align: inherit;
+}
+
+.prose table {
+  border-collapse: collapse !important;
+  table-layout: auto !important;
+  min-width: 100% !important;
+  border-radius: var(--radius) !important;
+  border: 1px solid var(--border) !important;
+  margin: 0 !important;
+}
+
+.prose thead {
+  border-bottom: 0 !important;
+}
+
+.prose th {
+  border: 1px solid var(--border) !important;
+  padding: 0.5rem 0.75rem !important;
+  min-width: 4rem !important;
+  vertical-align: top !important;
+  background-color: var(--muted) !important;
+  color: var(--foreground) !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  hyphens: none !important;
+}
+
+.prose td {
+  border: 1px solid var(--border) !important;
+  padding: 0.5rem 0.75rem !important;
+  min-width: 4rem !important;
+  vertical-align: top !important;
+  background-color: var(--background) !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  hyphens: none !important;
+  white-space: normal !important;
+}
+
+.prose p,
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  text-align: inherit;
 }

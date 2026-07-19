@@ -1,0 +1,62 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ScrollToTop from "@/components/ScrollToTop.astro";
+import ContactForm from "@/components/ContactForm.tsx";
+import { SITE_URL } from "@/lib/seoConfig";
+import { EMAIL, PHONE, WHATSAPP_LINK } from "@/lib/constants";
+---
+
+<Layout
+  title="Contact Bo Nyambe"
+  description="Get in touch to discuss your website, app, or SEO strategy. Book a strategy call or send a message to start your project."
+  keywords="contact web developer, contact software engineer, website development inquiry, angular developer contact"
+  canonical={`${SITE_URL}contact`}
+>
+  <ScrollToTop />
+  <main class="min-h-screen bg-background text-foreground">
+    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <div class="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+        <section class="space-y-6 text-center sm:text-start">
+          <span class="inline-flex rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">Contact & Project Intake</span>
+          <div class="space-y-4">
+            <h1 class="text-4xl font-black tracking-tight sm:text-5xl">Let’s turn your product idea into a <span class="text-primary">high-performing</span> website.</h1>
+            <p class="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">Share your goals, timeline, and challenge. I’ll respond with a practical plan for a fast, SEO-ready website or app built with NestJS, Angular, and modern best practices.</p>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2 text-start">
+            <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">
+              <p class="text-sm uppercase tracking-[0.2em] text-muted-foreground">Email</p>
+              <p class="mt-2 text-base font-semibold">{EMAIL}</p>
+            </div>
+            <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">
+              <p class="text-sm uppercase tracking-[0.2em] text-muted-foreground">Phone / WhatsApp</p>
+              <p class="mt-2 text-base font-semibold">{PHONE}</p>
+            </div>
+          </div>
+          <div class="rounded-3xl border border-border bg-card p-6 shadow-sm text-start">
+            <div class="flex items-center gap-3 text-sm font-semibold text-foreground">
+              <Mail size={18} /><span>Preferred contact channels</span>
+            </div>
+            <p class="mt-3 text-sm text-muted-foreground">Use the form to send project details, request a quote, or book a free strategy call. If you want an immediate reply, message on WhatsApp.</p>
+            <div class="mt-5 flex flex-wrap gap-3 text-sm text-foreground">
+              <a href={`mailto:${EMAIL}`} class="rounded-full border border-border px-4 py-2 transition hover:border-primary/70 hover:text-primary">Email</a>
+              <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" class="rounded-full border border-border px-4 py-2 transition hover:border-primary/70 hover:text-primary">WhatsApp</a>
+            </div>
+          </div>
+          <div class="rounded-3xl border border-border bg-card p-6 shadow-sm text-start">
+            <h2 class="text-xl font-semibold">What to include</h2>
+            <ul class="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
+              <li>• Your current website or app (if any)</li>
+              <li>• Business goals and target audience</li>
+              <li>• Key problems you want solved</li>
+              <li>• Desired timeline and launch priorities</li>
+            </ul>
+          </div>
+        </section>
+
+        <ContactForm client:load />
+      </div>
+    </div>
+  </main>
+</Layout>

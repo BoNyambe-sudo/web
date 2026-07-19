@@ -1,23 +1,73 @@
+---
+import "../styles/global.css";
+import { SITE_NAME, SITE_URL, SITE_DESCRIPTION, getOrganizationSchema } from "@/lib/seoConfig";
+import ThemeScript from "@/components/ThemeScript.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  image?: string;
+  type?: string;
+  canonical?: string;
+}
+
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  keywords,
+  image = `${SITE_URL}favicon.svg`,
+  type = "website",
+  canonical,
+} = Astro.props;
+
+const pageTitle = title ? `${title} - ${SITE_NAME}` : SITE_NAME;
+const canonicalHref = canonical || Astro.url.href;
+const organizationSchema = getOrganizationSchema();
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="author" content={SITE_NAME} />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <link rel="canonical" href={canonicalHref} />
+    <link rel="preload" as="image" href="/web/assets/hero.webp" fetchpriority="high" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalHref} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:site_name" content={SITE_NAME} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalHref} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:creator" content="@franknyambe213" />
+
+    <link rel="icon" type="image/svg+xml" href="/web/favicon.svg" />
+    <link rel="apple-touch-icon" href="/web/favicon.svg" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
+    <ThemeScript />
+  </head>
+  <body class="bg-background text-foreground">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to main content</a>
+    <slot />
+  </body>
+</html>

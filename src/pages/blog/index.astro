@@ -1,0 +1,50 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ScrollToTop from "@/components/ScrollToTop.astro";
+import BlogFilters from "@/components/BlogFilters.tsx";
+import { fetchBlogs, fetchTopTags, type BlogType } from "@/lib/api";
+import { SITE_URL, BLOG_CATEGORIES, getBlogListSchema, getDescriptionForCategory, getKeywordsForCategory } from "@/lib/seoConfig";
+
+let initialBlogs: BlogType[] = [];
+let availableTags: string[] = [];
+try {
+  const res = await fetchBlogs({ published: true, deleted: false, sortBy: "-views", limit: 10, page: 1 });
+  initialBlogs = res.data || [];
+} catch (e) {
+  console.error("Failed to fetch initial blogs:", e);
+}
+try {
+  const tags = await fetchTopTags();
+  availableTags = tags.tags || [];
+} catch (e) {
+  console.error("Failed to fetch top tags:", e);
+}
+
+const blogListSchema = getBlogListSchema(undefined, initialBlogs.length);
+const pageTitle = "Explore Blog";
+const pageDescription = "Explore insightful articles on Technology, Lifestyle, Health, Photography, Sports, Business, and more. Read latest blog posts and expert insights.";
+const pageKeywords = [...BLOG_CATEGORIES, "blog", "articles", "latest posts", "expert insights", "NestJS Angular developer", "web development", "Web development services in Zambia", "SEO web design", "performance optimization", "Zambia web developer", "website development Zambia", "website design Zambia", "software development Zambia", "web developer Lusaka", "responsive web design", "ecommerce website Zambia", "SEO services Zambia", "custom software development", "WordPress development Zambia"].join(", ");
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  canonical={`${SITE_URL}blog`}
+>
+  <ScrollToTop />
+  <script type="application/ld+json" set:html={JSON.stringify(blogListSchema)} />
+  <Header />
+  <main class="container py-10">
+    <h1 class="text-2xl font-bold mb-6">Blog</h1>
+    <BlogFilters
+      initialBlogs={initialBlogs}
+      availableCategories={BLOG_CATEGORIES}
+      availableTags={availableTags}
+      client:load
+    />
+  </main>
+  <Footer />
+</Layout>

@@ -1,0 +1,36 @@
+---
+import Facebook from "./icons/Facebook.astro";
+import Twitter from "./icons/Twitter.astro";
+import Instagram from "./icons/Instagram.astro";
+import LinkedIn from "./icons/LinkedIn.astro";
+import { facebookLink, instagramLink, linkedinLink, xLink } from "@/lib/constants";
+
+interface Props {
+  class?: string;
+  iconClassName?: string;
+}
+const { class: className, iconClassName } = Astro.props;
+
+const socialLinks = [
+  { title: "Facebook", href: facebookLink, icon: Facebook },
+  { title: "X", href: xLink, icon: Twitter },
+  { title: "Instagram", href: instagramLink, icon: Instagram },
+  { title: "Linkedin", href: linkedinLink, icon: LinkedIn },
+];
+---
+
+<div class={`flex items-center justify-center gap-3 p-4 ${className ?? ""}`}>
+  {
+    socialLinks.map((item) => (
+      <a
+        class={`p-2 border rounded-full hover:text-foreground hover:border-primary/80 hoverEffect ${iconClassName ?? ""}`}
+        href={item.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={item.title}
+      >
+        <item.icon size={14} />
+      </a>
+    ))
+  }
+</div>

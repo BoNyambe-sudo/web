@@ -1,0 +1,14 @@
+---
+---
+
+<script is:inline>
+  (function () {
+    try {
+      const stored = localStorage.getItem("theme");
+      const system = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const theme = stored || "system";
+      const isDark = theme === "dark" || (theme === "system" && system);
+      document.documentElement.classList.toggle("dark", isDark);
+    } catch (e) {}
+  })();
+</script>

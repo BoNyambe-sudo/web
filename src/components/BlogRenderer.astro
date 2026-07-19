@@ -1,0 +1,54 @@
+---
+interface Props {
+  htmlContent: string;
+  class?: string;
+}
+const { htmlContent, class: className } = Astro.props;
+---
+
+<article
+  class={`prose prose-blue dark:prose-invert lg:prose-xl mx-auto py-10 blog-renderer ${className ?? ""}`}
+  set:html={htmlContent}
+/>
+
+<style is:global>
+  .blog-renderer figure {
+    margin: 2rem 0;
+  }
+  .blog-renderer figure img {
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    width: 100%;
+    height: auto;
+  }
+  .blog-renderer figcaption {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin-top: 0.5rem;
+  }
+  .blog-renderer img {
+    border-radius: 0.75rem;
+    width: 100%;
+    height: auto;
+  }
+  .blog-renderer table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+  .blog-renderer th,
+  .blog-renderer td {
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+  .blog-renderer thead th {
+    background: var(--muted);
+    font-weight: 600;
+  }
+  .blog-renderer tbody tr:nth-child(even) {
+    background: color-mix(in oklch, var(--muted), transparent 50%);
+  }
+</style>

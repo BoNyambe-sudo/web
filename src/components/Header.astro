@@ -1,0 +1,80 @@
+---
+import Logo from "./Logo.astro";
+import ThemeToggle from "./ThemeToggle.tsx";
+
+const navLinks = [
+  { href: "/web/services", label: "Services" },
+  { href: "/web/blog", label: "Blog" },
+  { href: "/web/faqs", label: "FAQS" },
+  { href: "/web/contact", label: "Contact" },
+];
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/web/" ? pathname === "/web/" || pathname === "/web" : pathname.startsWith(href);
+---
+
+<header class="sticky z-50 top-0 w-full py-3 backdrop-blur-xl">
+  <div class="container flex items-center justify-between">
+    <a href="/web/" class="cursor-pointer" aria-label="Home">
+      <Logo size={32} class="text-foreground font-semibold" />
+    </a>
+
+    <nav class="hidden md:flex flex-1 justify-center items-center font-semibold gap-3" aria-label="Primary">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class={`relative group hover:text-primary transition-color ${isActive(link.href) ? "text-primary" : ""}`}
+          >
+            {link.label}
+            <span
+              class={`absolute -bottom-0.5 left-1/2 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${
+                isActive(link.href) ? "w-1/2" : "w-0"
+              }`}
+            />
+            <span
+              class={`absolute -bottom-0.5 right-1/2 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${
+                isActive(link.href) ? "w-1/2" : "w-0"
+              }`}
+            />
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <ThemeToggle client:load />
+      <button
+        id="mobile-menu-trigger"
+        class="md:hidden text-foreground font-semibold p-2 rounded-md hover:bg-muted"
+        aria-label="Open Menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="hidden md:hidden border-t mt-3 bg-background">
+    <nav class="container flex flex-col gap-1 py-3" aria-label="Mobile">
+      {
+        navLinks.map((link) => (
+          <a href={link.href} class={`py-2 px-2 rounded-md hover:bg-muted ${isActive(link.href) ? "text-primary" : ""}`}>
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>
+
+<script>
+  const trigger = document.getElementById("mobile-menu-trigger");
+  const menu = document.getElementById("mobile-menu");
+  trigger?.addEventListener("click", () => {
+    const open = menu?.classList.toggle("hidden") === false;
+    trigger.setAttribute("aria-expanded", String(open));
+  });
+</script>

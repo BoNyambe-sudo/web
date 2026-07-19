@@ -1,0 +1,40 @@
+---
+import Logo from "./Logo.astro";
+import Facebook from "./icons/Facebook.astro";
+import Instagram from "./icons/Instagram.astro";
+import Twitter from "./icons/Twitter.astro";
+import LinkedIn from "./icons/LinkedIn.astro";
+import { facebookLink, instagramLink, linkedinLink, xLink } from "@/lib/constants";
+
+const currentYear = new Date().getFullYear();
+const navLinks = [
+  { href: "/web/", label: "Home" },
+  { href: "/web/services", label: "Services" },
+  { href: "/web/blog", label: "Blog" },
+  { href: "/web/faqs", label: "FAQS" },
+  { href: "/web/privacy-policy", label: "Privacy Policy" },
+  { href: "/web/terms-of-service", label: "Terms of Service" },
+];
+---
+
+<footer class="flex flex-col-reverse md:flex-row items-center justify-center gap-6 border-t text-sm text-muted-foreground p-4 text-center md:text-start">
+  <p class="flex items-center gap-2">
+    <Logo size={24} class="font-semibold" />
+    <span class="text-xs">© {currentYear} All rights reserved</span>
+  </p>
+  <div class="flex flex-col md:flex-row items-center gap-2 text-xs">
+    {
+      navLinks.map((link) => (
+        <a class="hover:text-primary" href={link.href}>
+          {link.label}
+        </a>
+      ))
+    }
+    <div class="flex gap-2 items-center">
+      <a href={facebookLink} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Facebook size={12} /></a>
+      <a href={instagramLink} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Instagram size={12} /></a>
+      <a href={xLink} target="_blank" rel="noopener noreferrer" aria-label="Twitter"><Twitter size={12} /></a>
+      <a href={linkedinLink} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><LinkedIn size={12} /></a>
+    </div>
+  </div>
+</footer>

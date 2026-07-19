@@ -1,0 +1,27 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Services from "@/components/Services.tsx";
+import ScrollToTop from "@/components/ScrollToTop.astro";
+import { SITE_URL, SITE_DESCRIPTION } from "@/lib/seoConfig";
+
+const base = import.meta.env.BASE_URL;
+const images = {
+  adminPanel: `${base}services/admin-panel.webp`,
+  seo: `${base}services/SEO.webp`,
+  responsive: `${base}services/responsive.webp`,
+  theme: `${base}services/dark-and-light-mode.webp`,
+  accessibility: `${base}services/accessiblity.webp`,
+  performance: `${base}services/perfomance.webp`,
+};
+---
+
+<Layout
+  title="Services & Tech Stack"
+  description="Explore my tech stack, services, projects, and contact information. See examples of custom admin panels, SEO-optimized sites, responsive designs, and more."
+  keywords="tech stack, services, projects, Angular, Nest JS, MongoDB, Node.js, contact, portfolio, NestJS Angular developer, web development, Web development services in Zambia,SEO web design, performance optimization, Zambia web developer, website development Zambia, website design Zambia, software development Zambia, web developer Lusaka, responsive web design, ecommerce website Zambia, SEO services Zambia, custom software development, WordPress development Zambia"
+  canonical={`${SITE_URL}services`}
+  type="website"
+>
+  <ScrollToTop />
+  <Services images={images} client:load />
+</Layout>
