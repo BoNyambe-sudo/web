@@ -14,7 +14,7 @@ const formattedDate = formatDate(blog.createdAt);
 <div
   class={`relative mx-auto w-full max-w-auto h-auto pt-0 gap-4 overflow-hidden rounded-xl border bg-card ${className ?? ""}`}
 >
-  <a href={`/web/blog/${blog.slug}`} class="hoverEffect group block">
+  <a href={`/portfolio-dev/blog/${blog.slug}/`} class="hoverEffect group block">
     <img
       src={blog.thumbnail}
       class="relative z-20 aspect-video w-full object-cover transition-transform group-hover:scale-[1.02]"
@@ -47,7 +47,7 @@ const formattedDate = formatDate(blog.createdAt);
     </div>
     <a
       class="text-lg font-semibold hover:text-primary"
-      href={`/web/blog/${blog.slug}`}>{blog.title}</a
+      href={`/portfolio-dev/blog/${blog.slug}/`}>{blog.title}</a
     >
   </div>
 </div>

@@ -12,7 +12,7 @@ import { formatCompactNumber } from "@/lib/utils";
 
 export async function getStaticPaths() {
   try {
-    const res = await fetchBlogs({ published: true, deleted: false, limit: 100, page: 1 });
+    const res = await fetchBlogs({ published: true, deleted: false, limit: 1000, page: 1 });
     const blogs = res.data || [];
     return blogs.map((blog: BlogType) => ({
       params: { slug: blog.slug },
@@ -29,7 +29,7 @@ interface Props {
 }
 const { blog } = Astro.props;
 
-const canonical = `${SITE_URL}blog/${blog.slug}`;
+const canonical = `${SITE_URL}blog/${blog.slug}/`;
 const schema = getBlogPostSchema(blog);
 const breadcrumb = getBreadcrumbSchema([
   { name: "Home", url: SITE_URL },
@@ -66,9 +66,9 @@ const authorName = `${blog.author?.firstName || ""} ${blog.author?.lastName || "
   <Header />
   <div class="container py-10">
     <nav class="flex items-center gap-2 text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-      <a href="/web/" class="hover:text-primary">Home</a>
+      <a href="/portfolio-dev/" class="hover:text-primary">Home</a>
       <span>/</span>
-      <a href="/web/blog" class="hover:text-primary">Blog</a>
+      <a href="/portfolio-dev/blog/" class="hover:text-primary">Blog</a>
       <span>/</span>
       <span class="text-foreground">{blog.title}</span>
     </nav>
@@ -136,7 +136,7 @@ const authorName = `${blog.author?.firstName || ""} ${blog.author?.lastName || "
               Unlock Your Digital Potential
             </div>
             <p class="text-sm text-muted-foreground mb-4">A powerful website is the ultimate weapon for wealth, credibility, and unstoppable growth. Discover why your business cannot afford to be left behind.</p>
-            <a href="/web/website-benefits" class="inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/80">
+            <a href="/portfolio-dev/website-benefits/" class="inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/80">
               Explore Website Benefits
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
@@ -147,7 +147,7 @@ const authorName = `${blog.author?.firstName || ""} ${blog.author?.lastName || "
               Shape Your Digital Future
             </div>
             <p class="text-sm text-muted-foreground mb-4">Take our quick survey and discover how a website can transform your business. Get personalized insights in minutes.</p>
-            <a href="/web/website-survey" class="inline-flex w-full items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-semibold transition hover:bg-muted">
+            <a href="/portfolio-dev/website-survey/" class="inline-flex w-full items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-semibold transition hover:bg-muted">
               Take the Survey
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>

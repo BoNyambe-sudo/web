@@ -67,7 +67,7 @@ const pageKeywords = [
   title={pageTitle}
   description={pageDescription}
   keywords={pageKeywords}
-  canonical={`${SITE_URL}blog`}
+  canonical={`${SITE_URL}blog/`}
 >
   <ScrollToTop />
   <script
@@ -77,28 +77,21 @@ const pageKeywords = [
   <Header />
   <main class="container py-10">
     <div class="mb-8 space-y-4">
-      <div
-        class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between"
-      >
-        <div>
-          <p
-            class="text-sm font-medium uppercase tracking-[0.2em] text-primary"
-          >
-            Insights & ideas
-          </p>
-          <h1 class="text-2xl font-bold">Blog</h1>
-        </div>
+      <div class="space-y-2">
+        <p class="text-sm font-medium uppercase tracking-[0.2em] text-primary">
+          Insights & ideas
+        </p>
+        <h1 class="text-2xl font-bold">Blog</h1>
         <p class="max-w-2xl text-sm text-muted-foreground">
-          The posts below are pre-rendered at build time for the fastest first
-          paint. Use the filters and sorting controls only when you want a
-          backend-curated list.
+          Use the filters and sorting controls only when you want a curated
+          list.
         </p>
       </div>
 
       {
         initialBlogs.length > 0 ? (
           <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {initialBlogs.map((blog) => (
+            {initialBlogs.slice(0, 10).map((blog) => (
               <BlogCard blog={blog} />
             ))}
           </div>
@@ -114,8 +107,8 @@ const pageKeywords = [
       <div class="mb-4">
         <h2 class="text-xl font-semibold">Refine the list</h2>
         <p class="text-sm text-muted-foreground">
-          These controls request a filtered or sorted list from the backend only
-          when you choose to use them.
+          These controls request a filtered or sorted list when you choose to
+          use them.
         </p>
       </div>
       <BlogFilters

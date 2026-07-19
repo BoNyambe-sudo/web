@@ -5,6 +5,7 @@
   "engines": {
     "node": ">=22.12.0"
   },
+  "homepage": "https://bonyambe-sudo.github.io/portfolio-dev/",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

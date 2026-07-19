@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import BlogCard from "@/components/BlogCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   X,
   Search,
@@ -50,7 +51,7 @@ const BlogFilters = ({
   const [searchQuery, setSearchQuery] = React.useState("");
   const [blogs, setBlogs] = React.useState<BlogType[]>(initialBlogs);
   const [page, setPage] = React.useState(1);
-  const [hasNext, setHasNext] = React.useState(initialBlogs.length >= 10);
+  const [hasNext, setHasNext] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [total, setTotal] = React.useState(initialBlogs.length);
   const [interactiveMode, setInteractiveMode] = React.useState(false);
@@ -137,6 +138,9 @@ const BlogFilters = ({
     setInteractiveMode(true);
     setHasAppliedFilters(true);
     setPage(1);
+    setBlogs([]);
+    setTotal(0);
+    setHasNext(false);
     await runQuery(selectedFilters, searchQuery.trim(), 1, false);
     scrollToResults();
   };
@@ -428,8 +432,23 @@ const BlogFilters = ({
                   Found {total} {total === 1 ? "blog post" : "blog posts"}
                 </p>
 
-                {loading && blogs.length === 0 ? (
-                  <p className="text-muted-foreground">Loading...</p>
+                {loading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: blogs.length === 0 ? 6 : 3 }).map((_, i) => (
+                      <div key={i} className="rounded-xl border bg-card overflow-hidden">
+                        <Skeleton className="aspect-video w-full rounded-none" />
+                        <div className="p-4 space-y-3">
+                          <div className="flex items-center justify-between gap-4">
+                            <Skeleton className="h-4 w-24" />
+                            <div className="flex gap-2 items-center">
+                              <Skeleton className="h-4 w-16" />
+                            </div>
+                          </div>
+                          <Skeleton className="h-5 w-3/4" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 ) : blogs.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
                     <h3 className="text-lg font-medium mb-2">

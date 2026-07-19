@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import gsap from "gsap";
-import Whatsapp from "@/components/icons/whatsapp";
+import Whatsapp from "./icons/Whatsapp";
 import MongoDB from "@/components/icons/MongoDB";
 import Angular from "@/components/icons/Angular";
 import NestJS from "@/components/icons/NestJS";
@@ -101,6 +101,17 @@ const Services = ({ images }: { images: Record<string, string> }) => {
     { id: 4, title: "Accessible Sites", description: "WCAG compliant interfaces with proper ARIA labels, keyboard navigation, screen reader support, and focus management.", image: images.accessibility },
     { id: 5, title: "Performance First", description: "Optimized loading with code splitting, lazy loading, efficient caching, and Core Web Vitals optimization.", image: images.performance },
   ];
+
+  const clearTimers = () => {
+    if (sectionTimerRef.current) {
+      clearTimeout(sectionTimerRef.current);
+      sectionTimerRef.current = null;
+    }
+    if (carouselTimerRef.current) {
+      clearInterval(carouselTimerRef.current);
+      carouselTimerRef.current = null;
+    }
+  };
 
   useEffect(() => {
     if (timelineRef.current) {
@@ -341,8 +352,24 @@ const Services = ({ images }: { images: Record<string, string> }) => {
     <div className="h-screen w-screen bg-background text-foreground flex flex-col relative overflow-hidden">
       <header className="absolute top-0 left-0 right-0 z-40 px-4 sm:px-8 py-3 sm:py-4">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <a href="/web/" className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium hover:bg-muted">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+          <a
+            href="/portfolio-dev/"
+            className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium hover:bg-muted"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m12 19-7-7 7-7" />
+              <path d="M19 12H5" />
+            </svg>
             Back
           </a>
         </div>
@@ -371,9 +398,9 @@ const Services = ({ images }: { images: Record<string, string> }) => {
               <p className="text-muted-foreground text-xs sm:text-sm mt-4 tech-anim">
                 I use the MANN stack - MongoDB, Angular, NestJS, and Node.js -
                 for end-to-end Typescript development. It gives me flexible,
-                scalable data, modular backend architecture, and responsive
-                UIs in one cohesive stack. That means faster builds, cleaner
-                code, and apps that scale without losing performance or
+                scalable data, modular backend architecture, and responsive UIs
+                in one cohesive stack. That means faster builds, cleaner code,
+                and apps that scale without losing performance or
                 maintainability.
               </p>
             </div>
@@ -515,8 +542,6 @@ const Services = ({ images }: { images: Record<string, string> }) => {
               </p>
             </div>
             <Accordion
-              type="single"
-              collapsible
               className="w-full space-y-3 project-anim"
             >
               {projectItems.map((project) => (
@@ -534,7 +559,7 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                     <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
                       {project.description}
                     </p>
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="outline" size="sm" >
                       <a
                         href={project.link}
                         target="_blank"
@@ -603,7 +628,7 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                   <Button
                     variant="default"
                     className="w-full bg-green-600 hover:bg-green-700 text-white"
-                    asChild
+                    
                   >
                     <a
                       href={WHATSAPP_LINK}
@@ -632,7 +657,7 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                   <p className="text-sm text-muted-foreground mb-3">
                     Send me a message
                   </p>
-                  <Button variant="outline" className="w-full" asChild>
+                  <Button variant="outline" className="w-full" >
                     <a
                       href={`mailto:${EMAIL}`}
                       className="inline-flex items-center gap-2"
@@ -650,7 +675,10 @@ const Services = ({ images }: { images: Record<string, string> }) => {
         </section>
       </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none" aria-label="Page navigation">
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"
+        aria-label="Page navigation"
+      >
         <div className="flex flex-col items-center sm:items-start pb-4 sm:pb-6 sm:pl-6">
           {isMobile ? (
             <div className="pointer-events-auto flex items-center justify-center gap-2 bg-card/80 backdrop-blur-lg border border-border rounded-full px-4 py-2 shadow-lg">
@@ -690,9 +718,15 @@ const Services = ({ images }: { images: Record<string, string> }) => {
               aria-label={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? (
-                <><Pause className="h-4 w-4 mr-1" />Pause</>
+                <>
+                  <Pause className="h-4 w-4 mr-1" />
+                  Pause
+                </>
               ) : (
-                <><Play className="h-4 w-4 mr-1" />Play</>
+                <>
+                  <Play className="h-4 w-4 mr-1" />
+                  Play
+                </>
               )}
             </Button>
           </div>

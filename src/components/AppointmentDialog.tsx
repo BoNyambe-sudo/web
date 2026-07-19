@@ -116,12 +116,12 @@ function AppointmentDialog({
 }: AppointmentDialogProps) {
   const [formData, setFormData] = React.useState<AppointmentFormData>(emptyForm);
   const [pending, setPending] = React.useState(false);
-  const [error, setError] = React.useState("");
+  const [status, setStatus] = React.useState<"idle" | "success" | "error">("idle");
 
   React.useEffect(() => {
     if (open) {
       setFormData({ ...emptyForm, name: defaultName, email: defaultEmail, phoneNumber: defaultPhone, description: defaultDescription });
-      setError("");
+      setStatus("idle");
     }
   }, [open, defaultName, defaultEmail, defaultPhone, defaultDescription]);
 
@@ -132,11 +132,11 @@ function AppointmentDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phoneNumber || !formData.scheduledDate || !formData.scheduledTime) {
-      setError("Please fill in all required fields");
+      setStatus("error");
       return;
     }
     setPending(true);
-    setError("");
+    setStatus("idle");
     try {
       await createAppointment({
         name: formData.name,
@@ -146,9 +146,11 @@ function AppointmentDialog({
         email: formData.email || undefined,
         description: formData.description,
       });
-      onOpenChange(false);
+      setStatus("success");
+      setFormData(emptyForm);
+      setTimeout(() => onOpenChange(false), 1500);
     } catch {
-      setError("Something went wrong. Please try again.");
+      setStatus("error");
     } finally {
       setPending(false);
     }
@@ -197,7 +199,8 @@ function AppointmentDialog({
             <Label>Description <span className="text-destructive">*</span></Label>
             <Textarea required className="min-h-[80px]" placeholder="Description" value={formData.description} onChange={(e) => updateField("description", e.target.value)} />
           </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {status === "success" && <p className="text-sm text-primary">Appointment booked successfully! I'll confirm the details shortly.</p>}
+          {status === "error" && <p className="text-sm text-destructive">Please fill in all required fields, or call me directly at {import.meta.env.PUBLIC_PHONE || ""}.</p>}
           <div className="flex justify-end gap-3">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={pending}>Cancel</Button>
             <Button disabled={pending} type="submit">{submitLabel}</Button>
