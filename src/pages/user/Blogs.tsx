@@ -171,8 +171,8 @@ const Blogs = () => {
         title={pageTitle}
         description={pageDescription}
         keywords={pageKeywords}
-        url={`${SITE_URL}blog`}
-        canonicalUrl={`${SITE_URL}blog`}
+        url={`${SITE_URL}blog/`}
+        canonicalUrl={`${SITE_URL}blog/`}
       >
         <script type="application/ld+json">
           {JSON.stringify(blogListSchema)}

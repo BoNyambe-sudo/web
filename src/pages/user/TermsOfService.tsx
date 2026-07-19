@@ -10,8 +10,8 @@ const TermsOfService = () => {
         title="Terms of Service"
         description="Terms and conditions for using Bo Nyambe's website and services. Understand your rights and obligations."
         keywords="terms of service, terms and conditions, legal terms, Bo Nyambe, web development terms"
-        url={`${SITE_URL}terms-of-service`}
-        canonicalUrl={`${SITE_URL}terms-of-service`}
+        url={`${SITE_URL}terms-of-service/`}
+        canonicalUrl={`${SITE_URL}terms-of-service/`}
       />
       <Header className="backdrop-blur-xl" />
       <div className="container py-10 flex-1">

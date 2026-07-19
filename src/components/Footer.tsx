@@ -16,11 +16,11 @@ const Footer = () => {
       </p>
       <div className="flex flex-col md:flex-row items-center gap-2 text-xs">
         <Link className="hover:text-primary" to="/">Home</Link>
-        <Link className="hover:text-primary" to="/services">Services</Link>
-        <Link className="hover:text-primary" to="/blog">Blog</Link>
-        <Link className="hover:text-primary" to="/faqs">FAQS</Link>
-        <Link className="hover:text-primary" to="/privacy-policy">Privacy Policy</Link>
-        <Link className="hover:text-primary" to="/terms-of-service">Terms of Service</Link>
+        <Link className="hover:text-primary" to="/services/">Services</Link>
+        <Link className="hover:text-primary" to="/blog/">Blog</Link>
+        <Link className="hover:text-primary" to="/faqs/">FAQS</Link>
+        <Link className="hover:text-primary" to="/privacy-policy/">Privacy Policy</Link>
+        <Link className="hover:text-primary" to="/terms-of-service/">Terms of Service</Link>
         <div className="flex gap-2 items-center">
           <Link to={facebookLink} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
             <Facebook size={12} />

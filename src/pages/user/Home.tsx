@@ -125,7 +125,7 @@ const Home = () => {
                 <Button
                   size="lg"
                   className="w-full sm:w-auto h-14 px-10 text-lg font-bold shadow-xl"
-                  onClick={() => navigate("/website-survey")}
+                  onClick={() => navigate("/website-survey/")}
                 >
                   Book a strategy call
                 </Button>
@@ -135,7 +135,7 @@ const Home = () => {
                   className="w-full sm:w-auto h-14 px-10 text-lg font-bold shadow-xl"
                   asChild
                 >
-                  <Link to="/services">See my work</Link>
+                  <Link to="/services/">See my work</Link>
                 </Button>
               </div>
 
@@ -369,7 +369,7 @@ const Home = () => {
                 <Button
                   size="lg"
                   className="mt-8 h-14 px-10 text-lg font-bold shadow-xl"
-                  onClick={() => navigate("/services")}
+                  onClick={() => navigate("/services/")}
                 >
                   Explore services
                 </Button>
@@ -448,7 +448,7 @@ const Home = () => {
               <Button
                 size="lg"
                 className="h-14 px-10 text-lg font-bold shadow-xl"
-                onClick={() => navigate("/website-survey")}
+                onClick={() => navigate("/website-survey/")}
               >
                 Book a call
               </Button>
@@ -457,7 +457,7 @@ const Home = () => {
                 variant="outline"
                 asChild
               >
-                <Link to="/contact">Send a message</Link>
+                <Link to="/contact/">Send a message</Link>
               </Button>
             </div>
           </section>

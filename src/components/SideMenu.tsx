@@ -61,81 +61,81 @@ const SideMenu = ({ isOpen, onClose }: SidebarProps) => {
               ></span>
             </Link>
             <Link
-              to="/services"
+              to="/services/"
               onClick={onClose}
-              className={`relative group hover:primary  hoverEffect ${pathname === "/services" ? "text-primary" : ""}`}
+              className={`relative group hover:primary  hoverEffect ${pathname === "/services/" ? "text-primary" : ""}`}
             >
               Services
               <span
-                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/services" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/services/" ? "w-1/2" : ""}`}
               ></span>
               <span
                 className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/services" ? "w-1/2" : ""}`}
               ></span>
             </Link>
             <Link
-              to="/blog"
+              to="/blog/"
               onClick={onClose}
-              className={`relative group hover:primary  hoverEffect ${pathname === "/blog" ? "text-primary" : ""}`}
+              className={`relative group hover:primary  hoverEffect ${pathname === "/blog/" ? "text-primary" : ""}`}
             >
               Blog
               <span
-                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/blog" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/blog/" ? "w-1/2" : ""}`}
               ></span>
               <span
-                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/blog" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/blog/" ? "w-1/2" : ""}`}
               ></span>
             </Link>
             <Link
-              to="/faqs"
+              to="/faqs/"
               onClick={onClose}
-              className={`relative group hover:primary  hoverEffect ${pathname === "/faqs" ? "text-primary" : ""}`}
+              className={`relative group hover:primary  hoverEffect ${pathname === "/faqs/" ? "text-primary" : ""}`}
             >
               FAQs
               <span
-                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/faqs" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/faqs/" ? "w-1/2" : ""}`}
               ></span>
               <span
-                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/faqs" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/faqs/" ? "w-1/2" : ""}`}
               ></span>
             </Link>
             <Link
-              to="/contact"
+              to="/contact/"
               onClick={onClose}
-              className={`relative group hover:primary  hoverEffect ${pathname === "/contact" ? "text-primary" : ""}`}
+              className={`relative group hover:primary  hoverEffect ${pathname === "/contact/" ? "text-primary" : ""}`}
             >
               Contact
               <span
-                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/contact" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/contact/" ? "w-1/2" : ""}`}
               ></span>
               <span
-                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/contact" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/contact/" ? "w-1/2" : ""}`}
               ></span>
             </Link>
             <Link
-              to="/privacy-policy"
+              to="/privacy-policy/"
               onClick={onClose}
-              className={`relative group hover:primary  hoverEffect ${pathname === "/privacy-policy" ? "text-primary" : ""}`}
+              className={`relative group hover:primary  hoverEffect ${pathname === "/privacy-policy/" ? "text-primary" : ""}`}
             >
               Privacy Policy
               <span
-                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/privacy-policy" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/privacy-policy/" ? "w-1/2" : ""}`}
               ></span>
               <span
-                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/privacy-policy" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/privacy-policy/" ? "w-1/2" : ""}`}
               ></span>
             </Link>
             <Link
-              to="/terms-of-service"
+              to="/terms-of-service/"
               onClick={onClose}
-              className={`relative group hover:primary  hoverEffect ${pathname === "/terms-of-service" ? "text-primary" : ""}`}
+              className={`relative group hover:primary  hoverEffect ${pathname === "/terms-of-service/" ? "text-primary" : ""}`}
             >
               Terms of Service
               <span
-                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/terms-of-service" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 left-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:left-0 ${pathname === "/terms-of-service/" ? "w-1/2" : ""}`}
               ></span>
               <span
-                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/terms-of-service" ? "w-1/2" : ""}`}
+                className={`absolute -bottom-0.5 right-1/2 w-0 h-0.5 bg-primary/80 group-hover:w-1/2 hoverEffect group-hover:right-0 ${pathname === "/terms-of-service/" ? "w-1/2" : ""}`}
               ></span>
             </Link>
           </div>
