@@ -57,7 +57,9 @@ export const fetchBlogs = async (
       url.searchParams.set(key, String(value));
     }
   }
-  const res = await fetch(url.toString(), { headers: { Accept: "application/json" } });
+  const res = await fetch(url.toString(), {
+    headers: { Accept: "application/json" },
+  });
   if (!res.ok) {
     throw new Error(`Failed to fetch blogs: ${res.status}`);
   }

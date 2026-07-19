@@ -29,7 +29,6 @@ export interface BlogFiltersState {
   latest: boolean;
 }
 
-
 interface Props {
   initialBlogs: BlogType[];
   availableCategories: string[];
