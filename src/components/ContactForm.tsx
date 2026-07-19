@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail } from "lucide-react";
 import { sendInquiry } from "@/lib/clientApi";
 import { WHATSAPP_LINK, EMAIL } from "@/lib/constants";
 
@@ -33,12 +32,9 @@ const ContactForm = () => {
 
   return (
     <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Send a message</p>
-          <h2 className="mt-3 text-2xl font-bold">Start the conversation</h2>
-        </div>
-        <Button variant="outline" type="button" onClick={() => window.history.back()}>Back</Button>
+      <div>
+        <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Send a message</p>
+        <h2 className="mt-3 text-2xl font-bold">Start the conversation</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5">

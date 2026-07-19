@@ -4,6 +4,7 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import ScrollToTop from "@/components/ScrollToTop.astro";
 import ContactForm from "@/components/ContactForm.tsx";
+import { Mail } from "lucide-react";
 import { SITE_URL } from "@/lib/seoConfig";
 import { EMAIL, PHONE, WHATSAPP_LINK } from "@/lib/constants";
 ---
@@ -15,6 +16,7 @@ import { EMAIL, PHONE, WHATSAPP_LINK } from "@/lib/constants";
   canonical={`${SITE_URL}contact`}
 >
   <ScrollToTop />
+  <Header />
   <main class="min-h-screen bg-background text-foreground">
     <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
       <div class="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
@@ -59,4 +61,5 @@ import { EMAIL, PHONE, WHATSAPP_LINK } from "@/lib/constants";
       </div>
     </div>
   </main>
+  <Footer />
 </Layout>

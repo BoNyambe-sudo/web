@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import  BlogCard  from "@/components/BlogCard";
-import { X, Search, Loader2 } from "lucide-react";
+import { X, Search, Loader2, SlidersHorizontal, ChevronDown } from "lucide-react";
 import type { BlogType } from "@/lib/api";
 
 export interface BlogFiltersState {
@@ -45,6 +45,16 @@ const BlogFilters = ({ initialBlogs, availableCategories, availableTags }: Props
   const [hasNext, setHasNext] = React.useState(initialBlogs.length >= 10);
   const [loading, setLoading] = React.useState(false);
   const [total, setTotal] = React.useState(initialBlogs.length);
+
+  const [filtersOpen, setFiltersOpen] = React.useState(false);
+  const resultsRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToResults = React.useCallback(() => {
+    const el = resultsRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top, behavior: "smooth" });
+  }, []);
 
   React.useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(searchQuery), 500);
@@ -88,24 +98,34 @@ const BlogFilters = ({ initialBlogs, availableCategories, availableTags }: Props
 
   const handleCategoryChange = (category: string, checked: boolean) => {
     setSelectedFilters((s) => ({ ...s, category: checked ? category : "" }));
+    scrollToResults();
   };
   const handleTagChange = (tag: string, checked: boolean) => {
     setSelectedFilters((s) => ({
       ...s,
       tags: checked ? [...s.tags, tag] : s.tags.filter((t) => t !== tag),
     }));
+    scrollToResults();
   };
   const handleLatestChange = (checked: boolean) => {
     setSelectedFilters((s) => ({ ...s, latest: checked }));
+    scrollToResults();
+  };
+  const handleSortChange = (value: string | null) => {
+    if (value === null) return;
+    setSelectedFilters((s) => ({ ...s, sortBy: value }));
+    scrollToResults();
   };
   const handleReset = () => {
     setSelectedFilters({ category: "", tags: [], latest: false, sortBy: "-views" });
     setSearchQuery("");
+    scrollToResults();
   };
   const handleFilterRemove = (type: keyof BlogFiltersState, value: string) => {
     if (type === "category") setSelectedFilters((s) => ({ ...s, category: "" }));
     else if (type === "tags") setSelectedFilters((s) => ({ ...s, tags: s.tags.filter((t) => t !== value) }));
     else if (type === "latest") setSelectedFilters((s) => ({ ...s, latest: false }));
+    scrollToResults();
   };
 
   const hasSelected = selectedFilters.category || selectedFilters.tags.length > 0 || selectedFilters.latest;
@@ -114,7 +134,23 @@ const BlogFilters = ({ initialBlogs, availableCategories, availableTags }: Props
     <div className="flex flex-col lg:flex-row gap-6">
       <aside className="lg:w-64 shrink-0">
         <div className="lg:sticky lg:top-20 space-y-6 rounded-xl border border-border bg-card p-4">
-          <h2 className="text-lg font-semibold">Filters</h2>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-lg font-semibold">Filters</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              className="lg:hidden"
+              onClick={() => setFiltersOpen((o) => !o)}
+              aria-expanded={filtersOpen}
+              aria-controls="blog-filter-panel"
+            >
+              <SlidersHorizontal size={16} />
+              {filtersOpen ? "Hide" : "Show"}
+              <ChevronDown size={16} className={`transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
+            </Button>
+          </div>
+          <div id="blog-filter-panel" className={`${filtersOpen ? "block" : "hidden"} lg:block`}>
+          <h3 className="sr-only">Filter options</h3>
           <div className="space-y-3">
             <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Categories</h3>
             <div className="space-y-2">
@@ -148,10 +184,11 @@ const BlogFilters = ({ initialBlogs, availableCategories, availableTags }: Props
           </div>
           <Separator />
           <Button variant="destructive" size="sm" onClick={handleReset} className="w-full">Reset Filters</Button>
+          </div>
         </div>
       </aside>
 
-      <div className="flex-1 space-y-4">
+      <div ref={resultsRef} className="flex-1 space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Input type="search" placeholder="Search..." className="w-full pl-9" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
@@ -159,12 +196,12 @@ const BlogFilters = ({ initialBlogs, availableCategories, availableTags }: Props
           </div>
           <div className="flex gap-2 items-center">
             <p className="hidden md:block text-sm text-muted-foreground">Sort By:</p>
-            <Select value={selectedFilters.sortBy} onValueChange={(value) => setSelectedFilters((s) => ({ ...s, sortBy: value }))}>
+            <Select value={selectedFilters.sortBy} onValueChange={handleSortChange}>
               <SelectTrigger className="max-w-45">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="-views">Most Viewed</SelectItem>
+                <SelectItem value="-views">Popular</SelectItem>
                 <SelectItem value="title">Title: A to Z</SelectItem>
                 <SelectItem value="-title">Title: Z to A</SelectItem>
                 <SelectItem value="readTime">Read Time: Short to Long</SelectItem>
@@ -221,7 +258,7 @@ const BlogFilters = ({ initialBlogs, availableCategories, availableTags }: Props
 
         {hasNext && (
           <div className="mt-6 text-center">
-            <Button variant="outline" onClick={() => { const next = page + 1; setPage(next); runQuery(selectedFilters, debouncedSearch, next, true); }} disabled={loading} className="h-10">
+            <Button variant="outline" onClick={() => { const next = page + 1; setPage(next); runQuery(selectedFilters, debouncedSearch, next, true); scrollToResults(); }} disabled={loading} className="h-10">
               {loading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Loading...</> : "Load More"}
             </Button>
           </div>
