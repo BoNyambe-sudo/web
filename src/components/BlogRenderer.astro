@@ -6,10 +6,23 @@ interface Props {
 const { htmlContent, class: className } = Astro.props;
 ---
 
-<article
-  class={`prose prose-blue dark:prose-invert lg:prose-xl mx-auto py-10 blog-renderer ${className ?? ""}`}
-  set:html={htmlContent}
-/>
+<div class={`prose prose-blue dark:prose-invert lg:prose-xl mx-auto py-10 blog-renderer ${className ?? ""}`}>
+  <article set:html={htmlContent} />
+</div>
+
+<script is:inline>
+  (function() {
+    const article = document.querySelector('.blog-renderer article');
+    if (article) {
+      article.querySelectorAll('table').forEach(function(table) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      });
+    }
+  })();
+</script>
 
 <style is:global>
   .blog-renderer figure {
@@ -50,5 +63,13 @@ const { htmlContent, class: className } = Astro.props;
   }
   .blog-renderer tbody tr:nth-child(even) {
     background: color-mix(in oklch, var(--muted), transparent 50%);
+  }
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1.5rem 0;
+  }
+  .table-wrapper table {
+    margin: 0;
   }
 </style>

@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://mysite-backend-rtck.onrender.com/api/v1";
+const API_BASE_URL = "/api/v1";
 
 export const sendInquiry = async (data: {
   name: string;

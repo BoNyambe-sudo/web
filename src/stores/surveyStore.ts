@@ -12,6 +12,7 @@ interface SurveyState {
 const SURVEY_STORAGE_KEY = "primal-survey-state";
 
 const loadState = (): Partial<SurveyState> => {
+  if (typeof window === "undefined") return {};
   try {
     const stored = localStorage.getItem(SURVEY_STORAGE_KEY);
     if (stored) return JSON.parse(stored);

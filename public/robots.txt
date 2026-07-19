@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bonyambe-sudo.github.io/web/sitemap.xml
