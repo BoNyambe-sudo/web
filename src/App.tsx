@@ -22,6 +22,8 @@ import AdminManage from "./pages/admin/AdminManage";
 import ScrollToTop from "./components/ScrollToTop";
 import { AdminRoute, AdminOnlyRoute } from "./components/AdminGuard";
 import { useEffect } from "react";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function AppReadySignal() {
   const isFetching = useIsFetching();
@@ -61,6 +63,8 @@ function AppWithQuery() {
       <div id="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminDashboard />}>
