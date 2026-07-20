@@ -6,8 +6,16 @@ import {
   useInfiniteQuery,
 } from "@tanstack/react-query";
 import type { BlogType, CommentType } from "../clientState/useBlog";
-import { type BlogQueryParams } from "@/pages/user/Blogs";
 import toast from "react-hot-toast";
+
+export type BlogQueryParams = {
+  page?: number
+  limit?: number
+  author?: number
+  published?: boolean
+  sortBy?: string
+  deleted?: boolean
+}
 
 export interface CreateBlogType {
   title: string;

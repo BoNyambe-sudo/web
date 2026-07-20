@@ -3,37 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://bonyambe-sudo.github.io/web/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "postbuild": "node scripts/postbuild.mjs"
-  },
-  "reactSnap": {
-    "source": "dist",
-    "puppeteerArgs": [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-      "--disable-extensions",
-      "--remote-debugging-port=0"
-    ],
-    "include": [
-      "/",
-      "/blog",
-      "/website-survey",
-      "/website-benefits",
-      "/services",
-      "/contact",
-      "/faqs",
-      "/privacy-policy",
-      "/terms-of-service"
-    ],
-    "crawl": true,
-    "skipThirdPartyRequests": true
+    "preview": "vite preview"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.8",

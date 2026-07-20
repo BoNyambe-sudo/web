@@ -7,22 +7,12 @@ import { queryClient } from "./hooks/queryClient";
 import { useTheme } from "./hooks/clientState/useTheme";
 import ThemeToggle from "./components/ToggleTheme";
 import { useToken } from "./hooks/clientState/useToken";
-import Home from "./pages/user/Home";
-import SingleBlog from "./pages/user/SingleBlog";
-import Blogs from "./pages/user/Blogs";
-import FAQs from "./pages/user/FAQs";
-import PrivacyPolicy from "./pages/user/PrivacyPolicy";
-import TermsOfService from "./pages/user/TermsOfService";
+import Home from "./pages/Home";
+
 import NotFoundPage from "./pages/NotFoundPage";
-import ManageAccount from "./pages/user/ManageAccount";
+
 import { TooltipProvider } from "@/components/ui/tooltip";
-import SideMenu from "./components/SideMenu";
-import { useToggleState } from "./hooks/clientState/useToggles";
-import AuthCallback from "./pages/user/AuthCallback";
-import Services from "./pages/user/Services";
-import PrimalSurvey from "./pages/user/PrimalSurvey";
-import WebsiteBenefits from "./pages/user/WebsiteBenefits";
-import Contact from "./pages/user/Contact";
+
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminHome from "./pages/admin/AdminHome";
 import AdminBlogs from "./pages/admin/AdminBlogs";
@@ -51,7 +41,7 @@ function App() {
 
   return (
     <HelmetProvider>
-      <Router basename="/web">
+      <Router>
         <QueryClientProvider client={queryClient}>
           <AppReadySignal />
           <AppWithQuery />
@@ -62,9 +52,6 @@ function App() {
 }
 
 function AppWithQuery() {
-  const sidebarOpen = useToggleState((state) => state.sidebarOpen);
-  const toggleSidebarOpen = useToggleState((state) => state.toggleSidebarOpen);
-
   return (
     <TooltipProvider>
       <ScrollToTop />
@@ -73,18 +60,7 @@ function AppWithQuery() {
       </a>
       <div id="main-content">
         <Routes>
-          <Route path="/website-survey" element={<PrimalSurvey />} />
-          <Route path="/website-benefits" element={<WebsiteBenefits />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/" element={<Home />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/blog" element={<Blogs />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/faqs" element={<FAQs />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/blog/:slug" element={<SingleBlog />} />
-          <Route path="/manage-account" element={<ManageAccount />} />
 
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminDashboard />}>
@@ -100,12 +76,6 @@ function AppWithQuery() {
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-        {sidebarOpen && (
-          <SideMenu
-            isOpen={sidebarOpen}
-            onClose={() => toggleSidebarOpen(false)}
-          />
-        )}
       </div>
       <Toaster
         position="top-right"

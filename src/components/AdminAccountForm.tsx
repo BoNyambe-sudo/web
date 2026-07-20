@@ -360,7 +360,7 @@ const AdminAccountForm = ({ user }: { user: UserDataResponse }) => {
               <div className="flex items-center gap-3">
                 <div
                   className={`w-3 h-3 rounded-full ${
-                    user?.status === "ACTIVE" ? "bg-green-500" : "bg-red-500"
+                    user?.status === "ACTIVE" ? "bg-green-500" : "bg-destructive"
                   }`}
                 />
                 <div>
@@ -380,7 +380,7 @@ const AdminAccountForm = ({ user }: { user: UserDataResponse }) => {
           {/* Danger Zone */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-red-600">
+              <CardTitle className="flex items-center gap-2 text-destructive">
                 <AlertTriangle className="h-5 w-5" />
                 Danger Zone
               </CardTitle>
@@ -410,7 +410,7 @@ const AdminAccountForm = ({ user }: { user: UserDataResponse }) => {
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
-                      <DialogTitle className="flex items-center gap-2 text-red-800">
+                      <DialogTitle className="flex items-center gap-2 text-destructive">
                         <AlertTriangle className="h-5 w-5" />
                         Are you absolutely sure?
                       </DialogTitle>
