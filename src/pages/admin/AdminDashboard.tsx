@@ -34,7 +34,7 @@ const AdminDashboard = () => {
           </div>
           {isStaffUser(user) && (
             <Button asChild variant="outline" className="ml-auto mr-2 hidden md:inline-flex">
-              <Link to="/">View Site</Link>
+              <Link to="https://bonyambe-sudo.github.io/web/" target="_blank">View Site</Link>
             </Button>
           )}
         </header>

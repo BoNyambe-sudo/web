@@ -17,6 +17,7 @@ export function NavMain({
     url: string;
     icon?: LucideIcon;
     isActive?: boolean;
+    target?: string;
     items?: {
       title: string;
       url: string;
@@ -38,6 +39,7 @@ export function NavMain({
               <Link
                 to={item.url}
                 className={`${pathname === item.url && "text-primary"}`}
+                {...(item.target && { target: item.target })}
               >
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>

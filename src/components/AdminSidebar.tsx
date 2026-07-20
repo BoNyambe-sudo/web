@@ -5,12 +5,33 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { BookOpen, Calendar, Globe, LayoutDashboard, Users } from "lucide-react";
+import { BookOpen, Calendar, Globe, LayoutDashboard, Users, type LucideProps } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import Logo from "./Logo";
 
-const data = {
+const data: {
+  navMain: (
+    | {
+        title: string;
+        url: string;
+        icon: React.ForwardRefExoticComponent<
+          Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+        >;
+        isActive: boolean;
+        target?: string
+      }
+    | {
+        title: string;
+        url: string;
+        icon: React.ForwardRefExoticComponent<
+          Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+        >;
+        isActive?: undefined;
+        target?: string
+      }
+  )[];
+} = {
   navMain: [
     {
       title: "Dashboard",
@@ -36,9 +57,10 @@ const data = {
     },
     {
       title: "View Site",
-      url: "/",
+      url: "https://bonyambe-sudo.github.io/web/",
       icon: Globe,
-    },
+      target: "_blank"
+    }
   ],
 };
 
