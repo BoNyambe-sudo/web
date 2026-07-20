@@ -7,9 +7,7 @@ on:
   workflow_dispatch:
   repository_dispatch:
     types:
-      - blog-updated
-      - blog-created
-      - blog-published
+      - rebuild_site
 
 jobs:
   build-and-deploy:
