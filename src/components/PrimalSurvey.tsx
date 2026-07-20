@@ -103,6 +103,7 @@ const PrimalSurvey = () => {
   const isFirst = currentStep === 0;
   const isLast = currentStep === TOTAL_STEPS - 1;
   const progress = ((currentStep + 1) / TOTAL_STEPS) * 100;
+  
 
   const getOutcomeDetails = () => {
     const hasWebsite = responses.has_website === "Yes";
