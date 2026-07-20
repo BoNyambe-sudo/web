@@ -80,7 +80,7 @@ const PrimalSurvey = () => {
     if (currentStep === 4 && responses.has_website === "Yes" && !tempWebsiteUrl) { setShowValidationError(true); return; }
     if (currentStep === 5 && !tempPhone) { setShowValidationError(true); return; }
     if (currentStep === 6 && !responses.budget) { setShowValidationError(true); return; }
-    if (currentStep === TOTAL_STEPS - 1) { window.location.href = "/portfolio-dev/website-benefits/"; return; }
+    if (currentStep === TOTAL_STEPS - 1) { window.location.href = "/web/website-benefits/"; return; }
     setDirection("forward");
     nextStep();
   };

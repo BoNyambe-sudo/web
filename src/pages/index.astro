@@ -6,32 +6,86 @@ import ScrollToTop from "@/components/ScrollToTop.astro";
 import { SITE_URL, SITE_DESCRIPTION } from "@/lib/seoConfig";
 
 const FAQS = [
-  { question: "How long does it take to launch a website?", answer: "Typical projects launch in 4-8 weeks depending on scope. I focus on speed without sacrificing quality, SEO, or user experience." },
-  { question: "Do you handle SEO and performance optimization?", answer: "Yes. Every project includes SEO-ready structure, metadata setup, fast Core Web Vitals, and mobile-first page performance." },
-  { question: "Can you improve my existing site instead of building from scratch?", answer: "Absolutely. I audit your current stack, fix performance bottlenecks, and make your site faster, more secure, and easier to maintain." },
-  { question: "What industries do you work with?", answer: "I work with startups, agencies, small businesses, and founders who want modern, scalable web platforms across commerce, SaaS, and enterprise projects." },
-  { question: "Why NestJS and Angular?", answer: "NestJS delivers enterprise-grade backend architecture while Angular provides a resilient, testable frontend. Together they create apps built to scale and rank." },
+  {
+    question: "How long does it take to launch a website?",
+    answer:
+      "Typical projects launch in 4-8 weeks depending on scope. I focus on speed without sacrificing quality, SEO, or user experience.",
+  },
+  {
+    question: "Do you handle SEO and performance optimization?",
+    answer:
+      "Yes. Every project includes SEO-ready structure, metadata setup, fast Core Web Vitals, and mobile-first page performance.",
+  },
+  {
+    question:
+      "Can you improve my existing site instead of building from scratch?",
+    answer:
+      "Absolutely. I audit your current stack, fix performance bottlenecks, and make your site faster, more secure, and easier to maintain.",
+  },
+  {
+    question: "What industries do you work with?",
+    answer:
+      "I work with startups, agencies, small businesses, and founders who want modern, scalable web platforms across commerce, SaaS, and enterprise projects.",
+  },
+  {
+    question: "Why NestJS and Angular?",
+    answer:
+      "NestJS delivers enterprise-grade backend architecture while Angular provides a resilient, testable frontend. Together they create apps built to scale and rank.",
+  },
 ];
 
 const SERVICES = [
-  { title: "Custom Web Applications", description: "NestJS backend and Angular or React frontend for dashboards, SaaS, marketplaces, and business-critical apps.", icon: "rocket" },
-  { title: "Performance & SEO", description: "Lighthouse 90+ performance, metadata SEO, fast Core Web Vitals, and a site built to rank for your most important search terms.", icon: "trending-up" },
-  { title: "Launch-Ready Platforms", description: "From MVP to launch, I build production-ready applications with deployable architecture, auth, and growth-ready infrastructure.", icon: "sparkles" },
+  {
+    title: "Custom Web Applications",
+    description:
+      "NestJS backend and Angular or React frontend for dashboards, SaaS, marketplaces, and business-critical apps.",
+    icon: "rocket",
+  },
+  {
+    title: "Performance & SEO",
+    description:
+      "Lighthouse 90+ performance, metadata SEO, fast Core Web Vitals, and a site built to rank for your most important search terms.",
+    icon: "trending-up",
+  },
+  {
+    title: "Launch-Ready Platforms",
+    description:
+      "From MVP to launch, I build production-ready applications with deployable architecture, auth, and growth-ready infrastructure.",
+    icon: "sparkles",
+  },
 ];
 
 const serviceIcon = (name: string) => {
   const icons: Record<string, string> = {
-    rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
-    "trending-up": '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
-    sparkles: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+    rocket:
+      '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+    "trending-up":
+      '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+    sparkles:
+      '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
   };
   return icons[name] ?? "";
 };
 
 const FEATURED_PROJECTS = [
-  { title: "SaaS Growth Engine", description: "A scalable admin platform built with NestJS, Angular, and Stripe-ready payments for subscription growth.", badge: "Lighthouse 95+" },
-  { title: "SEO Blog Platform", description: "A content-first website built for ranking, fast indexing, and high visibility across niche search queries.", badge: "SEO-ready content" },
-  { title: "Real-Time Analytics Dashboard", description: "A responsive dashboard with real-time data, secure auth, and reliable performance under heavy user load.", badge: "Enterprise architecture" },
+  {
+    title: "SaaS Growth Engine",
+    description:
+      "A scalable admin platform built with NestJS, Angular, and Stripe-ready payments for subscription growth.",
+    badge: "Lighthouse 95+",
+  },
+  {
+    title: "SEO Blog Platform",
+    description:
+      "A content-first website built for ranking, fast indexing, and high visibility across niche search queries.",
+    badge: "SEO-ready content",
+  },
+  {
+    title: "Real-Time Analytics Dashboard",
+    description:
+      "A responsive dashboard with real-time data, secure auth, and reliable performance under heavy user load.",
+    badge: "Enterprise architecture",
+  },
 ];
 ---
 
@@ -45,64 +99,150 @@ const FEATURED_PROJECTS = [
   <div class="bg-background text-foreground">
     <Header />
 
-    <section class="relative overflow-hidden bg-cover bg-center text-foreground" style="background-image: url(/portfolio-dev/assets/hero.webp)">
+    <section
+      class="relative overflow-hidden bg-cover bg-center text-foreground"
+      style="background-image: url(/web/assets/hero.webp)"
+    >
       <div class="absolute inset-0 bg-background/70"></div>
       <div class="relative mx-auto max-w-6xl px-4 py-28 sm:px-6 lg:px-8">
         <div class="max-w-3xl space-y-8 text-center sm:text-start">
-          <span class="inline-flex rounded-full bg-primary/30 px-4 py-2 text-xs md:text-sm font-semibold uppercase tracking-[0.3em] text-primary">High-growth web ecosystems</span>
-          <h1 class="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">Architecting premium, <span class="text-primary">high-performance</span> web ecosystems that rank and convert</h1>
-          <p class="text-base leading-8 text-muted-foreground sm:text-xl sm:leading-9">I build scalable NestJS + Angular or Astro applications with fast performance, strong SEO, and user-first conversion flows.</p>
+          <span
+            class="inline-flex rounded-full bg-primary/30 px-4 py-2 text-xs md:text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+            >High-growth web ecosystems</span
+          >
+          <h1
+            class="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
+          >
+            Architecting premium, <span class="text-primary"
+              >high-performance</span
+            > web ecosystems that rank and convert
+          </h1>
+          <p
+            class="text-base leading-8 text-muted-foreground sm:text-xl sm:leading-9"
+          >
+            I build scalable NestJS + Angular or Astro applications with fast
+            performance, strong SEO, and user-first conversion flows.
+          </p>
 
           <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <a href="/portfolio-dev/website-survey/" class="inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80">Book a strategy call</a>
-            <a href="/portfolio-dev/services/" class="inline-flex h-14 items-center justify-center rounded-lg border border-border bg-background px-10 text-lg font-bold shadow-xl transition hover:bg-muted">See my work</a>
+            <a
+              href="/web/website-survey/"
+              class="inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80"
+              >Book a strategy call</a
+            >
+            <a
+              href="/web/services/"
+              class="inline-flex h-14 items-center justify-center rounded-lg border border-border bg-background px-10 text-lg font-bold shadow-xl transition hover:bg-muted"
+              >See my work</a
+            >
           </div>
 
-          <div class="rounded-3xl border border-border/20 bg-card/20 p-6 text-sm text-foreground shadow-xl shadow-border/10 backdrop-blur-md">
+          <div
+            class="rounded-3xl border border-border/20 bg-card/20 p-6 text-sm text-foreground shadow-xl shadow-border/10 backdrop-blur-md"
+          >
             <p class="font-semibold">Built with:</p>
-            <div class="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.25em] text-muted-foreground">
+            <div
+              class="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.25em] text-muted-foreground"
+            >
               <span class="rounded-full bg-card/30 px-3 py-2">NestJS</span>
               <span class="rounded-full bg-card/30 px-3 py-2">Angular</span>
               <span class="rounded-full bg-card/30 px-3 py-2">Astro</span>
               <span class="rounded-full bg-card/30 px-3 py-2">React</span>
-              <span class="rounded-full bg-card/30 px-3 py-2">Lighthouse 95+</span>
-              <span class="rounded-full bg-card/30 px-3 py-2">Mobile first</span>
+              <span class="rounded-full bg-card/30 px-3 py-2"
+                >Lighthouse 95+</span
+              >
+              <span class="rounded-full bg-card/30 px-3 py-2">Mobile first</span
+              >
             </div>
           </div>
         </div>
       </div>
       <div class="relative mx-auto max-w-6xl px-4 pb-10 sm:px-6 lg:px-8">
         <div class="flex items-center justify-center">
-          <a href="#problem" class="inline-flex items-center gap-2 rounded-full border border-border/30 bg-card/20 px-4 py-2 text-xs md:text-sm uppercase tracking-[0.3em] text-foreground transition hover:bg-card/30">Scroll to learn more <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg></a>
+          <a
+            href="#problem"
+            class="inline-flex items-center gap-2 rounded-full border border-border/30 bg-card/20 px-4 py-2 text-xs md:text-sm uppercase tracking-[0.3em] text-foreground transition hover:bg-card/30"
+            >Scroll to learn more <svg
+              class="h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><line x1="5" y1="12" x2="19" y2="12"></line><polyline
+                points="12 5 19 12 12 19"></polyline></svg
+            ></a
+          >
         </div>
       </div>
     </section>
 
     <main class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <section id="problem" class="grid gap-12 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+      <section
+        id="problem"
+        class="grid gap-12 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"
+      >
         <div class="space-y-6">
-          <span class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Problem + Solution</span>
-          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Tired of slow, bloated websites that don't rank?</h2>
-          <p class="max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">Most developers ship pretty UIs that still load in 8 seconds and tank on Google. I deliver premium ecosystems where sophisticated backend logic, clean architecture, and SEO-first design work together to convert visitors into customers.</p>
+          <span
+            class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+            >Problem + Solution</span
+          >
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Tired of slow, bloated websites that don't rank?
+          </h2>
+          <p
+            class="max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg"
+          >
+            Most developers ship pretty UIs that still load in 8 seconds and
+            tank on Google. I deliver premium ecosystems where sophisticated
+            backend logic, clean architecture, and SEO-first design work
+            together to convert visitors into customers.
+          </p>
         </div>
         <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">
           <div class="space-y-5">
             <div>
               <h3 class="text-xl font-semibold">What you get</h3>
-              <p class="mt-3 text-sm leading-7 text-muted-foreground">A website and app built for speed, search visibility, and scalable growth—without the agency waste.</p>
+              <p class="mt-3 text-sm leading-7 text-muted-foreground">
+                A website and app built for speed, search visibility, and
+                scalable growth—without the agency waste.
+              </p>
             </div>
             <div class="grid gap-4">
               <div class="rounded-2xl bg-card/80 p-5">
-                <p class="text-sm uppercase tracking-[0.25em] text-primary font-medium">Speed</p>
-                <p class="mt-3 text-base text-foreground">Fast Core Web Vitals, quicker conversions, and fewer lost visitors.</p>
+                <p
+                  class="text-sm uppercase tracking-[0.25em] text-primary font-medium"
+                >
+                  Speed
+                </p>
+                <p class="mt-3 text-base text-foreground">
+                  Fast Core Web Vitals, quicker conversions, and fewer lost
+                  visitors.
+                </p>
               </div>
               <div class="rounded-2xl bg-card/80 p-5">
-                <p class="text-sm uppercase tracking-[0.25em] text-primary font-medium">Visibility</p>
-                <p class="mt-3 text-base text-foreground">SEO-ready structure with metadata and schema for higher search rankings.</p>
+                <p
+                  class="text-sm uppercase tracking-[0.25em] text-primary font-medium"
+                >
+                  Visibility
+                </p>
+                <p class="mt-3 text-base text-foreground">
+                  SEO-ready structure with metadata and schema for higher search
+                  rankings.
+                </p>
               </div>
               <div class="rounded-2xl bg-card/80 p-5">
-                <p class="text-sm uppercase tracking-[0.25em] text-primary font-medium">Conversion</p>
-                <p class="mt-3 text-base text-foreground">Intent-driven pages that guide visitors toward your best offer.</p>
+                <p
+                  class="text-sm uppercase tracking-[0.25em] text-primary font-medium"
+                >
+                  Conversion
+                </p>
+                <p class="mt-3 text-base text-foreground">
+                  Intent-driven pages that guide visitors toward your best
+                  offer.
+                </p>
               </div>
             </div>
           </div>
@@ -111,95 +251,231 @@ const FEATURED_PROJECTS = [
 
       <section id="services" class="space-y-10 pb-20">
         <div class="space-y-4 text-center">
-          <span class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">What I build for you</span>
-          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Services designed to make your website work harder.</h2>
-          <p class="mx-auto max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">Clear service offerings, no hidden buttons. I help brands move from invisible to high-converting digital platforms.</p>
+          <span
+            class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+            >What I build for you</span
+          >
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Services designed to make your website work harder.
+          </h2>
+          <p
+            class="mx-auto max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg"
+          >
+            Clear service offerings, no hidden buttons. I help brands move from
+            invisible to high-converting digital platforms.
+          </p>
         </div>
         <div class="grid gap-6 md:grid-cols-3">
-          {SERVICES.map((service) => (
-            <div class="border-border/50 rounded-xl border shadow-sm">
-              <div class="space-y-4 p-6">
-                <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary" set:html={`<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${serviceIcon(service.icon)}</svg>`}></div>
-                <h3 class="text-lg font-semibold">{service.title}</h3>
-                <p class="text-sm leading-7 text-muted-foreground">{service.description}</p>
+          {
+            SERVICES.map((service) => (
+              <div class="border-border/50 rounded-xl border shadow-sm">
+                <div class="space-y-4 p-6">
+                  <div
+                    class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary"
+                    set:html={`<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${serviceIcon(service.icon)}</svg>`}
+                  />
+                  <h3 class="text-lg font-semibold">{service.title}</h3>
+                  <p class="text-sm leading-7 text-muted-foreground">
+                    {service.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          }
         </div>
       </section>
 
       <section id="featured" class="space-y-10 border-t border-border/70 py-20">
         <div class="space-y-4 text-center">
-          <span class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Proof of work</span>
-          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Featured builds that prove the approach.</h2>
+          <span
+            class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+            >Proof of work</span
+          >
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Featured builds that prove the approach.
+          </h2>
         </div>
         <div class="grid gap-6 lg:grid-cols-3">
-          {FEATURED_PROJECTS.map((project) => (
-            <div class="border-border/50 rounded-xl border shadow-sm">
-              <div class="space-y-4 p-6">
-                <h3 class="text-lg font-semibold">{project.title}</h3>
-                <p class="text-sm uppercase tracking-[0.25em] text-primary">{project.badge}</p>
-                <p class="text-sm leading-7 text-muted-foreground">{project.description}</p>
+          {
+            FEATURED_PROJECTS.map((project) => (
+              <div class="border-border/50 rounded-xl border shadow-sm">
+                <div class="space-y-4 p-6">
+                  <h3 class="text-lg font-semibold">{project.title}</h3>
+                  <p class="text-sm uppercase tracking-[0.25em] text-primary">
+                    {project.badge}
+                  </p>
+                  <p class="text-sm leading-7 text-muted-foreground">
+                    {project.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          }
         </div>
       </section>
 
       <section id="process" class="grid gap-12 py-20 lg:grid-cols-3">
         <div class="space-y-4">
-          <span class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">How I work</span>
-          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">A simple 3-step process for stress-free launches.</h2>
-          <p class="text-base leading-8 text-muted-foreground">Planning, building, and launching with clarity so your project moves fast and stays on budget.</p>
+          <span
+            class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+            >How I work</span
+          >
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            A simple 3-step process for stress-free launches.
+          </h2>
+          <p class="text-base leading-8 text-muted-foreground">
+            Planning, building, and launching with clarity so your project moves
+            fast and stays on budget.
+          </p>
         </div>
-        {[{ step: "Plan", copy: "We define goals, tech stack, and success metrics so every feature drives business value." }, { step: "Build", copy: "I ship clean, documented code with weekly updates so you always know progress is real." }, { step: "Launch", copy: "Deployment, SEO setup, and performance tests finish the project with a polished, measurable release." }].map((item) => (
-          <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">
-            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">{item.step}</p>
-            <p class="mt-4 text-base leading-7 text-muted-foreground">{item.copy}</p>
-          </div>
-        ))}
+        {
+          [
+            {
+              step: "Plan",
+              copy: "We define goals, tech stack, and success metrics so every feature drives business value.",
+            },
+            {
+              step: "Build",
+              copy: "I ship clean, documented code with weekly updates so you always know progress is real.",
+            },
+            {
+              step: "Launch",
+              copy: "Deployment, SEO setup, and performance tests finish the project with a polished, measurable release.",
+            },
+          ].map((item) => (
+            <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">
+              <p class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">
+                {item.step}
+              </p>
+              <p class="mt-4 text-base leading-7 text-muted-foreground">
+                {item.copy}
+              </p>
+            </div>
+          ))
+        }
       </section>
 
-      <section id="why-stack" class="space-y-10 border-t border-border/70 py-20">
+      <section
+        id="why-stack"
+        class="space-y-10 border-t border-border/70 py-20"
+      >
         <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <span class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Why this stack</span>
-            <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">NestJS + Angular for speed, scale, and predictable growth.</h2>
-            <p class="mt-6 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg">NestJS delivers enterprise backend architecture while Angular provides resilient, maintainable frontends. Together they ensure your app can handle real traffic, evolve safely, and rank strongly.</p>
-            <a href="/portfolio-dev/services/" class="mt-8 inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80">Explore services</a>
+            <span
+              class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+              >Why this stack</span
+            >
+            <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+              NestJS + Angular for speed, scale, and predictable growth.
+            </h2>
+            <p
+              class="mt-6 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg"
+            >
+              NestJS delivers enterprise backend architecture while Angular
+              provides resilient, maintainable frontends. Together they ensure
+              your app can handle real traffic, evolve safely, and rank
+              strongly.
+            </p>
+            <a
+              href="/web/services/"
+              class="mt-8 inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80"
+              >Explore services</a
+            >
           </div>
           <div class="grid gap-4">
-            {[{ title: "Reliable architecture", description: "Code that stays maintainable as your business grows." }, { title: "SEO-ready foundations", description: "Structured pages, metadata, and performance work together for visibility." }, { title: "Built for conversion", description: "Interfaces designed to guide users and capture leads with clear CTAs." }].map((item) => (
-              <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">
-                <div class="flex items-center gap-3 text-primary"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg><p class="font-semibold">{item.title}</p></div>
-                <p class="mt-4 text-sm leading-7 text-muted-foreground">{item.description}</p>
-              </div>
-            ))}
+            {
+              [
+                {
+                  title: "Reliable architecture",
+                  description:
+                    "Code that stays maintainable as your business grows.",
+                },
+                {
+                  title: "SEO-ready foundations",
+                  description:
+                    "Structured pages, metadata, and performance work together for visibility.",
+                },
+                {
+                  title: "Built for conversion",
+                  description:
+                    "Interfaces designed to guide users and capture leads with clear CTAs.",
+                },
+              ].map((item) => (
+                <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">
+                  <div class="flex items-center gap-3 text-primary">
+                    <>
+                      <svg
+                        class="h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+                      </svg>
+                      <p class="font-semibold">{item.title}</p>
+                    </>
+                  </div>
+                  <p class="mt-4 text-sm leading-7 text-muted-foreground">
+                    {item.description}
+                  </p>
+                </div>
+              ))
+            }
           </div>
         </div>
       </section>
 
       <section id="faq" class="space-y-10 border-t border-border/70 py-20">
         <div class="space-y-4 text-center">
-          <span class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">FAQ</span>
-          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Questions I hear most often.</h2>
+          <span
+            class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+            >FAQ</span
+          >
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Questions I hear most often.
+          </h2>
         </div>
         <div class="grid gap-6 lg:grid-cols-2">
-          {FAQS.map((item) => (
-            <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">
-              <h3 class="text-lg font-semibold">{item.question}</h3>
-              <p class="mt-4 text-sm leading-7 text-muted-foreground">{item.answer}</p>
-            </div>
-          ))}
+          {
+            FAQS.map((item) => (
+              <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">
+                <h3 class="text-lg font-semibold">{item.question}</h3>
+                <p class="mt-4 text-sm leading-7 text-muted-foreground">
+                  {item.answer}
+                </p>
+              </div>
+            ))
+          }
         </div>
       </section>
 
       <section class="space-y-8 border-t border-border/70 py-20 text-center">
-        <h2 class="text-4xl font-black tracking-tight sm:text-5xl">Let’s build a website that actually performs.</h2>
-        <p class="mx-auto max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">No agencies. No bloated timelines. Just clean, premium code that helps your business win online.</p>
-        <div class="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center">
-          <a href="/portfolio-dev/website-survey/" class="inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80">Book a call</a>
-          <a href="/portfolio-dev/contact/" class="inline-flex h-14 items-center justify-center rounded-lg border border-border bg-background px-10 text-lg font-bold shadow-xl transition hover:bg-muted">Send a message</a>
+        <h2 class="text-4xl font-black tracking-tight sm:text-5xl">
+          Let’s build a website that actually performs.
+        </h2>
+        <p
+          class="mx-auto max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg"
+        >
+          No agencies. No bloated timelines. Just clean, premium code that helps
+          your business win online.
+        </p>
+        <div
+          class="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center"
+        >
+          <a
+            href="/web/website-survey/"
+            class="inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80"
+            >Book a call</a
+          >
+          <a
+            href="/web/contact/"
+            class="inline-flex h-14 items-center justify-center rounded-lg border border-border bg-background px-10 text-lg font-bold shadow-xl transition hover:bg-muted"
+            >Send a message</a
+          >
         </div>
       </section>
     </main>

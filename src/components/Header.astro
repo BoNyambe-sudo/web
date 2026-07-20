@@ -3,20 +3,20 @@ import Logo from "./Logo.astro";
 import ThemeToggle from "./ThemeToggle.tsx";
 
 const navLinks = [
-  { href: "/portfolio-dev/services/", label: "Services" },
-  { href: "/portfolio-dev/blog/", label: "Blog" },
-  { href: "/portfolio-dev/faqs/", label: "FAQS" },
-  { href: "/portfolio-dev/contact/", label: "Contact" },
+  { href: "/web/services/", label: "Services" },
+  { href: "/web/blog/", label: "Blog" },
+  { href: "/web/faqs/", label: "FAQS" },
+  { href: "/web/contact/", label: "Contact" },
 ];
 
 const pathname = Astro.url.pathname;
 const isActive = (href: string) =>
-  href === "/portfolio-dev/" ? pathname === "/portfolio-dev/" || pathname === "/portfolio-dev" : pathname.startsWith(href);
+  href === "/web/" ? pathname === "/web/" || pathname === "/web" : pathname.startsWith(href);
 ---
 
 <header class="sticky z-50 top-0 w-full py-3 backdrop-blur-xl">
   <div class="container flex items-center justify-between">
-    <a href="/portfolio-dev/" class="cursor-pointer" aria-label="Home">
+    <a href="/web/" class="cursor-pointer" aria-label="Home">
       <Logo size={32} class="text-foreground font-semibold" />
     </a>
 
@@ -55,7 +55,7 @@ const isActive = (href: string) =>
         <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
         <svg id="menu-icon-close" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18" /><line x1="6" x2="18" y1="6" y2="18" /></svg>
       </button>
-      <a href="/portfolio-dev/website-survey/" class="hidden md:inline-flex h-9 items-center justify-center rounded-md bg-primary px-6 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80">Book a call</a>
+      <a href="/web/website-survey/" class="hidden md:inline-flex h-9 items-center justify-center rounded-md bg-primary px-6 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80">Book a call</a>
     </div>
   </div>
 

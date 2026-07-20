@@ -9,7 +9,7 @@ const BlogCard = ({ blog }: { blog: BlogType }) => {
   return (
     <div className="relative mx-auto w-full max-w-auto h-auto pt-0 gap-4 overflow-hidden rounded-xl border bg-card">
       <a
-        href={`/portfolio-dev/blog/${blog.slug}/`}
+        href={`/web/blog/${blog.slug}/`}
         className="hoverEffect group block"
       >
         <img
@@ -39,7 +39,7 @@ const BlogCard = ({ blog }: { blog: BlogType }) => {
         </div>
         <a
           className="text-lg font-semibold hover:text-primary"
-          href={`/portfolio-dev/blog/${blog.slug}/`}
+          href={`/web/blog/${blog.slug}/`}
         >
           {blog.title}
         </a>

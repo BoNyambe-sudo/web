@@ -34,10 +34,30 @@ type TechStackItem = {
 };
 
 const techStackItems: TechStackItem[] = [
-  { label: "MongoDB", icon: <MongoDB />, color: "bg-green-50 text-green-700 border-green-200", colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800" },
-  { label: "Angular", icon: <Angular />, color: "bg-red-50 text-red-700 border-red-200", colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800" },
-  { label: "Nest JS", icon: <NestJS />, color: "bg-red-50 text-red-700 border-red-200", colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800" },
-  { label: "Node.js", icon: <NodeJS />, color: "bg-green-50 text-green-700 border-green-200", colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800" },
+  {
+    label: "MongoDB",
+    icon: <MongoDB />,
+    color: "bg-green-50 text-green-700 border-green-200",
+    colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800",
+  },
+  {
+    label: "Angular",
+    icon: <Angular />,
+    color: "bg-red-50 text-red-700 border-red-200",
+    colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800",
+  },
+  {
+    label: "Nest JS",
+    icon: <NestJS />,
+    color: "bg-red-50 text-red-700 border-red-200",
+    colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800",
+  },
+  {
+    label: "Node.js",
+    icon: <NodeJS />,
+    color: "bg-green-50 text-green-700 border-green-200",
+    colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800",
+  },
 ];
 
 interface CarouselItem {
@@ -48,7 +68,13 @@ interface CarouselItem {
 }
 
 const projectItems = [
-  { id: "project-1", title: "E-Commerce Platform", description: "A full-featured online store with payment integration, inventory management, and real-time order tracking.", link: "https://oop-online-store-frontend.vercel.app" },
+  {
+    id: "project-1",
+    title: "E-Commerce Platform",
+    description:
+      "A full-featured online store with payment integration, inventory management, and real-time order tracking.",
+    link: "https://oop-online-store-frontend.vercel.app",
+  },
 ];
 
 const SECTIONS = [
@@ -94,12 +120,48 @@ const Services = ({ images }: { images: Record<string, string> }) => {
   const prevIndexRef = useRef(activeSectionIndex);
 
   const carouselItems: CarouselItem[] = [
-    { id: 0, title: "Custom Admin Panels", description: "Powerful dashboards with real-time data visualization, role-based access control, and intuitive management interfaces.", image: images.adminPanel },
-    { id: 1, title: "SEO-Optimized Sites", description: "Built with semantic HTML, meta tags, structured data, and performance optimization for maximum search engine visibility.", image: images.seo },
-    { id: 2, title: "Responsive Websites", description: "Mobile-first design approach ensuring perfect display on phones, tablets, and desktops with fluid layouts.", image: images.responsive },
-    { id: 3, title: "Dark/Light Mode", description: "Seamless theme switching with CSS custom properties, respecting user preferences and system settings.", image: images.theme },
-    { id: 4, title: "Accessible Sites", description: "WCAG compliant interfaces with proper ARIA labels, keyboard navigation, screen reader support, and focus management.", image: images.accessibility },
-    { id: 5, title: "Performance First", description: "Optimized loading with code splitting, lazy loading, efficient caching, and Core Web Vitals optimization.", image: images.performance },
+    {
+      id: 0,
+      title: "Custom Admin Panels",
+      description:
+        "Powerful dashboards with real-time data visualization, role-based access control, and intuitive management interfaces.",
+      image: images.adminPanel,
+    },
+    {
+      id: 1,
+      title: "SEO-Optimized Sites",
+      description:
+        "Built with semantic HTML, meta tags, structured data, and performance optimization for maximum search engine visibility.",
+      image: images.seo,
+    },
+    {
+      id: 2,
+      title: "Responsive Websites",
+      description:
+        "Mobile-first design approach ensuring perfect display on phones, tablets, and desktops with fluid layouts.",
+      image: images.responsive,
+    },
+    {
+      id: 3,
+      title: "Dark/Light Mode",
+      description:
+        "Seamless theme switching with CSS custom properties, respecting user preferences and system settings.",
+      image: images.theme,
+    },
+    {
+      id: 4,
+      title: "Accessible Sites",
+      description:
+        "WCAG compliant interfaces with proper ARIA labels, keyboard navigation, screen reader support, and focus management.",
+      image: images.accessibility,
+    },
+    {
+      id: 5,
+      title: "Performance First",
+      description:
+        "Optimized loading with code splitting, lazy loading, efficient caching, and Core Web Vitals optimization.",
+      image: images.performance,
+    },
   ];
 
   const clearTimers = () => {
@@ -353,7 +415,7 @@ const Services = ({ images }: { images: Record<string, string> }) => {
       <header className="absolute top-0 left-0 right-0 z-40 px-4 sm:px-8 py-3 sm:py-4">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           <a
-            href="/portfolio-dev/"
+            href="/web/"
             className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium hover:bg-muted"
           >
             <svg
@@ -541,9 +603,7 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                 A selection of my deployed work
               </p>
             </div>
-            <Accordion
-              className="w-full space-y-3 project-anim"
-            >
+            <Accordion className="w-full space-y-3 project-anim">
               {projectItems.map((project) => (
                 <AccordionItem
                   key={project.id}
@@ -559,7 +619,7 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                     <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
                       {project.description}
                     </p>
-                    <Button variant="outline" size="sm" >
+                    <Button variant="outline" size="sm">
                       <a
                         href={project.link}
                         target="_blank"
@@ -628,7 +688,6 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                   <Button
                     variant="default"
                     className="w-full bg-green-600 hover:bg-green-700 text-white"
-                    
                   >
                     <a
                       href={WHATSAPP_LINK}
@@ -657,7 +716,7 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                   <p className="text-sm text-muted-foreground mb-3">
                     Send me a message
                   </p>
-                  <Button variant="outline" className="w-full" >
+                  <Button variant="outline" className="w-full">
                     <a
                       href={`mailto:${EMAIL}`}
                       className="inline-flex items-center gap-2"

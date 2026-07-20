@@ -1,7 +1,7 @@
 import { facebookLink, instagramLink, linkedinLink, xLink } from "./constants";
 
 export const SITE_NAME = "Bo Nyambe";
-export const SITE_URL = "https://bonyambe-sudo.github.io/portfolio-dev/";
+export const SITE_URL = "https://bonyambe-sudo.github.io/web/";
 export const SITE_DESCRIPTION =
   "Bo Nyambe builds fast, SEO-optimized NestJS and Angular websites and web apps that rank well and convert visitors into customers.";
 
