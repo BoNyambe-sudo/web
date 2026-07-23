@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://bonyambe-sudo.github.io",
+  site: "https://bonyambe-sudo.github.io/web/",
   base: "/web/",
   trailingSlash: "always",
 
