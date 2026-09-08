@@ -9,6 +9,14 @@ export const buildApiUrl = (path: string) => {
   return `${API_BASE_URL}${normalizedPath}`;
 };
 
+const API_TIMEOUT_MS = Number(import.meta.env.PUBLIC_API_TIMEOUT_MS || 300000);
+
+const fetchApi = (url: string) =>
+  fetch(url, {
+    headers: { Accept: "application/json" },
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
+  });
+
 export interface Author {
   firstName: string;
   lastName: string;
@@ -57,9 +65,7 @@ export const fetchBlogs = async (
       url.searchParams.set(key, String(value));
     }
   }
-  const res = await fetch(url.toString(), {
-    headers: { Accept: "application/json" },
-  });
+  const res = await fetchApi(url.toString());
   if (!res.ok) {
     throw new Error(`Failed to fetch blogs: ${res.status}`);
   }
@@ -67,9 +73,7 @@ export const fetchBlogs = async (
 };
 
 export const fetchBlog = async (slug: string): Promise<BlogType> => {
-  const res = await fetch(buildApiUrl(`/blogs/${slug}`), {
-    headers: { Accept: "application/json" },
-  });
+  const res = await fetchApi(buildApiUrl(`/blogs/${slug}`));
   if (!res.ok) {
     throw new Error(`Failed to fetch blog: ${res.status}`);
   }
@@ -77,9 +81,7 @@ export const fetchBlog = async (slug: string): Promise<BlogType> => {
 };
 
 export const fetchTopTags = async (): Promise<TopTagsResponse> => {
-  const res = await fetch(buildApiUrl("/blogs/top-tags"), {
-    headers: { Accept: "application/json" },
-  });
+  const res = await fetchApi(buildApiUrl("/blogs/top-tags"));
   if (!res.ok) {
     throw new Error(`Failed to fetch top tags: ${res.status}`);
   }

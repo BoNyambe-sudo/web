@@ -42,7 +42,7 @@ const canonical = `${SITE_URL}blog/${blog.slug}/`;
 const schema = getBlogPostSchema(blog);
 const breadcrumb = getBreadcrumbSchema([
   { name: "Home", url: SITE_URL },
-  { name: "Blog", url: `${SITE_URL}blog` },
+  { name: "Blog", url: `${SITE_URL}blog/` },
   { name: blog.title, url: canonical },
 ]);
 

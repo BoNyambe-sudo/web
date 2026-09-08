@@ -1,17 +1,13 @@
 import * as React from "react";
 import { Calendar, Eye } from "lucide-react";
 import { formatDate } from "@/lib/formattedDate";
-import { formatCompactNumber } from "@/lib/utils";
 import type { BlogType } from "@/lib/api";
 
 const BlogCard = ({ blog }: { blog: BlogType }) => {
   const formattedDate = formatDate(blog.createdAt);
   return (
-    <div className="relative mx-auto w-full max-w-auto h-auto pt-0 gap-4 overflow-hidden rounded-xl border bg-card">
-      <a
-        href={`/web/blog/${blog.slug}/`}
-        className="hoverEffect group block"
-      >
+    <div className="relative mx-auto w-full max-w-auto h-auto pt-0 gap-4 overflow-hidden shadow-lg rounded-xl border bg-card">
+      <a href={`/web/blog/${blog.slug}/`} className="hoverEffect group block">
         <img
           src={blog.thumbnail}
           className="relative z-20 aspect-video w-full object-cover transition-transform group-hover:scale-[1.02]"
@@ -29,12 +25,6 @@ const BlogCard = ({ blog }: { blog: BlogType }) => {
             <span className="font font-semibold text-muted-foreground text-sm">
               {formattedDate}
             </span>
-            {blog.views !== undefined && (
-              <span className="flex items-center gap-1 text-muted-foreground text-xs">
-                <Eye size={14} />
-                {formatCompactNumber(blog.views)}
-              </span>
-            )}
           </div>
         </div>
         <a
@@ -43,6 +33,9 @@ const BlogCard = ({ blog }: { blog: BlogType }) => {
         >
           {blog.title}
         </a>
+        {blog.description && (
+          <p className="text-muted-foreground text-sm">{blog.description}</p>
+        )}
       </div>
     </div>
   );
