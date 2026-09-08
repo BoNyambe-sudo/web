@@ -84,7 +84,7 @@ export const getBlogListSchema = (category?: string, blogCount: number = 0) => {
     description: category
       ? getDescriptionForCategory(category)
       : SITE_DESCRIPTION,
-    url: SITE_URL + "blog",
+    url: SITE_URL + "blog/",
     isPartOf: {
       "@type": "WebSite",
       name: SITE_NAME,
@@ -166,10 +166,10 @@ export const getBlogPostSchema = (blog: {
       },
     },
     inLanguage: "en-US",
-    url: `${SITE_URL}blog/${blog.slug}`,
+    url: `${SITE_URL}blog/${blog.slug}/`,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${SITE_URL}blog/${blog.slug}`,
+      "@id": `${SITE_URL}blog/${blog.slug}/`,
     },
     articleSection: blog.category,
     keywords: blog.tags?.join(", "),

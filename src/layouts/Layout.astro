@@ -53,7 +53,7 @@ const organizationSchema = getOrganizationSchema();
       href="/web/assets/hero.webp"
       fetchpriority="high"
     />
-    <link rel="sitemap" href="/web/sitemap.xml" />
+    <link rel="sitemap" href={`${import.meta.env.BASE_URL}sitemap-index.xml`} />
 
     <meta property="og:type" content={type} />
     <meta property="og:url" content={canonicalHref} />
