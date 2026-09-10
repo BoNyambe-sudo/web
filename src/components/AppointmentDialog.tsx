@@ -35,6 +35,7 @@ interface AppointmentFormData {
   phoneNumber: string;
   scheduledDate: Date | undefined;
   scheduledTime: string;
+  callMethod: "WhatsApp" | "Zoom" | "Google Meet";
   description: string;
 }
 
@@ -44,11 +45,31 @@ const emptyForm: AppointmentFormData = {
   phoneNumber: "",
   scheduledDate: undefined,
   scheduledTime: "",
+  callMethod: "WhatsApp",
   description: "",
 };
 
+const CALL_METHODS: AppointmentFormData["callMethod"][] = [
+  "WhatsApp",
+  "Zoom",
+  "Google Meet",
+];
+
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 function MonthCalendar({
   value,
@@ -67,20 +88,43 @@ function MonthCalendar({
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
   const sameDay = (a: Date | undefined, d: number) =>
-    a && a.getFullYear() === year && a.getMonth() === month && a.getDate() === d;
+    a &&
+    a.getFullYear() === year &&
+    a.getMonth() === month &&
+    a.getDate() === d;
 
   const today = new Date();
-  const isPast = (d: number) => new Date(year, month, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const isPast = (d: number) =>
+    new Date(year, month, d) <
+    new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
   return (
     <div className="w-64 p-2">
       <div className="flex items-center justify-between mb-2">
-        <button type="button" className="rounded-md p-1 hover:bg-muted" onClick={() => setView(new Date(year, month - 1, 1))} aria-label="Previous month"><ChevronLeft className="size-4" /></button>
-        <span className="text-sm font-medium">{MONTHS[month]} {year}</span>
-        <button type="button" className="rounded-md p-1 hover:bg-muted" onClick={() => setView(new Date(year, month + 1, 1))} aria-label="Next month"><ChevronRight className="size-4" /></button>
+        <button
+          type="button"
+          className="rounded-md p-1 hover:bg-muted"
+          onClick={() => setView(new Date(year, month - 1, 1))}
+          aria-label="Previous month"
+        >
+          <ChevronLeft className="size-4" />
+        </button>
+        <span className="text-sm font-medium">
+          {MONTHS[month]} {year}
+        </span>
+        <button
+          type="button"
+          className="rounded-md p-1 hover:bg-muted"
+          onClick={() => setView(new Date(year, month + 1, 1))}
+          aria-label="Next month"
+        >
+          <ChevronRight className="size-4" />
+        </button>
       </div>
       <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground mb-1">
-        {WEEKDAYS.map((w) => <div>{w}</div>)}
+        {WEEKDAYS.map((w) => (
+          <div>{w}</div>
+        ))}
       </div>
       <div className="grid grid-cols-7 gap-1">
         {cells.map((d, i) =>
@@ -114,24 +158,41 @@ function AppointmentDialog({
   submitLabel = "Book Call",
   descriptionPrefix = "Schedule a call",
 }: AppointmentDialogProps) {
-  const [formData, setFormData] = React.useState<AppointmentFormData>(emptyForm);
+  const [formData, setFormData] =
+    React.useState<AppointmentFormData>(emptyForm);
   const [pending, setPending] = React.useState(false);
-  const [status, setStatus] = React.useState<"idle" | "success" | "error">("idle");
+  const [status, setStatus] = React.useState<"idle" | "success" | "error">(
+    "idle",
+  );
 
   React.useEffect(() => {
     if (open) {
-      setFormData({ ...emptyForm, name: defaultName, email: defaultEmail, phoneNumber: defaultPhone, description: defaultDescription });
+      setFormData({
+        ...emptyForm,
+        name: defaultName,
+        email: defaultEmail,
+        phoneNumber: defaultPhone,
+        description: defaultDescription,
+      });
       setStatus("idle");
     }
   }, [open, defaultName, defaultEmail, defaultPhone, defaultDescription]);
 
-  const updateField = <K extends keyof AppointmentFormData>(field: K, value: AppointmentFormData[K]) => {
+  const updateField = <K extends keyof AppointmentFormData>(
+    field: K,
+    value: AppointmentFormData[K],
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phoneNumber || !formData.scheduledDate || !formData.scheduledTime) {
+    if (
+      !formData.name ||
+      !formData.phoneNumber ||
+      !formData.scheduledDate ||
+      !formData.scheduledTime
+    ) {
       setStatus("error");
       return;
     }
@@ -143,6 +204,7 @@ function AppointmentDialog({
         phoneNumber: formData.phoneNumber,
         scheduledDate: formData.scheduledDate.toISOString(),
         scheduledTime: formData.scheduledTime,
+        callMethod: formData.callMethod,
         email: formData.email || undefined,
         description: formData.description,
       });
@@ -166,44 +228,143 @@ function AppointmentDialog({
         </DialogDescription>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="appt-name">Name <span className="text-destructive">*</span></Label>
-            <Input id="appt-name" required placeholder="Enter your name" value={formData.name} onChange={(e) => updateField("name", e.target.value)} />
+            <Label htmlFor="appt-name">
+              Name <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="appt-name"
+              required
+              placeholder="Enter your name"
+              value={formData.name}
+              onChange={(e) => updateField("name", e.target.value)}
+            />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="appt-phone">Phone Number <span className="text-destructive">*</span></Label>
-            <Input id="appt-phone" type="tel" required placeholder="Enter phone number" value={formData.phoneNumber} onChange={(e) => updateField("phoneNumber", e.target.value)} />
+            <Label htmlFor="appt-phone">
+              Phone Number <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="appt-phone"
+              type="tel"
+              required
+              placeholder="Enter phone number"
+              value={formData.phoneNumber}
+              onChange={(e) => updateField("phoneNumber", e.target.value)}
+            />
           </div>
           <div className="space-y-2">
-            <Label>Date <span className="text-destructive">*</span></Label>
+            <Label>
+              Date <span className="text-destructive">*</span>
+            </Label>
             <Popover>
-              <PopoverTrigger render={
-                <Button variant="outline" data-empty={!formData.scheduledDate} className="w-full justify-between text-left font-normal data-[empty=true]:text-muted-foreground">
-                  {formData.scheduledDate ? formData.scheduledDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : <span>Pick a date</span>}
-                  <ChevronDownIcon />
-                </Button>
-              } />
+              <PopoverTrigger
+                render={
+                  <Button
+                    variant="outline"
+                    data-empty={!formData.scheduledDate}
+                    className="w-full justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
+                  >
+                    {formData.scheduledDate ? (
+                      formData.scheduledDate.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                    <ChevronDownIcon />
+                  </Button>
+                }
+              />
               <PopoverContent className="w-auto p-0" align="start">
-                <MonthCalendar value={formData.scheduledDate} onSelect={(d) => updateField("scheduledDate", d)} />
+                <MonthCalendar
+                  value={formData.scheduledDate}
+                  onSelect={(d) => updateField("scheduledDate", d)}
+                />
               </PopoverContent>
             </Popover>
           </div>
           <div className="space-y-2">
-            <Label>Time <span className="text-destructive">*</span></Label>
-            <Input required type="time" value={formData.scheduledTime} onChange={(e) => updateField("scheduledTime", e.target.value)} />
+            <Label>
+              Time <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              required
+              type="time"
+              value={formData.scheduledTime}
+              onChange={(e) => updateField("scheduledTime", e.target.value)}
+            />
           </div>
+          <fieldset className="space-y-2">
+            <legend className="text-sm font-medium">
+              Call method <span className="text-destructive">*</span>
+            </legend>
+            <div className="grid gap-2 sm:grid-cols-3">
+              {CALL_METHODS.map((method) => (
+                <Label
+                  key={method}
+                  className="cursor-pointer rounded-md border px-3 py-2 font-normal has-checked:border-primary has-checked:bg-primary/5"
+                >
+                  <input
+                    type="radio"
+                    name="callMethod"
+                    value={method}
+                    checked={formData.callMethod === method}
+                    onChange={() => updateField("callMethod", method)}
+                    className="accent-primary"
+                    required
+                  />
+                  {method}
+                </Label>
+              ))}
+            </div>
+          </fieldset>
           <div className="space-y-2">
             <Label htmlFor="appt-email">Email</Label>
-            <Input id="appt-email" type="email" placeholder="Enter your email" value={formData.email} onChange={(e) => updateField("email", e.target.value)} />
+            <Input
+              id="appt-email"
+              type="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={(e) => updateField("email", e.target.value)}
+            />
           </div>
           <div className="space-y-2">
-            <Label>Description <span className="text-destructive">*</span></Label>
-            <Textarea required className="min-h-[80px]" placeholder="Description" value={formData.description} onChange={(e) => updateField("description", e.target.value)} />
+            <Label>
+              Description <span className="text-destructive">*</span>
+            </Label>
+            <Textarea
+              required
+              className="min-h-20"
+              placeholder="Description"
+              value={formData.description}
+              onChange={(e) => updateField("description", e.target.value)}
+            />
           </div>
-          {status === "success" && <p className="text-sm text-primary">Appointment booked successfully! I'll confirm the details shortly.</p>}
-          {status === "error" && <p className="text-sm text-destructive">Please fill in all required fields, or call me directly at {import.meta.env.PUBLIC_PHONE || ""}.</p>}
+          {status === "success" && (
+            <p className="text-sm text-primary">
+              Appointment booked successfully! I'll confirm the details shortly.
+            </p>
+          )}
+          {status === "error" && (
+            <p className="text-sm text-destructive">
+              Please fill in all required fields, or call me directly at{" "}
+              {import.meta.env.PUBLIC_PHONE || "+260978000956"}.
+            </p>
+          )}
           <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={pending}>Cancel</Button>
-            <Button disabled={pending} type="submit">{submitLabel}</Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={pending}
+            >
+              Cancel
+            </Button>
+            <Button disabled={pending} type="submit">
+              {submitLabel}
+            </Button>
           </div>
         </form>
       </DialogContent>

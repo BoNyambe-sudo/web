@@ -20,6 +20,7 @@ export const createAppointment = async (data: {
   phoneNumber: string;
   scheduledDate: string;
   scheduledTime: string;
+  callMethod: "WhatsApp" | "Zoom" | "Google Meet";
   email?: string;
   description?: string;
 }) => {
