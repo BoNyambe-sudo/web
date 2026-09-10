@@ -189,8 +189,8 @@ const BlogFilters = ({
                 Explore with smart filters
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Turn on the interactive controls to request a server-filtered
-                and server-sorted list from the backend.
+                Turn on the interactive controls to request a filtered
+                and sorted list.
               </p>
             </div>
             <Button

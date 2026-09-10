@@ -164,6 +164,7 @@ function AppointmentDialog({
   const [status, setStatus] = React.useState<"idle" | "success" | "error">(
     "idle",
   );
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   React.useEffect(() => {
     if (open) {
@@ -175,6 +176,7 @@ function AppointmentDialog({
         description: defaultDescription,
       });
       setStatus("idle");
+      setErrorMessage("");
     }
   }, [open, defaultName, defaultEmail, defaultPhone, defaultDescription]);
 
@@ -185,8 +187,9 @@ function AppointmentDialog({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
+
     if (
       !formData.name ||
       !formData.phoneNumber ||
@@ -194,10 +197,12 @@ function AppointmentDialog({
       !formData.scheduledTime
     ) {
       setStatus("error");
+      setErrorMessage("Please fill in all required fields before booking.");
       return;
     }
     setPending(true);
     setStatus("idle");
+    setErrorMessage("");
     try {
       await createAppointment({
         name: formData.name,
@@ -211,8 +216,13 @@ function AppointmentDialog({
       setStatus("success");
       setFormData(emptyForm);
       setTimeout(() => onOpenChange(false), 1500);
-    } catch {
+    } catch (error) {
       setStatus("error");
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to book the appointment. Please try again or contact me directly.",
+      );
     } finally {
       setPending(false);
     }
@@ -349,8 +359,8 @@ function AppointmentDialog({
           )}
           {status === "error" && (
             <p className="text-sm text-destructive">
-              Please fill in all required fields, or call me directly at{" "}
-              {import.meta.env.PUBLIC_PHONE || "+260978000956"}.
+              {errorMessage ||
+                `Unable to book the appointment. Please call me directly at ${import.meta.env.PUBLIC_PHONE || "+260978000956"}.`}
             </p>
           )}
           <div className="flex justify-end gap-3">
