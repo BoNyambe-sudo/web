@@ -1,0 +1,14 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ContractSigning from "@/components/ContractSigning";
+
+const token = Astro.url.searchParams.get("token") ?? "";
+---
+
+<Layout
+  title="Private Contract"
+  description="Private contract signing"
+  robots="noindex, nofollow, noarchive"
+>
+  <ContractSigning token={token} client:load />
+</Layout>

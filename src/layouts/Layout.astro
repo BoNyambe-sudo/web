@@ -15,6 +15,7 @@ interface Props {
   image?: string;
   type?: string;
   canonical?: string;
+  robots?: string;
 }
 
 const {
@@ -24,6 +25,7 @@ const {
   image = `${SITE_URL}favicon.svg`,
   type = "website",
   canonical,
+  robots = "index, follow",
 } = Astro.props;
 
 const pageTitle = title ? `${title} - ${SITE_NAME}` : SITE_NAME;
@@ -42,7 +44,7 @@ const organizationSchema = getOrganizationSchema();
     <meta name="description" content={description} />
     {keywords && <meta name="keywords" content={keywords} />}
     <meta name="author" content={SITE_NAME} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={robots} />
     <meta name="language" content="English" />
     <meta name="revisit-after" content="7 days" />
 
