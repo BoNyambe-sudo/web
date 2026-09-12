@@ -13,6 +13,8 @@ const ContractSigning = ({ token }: { token: string }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const [contract, setContract] = React.useState<PublicContract | null>(null);
   const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState(contract?.clientEmail || "");
+  const [phone, setPhone] = React.useState("");
   const [consent, setConsent] = React.useState(false);
   const [signed, setSigned] = React.useState(false);
   const [pending, setPending] = React.useState(true);
@@ -73,10 +75,17 @@ const ContractSigning = ({ token }: { token: string }) => {
     context.stroke();
   };
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: React.SubmitEvent) => {
     event.preventDefault();
     const signature = canvasRef.current?.toDataURL("image/png").split(",")[1];
-    if (!name.trim() || !consent || !signature || !canvasRef.current) {
+    if (
+      !name.trim() ||
+      !consent ||
+      !signature ||
+      !email ||
+      !phone ||
+      !canvasRef.current
+    ) {
       setError(
         "Enter your name, draw your signature, and accept the agreement.",
       );
@@ -88,7 +97,9 @@ const ContractSigning = ({ token }: { token: string }) => {
       await signPublicContract(token, {
         clientName: name.trim(),
         clientSignature: signature,
-        consentVersion: "2026-09-11",
+        consentVersion: new Date().toDateString(),
+        clientPhone: phone,
+        clientEmail: email,
       });
       setSigned(true);
     } catch {
@@ -118,7 +129,7 @@ const ContractSigning = ({ token }: { token: string }) => {
           Web Development Agreement
         </p>
         <h1 className="text-3xl font-bold">
-          Agreement for {contract.clientName}
+          Agreement for {contract.clientName || name}
         </h1>
         <p className="text-sm text-muted-foreground">
           Effective {new Date(contract.effectiveDate).toLocaleDateString()}
@@ -151,8 +162,7 @@ const ContractSigning = ({ token }: { token: string }) => {
         <h2>Third-Party Platforms</h2>
         <p>{contract.thirdPartyTerms}</p>
         <h2>Governing Law and Disputes</h2>
-        <p>{contract.governingLaw}</p>
-        <p>{contract.disputeResolution}</p>
+        <p>{contract.disputeResolution + " " + contract.governingLaw}</p>
       </article>
       {signed || contract.status === "SIGNED" ? (
         <section className="space-y-4 border-t pt-6">
@@ -182,6 +192,24 @@ const ContractSigning = ({ token }: { token: string }) => {
               id="client-name"
               value={name}
               onChange={(event) => setName(event.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="client-email">Email</Label>
+            <Input
+              id="client-email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="client-phone">Phone</Label>
+            <Input
+              id="client-phone"
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
               required
             />
           </div>
