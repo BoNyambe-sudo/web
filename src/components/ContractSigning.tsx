@@ -175,13 +175,7 @@ const ContractSigning = ({ token }: { token: string }) => {
             <Button type="button" onClick={downloadPdf}>
               Download PDF
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => window.print()}
-            >
-              Print contract
-            </Button>
+            
           </div>
         </section>
       ) : (
