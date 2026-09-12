@@ -27,7 +27,7 @@ const ContractSigning = ({ token }: { token: string }) => {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "signed-contract.pdf";
+      link.download = "contract.pdf";
       link.click();
       URL.revokeObjectURL(url);
     } catch {
