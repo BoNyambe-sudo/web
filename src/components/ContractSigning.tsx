@@ -11,6 +11,15 @@ import {
 
 const ContractSigning = ({ token }: { token: string }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const contractToken = React.useMemo(() => {
+    const fromProp = token?.trim() ?? "";
+    if (fromProp) return fromProp;
+
+    if (typeof window === "undefined") return "";
+    return (
+      new URLSearchParams(window.location.search).get("token")?.trim() ?? ""
+    );
+  }, [token]);
   const [contract, setContract] = React.useState<PublicContract | null>(null);
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState(contract?.clientEmail || "");
@@ -22,8 +31,13 @@ const ContractSigning = ({ token }: { token: string }) => {
   const [drawing, setDrawing] = React.useState(false);
 
   const downloadPdf = async () => {
+    if (!contractToken) {
+      setError("This contract link is missing its token.");
+      return;
+    }
+
     try {
-      const blob = await downloadPublicContractPdf(token);
+      const blob = await downloadPublicContractPdf(contractToken);
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -36,24 +50,33 @@ const ContractSigning = ({ token }: { token: string }) => {
   };
 
   React.useEffect(() => {
-    fetchPublicContract(token)
+    if (!contractToken) {
+      setError("This contract link is missing its token.");
+      setPending(false);
+      return;
+    }
+
+    fetchPublicContract(contractToken)
       .then(setContract)
       .catch(() =>
         setError("This contract link is invalid, expired, or unavailable."),
       )
       .finally(() => setPending(false));
-  }, [token]);
+  }, [contractToken]);
 
-  const point = (event: React.PointerEvent<HTMLCanvasElement>) => {
+  const getPoint = (event: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
     const bounds = canvas.getBoundingClientRect();
-    return { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
+    return {
+      x: ((event.clientX - bounds.left) / bounds.width) * canvas.width,
+      y: ((event.clientY - bounds.top) / bounds.height) * canvas.height,
+    };
   };
 
   const startDrawing = (event: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
-    const position = point(event);
+    const position = getPoint(event);
     if (!canvas || !position) return;
     canvas.setPointerCapture(event.pointerId);
     const context = canvas.getContext("2d");
@@ -65,14 +88,16 @@ const ContractSigning = ({ token }: { token: string }) => {
 
   const draw = (event: React.PointerEvent<HTMLCanvasElement>) => {
     if (!drawing) return;
-    const position = point(event);
+    const position = getPoint(event);
     const context = canvasRef.current?.getContext("2d");
     if (!position || !context) return;
-    context.lineWidth = 2;
-    context.lineCap = "round";
-    context.strokeStyle = "#111827";
     context.lineTo(position.x, position.y);
     context.stroke();
+  };
+
+  const finishDrawing = () => {
+    if (!drawing || !canvasRef.current) return;
+    setDrawing(false);
   };
 
   const submit = async (event: React.SubmitEvent) => {
@@ -91,10 +116,16 @@ const ContractSigning = ({ token }: { token: string }) => {
       );
       return;
     }
+    if (!contractToken) {
+      setError("This contract link is missing its token.");
+      return;
+    }
+
     setPending(true);
     setError("");
+
     try {
-      await signPublicContract(token, {
+      await signPublicContract(contractToken, {
         clientName: name.trim(),
         clientSignature: signature,
         consentVersion: new Date().toDateString(),
@@ -110,6 +141,16 @@ const ContractSigning = ({ token }: { token: string }) => {
       setPending(false);
     }
   };
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext("2d");
+    if (!context) return;
+    context.lineWidth = 2.5;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.strokeStyle = "#111827";
+  }, []);
 
   if (pending && !contract)
     return <main className="container py-16">Loading contract...</main>;
@@ -162,13 +203,14 @@ const ContractSigning = ({ token }: { token: string }) => {
         <h2>Third-Party Platforms</h2>
         <p>{contract.thirdPartyTerms}</p>
         <h2>Governing Law and Disputes</h2>
-        <p>{contract.disputeResolution + " " + contract.governingLaw}</p>
+        <p>{contract.disputeResolution + " " + contract.governingLaw}.</p>
       </article>
       {signed || contract.status === "SIGNED" ? (
         <section className="space-y-4 border-t pt-6">
           <h2 className="text-xl font-semibold">Contract signed</h2>
           <p className="text-muted-foreground">
-            Your signed contract has been recorded. You can download a copy for your records.
+            Your signed contract has been recorded. You can download a copy for
+            your records.
           </p>
           <div className="flex flex-wrap gap-3">
             <Button type="button" onClick={downloadPdf}>
@@ -214,20 +256,26 @@ const ContractSigning = ({ token }: { token: string }) => {
               className="h-40 w-full touch-none rounded-md border bg-white"
               onPointerDown={startDrawing}
               onPointerMove={draw}
-              onPointerUp={() => setDrawing(false)}
-              onPointerLeave={() => setDrawing(false)}
+              onPointerUp={finishDrawing}
+              onPointerLeave={finishDrawing}
+              onPointerCancel={finishDrawing}
             />
             <Button
               type="button"
               variant="outline"
-              onClick={() =>
-                canvasRef.current?.getContext("2d")?.clearRect(0, 0, 800, 180)
-              }
+              onClick={() => {
+                const canvas = canvasRef.current;
+                if (!canvas) return;
+                const context = canvas.getContext("2d");
+                if (!context) return;
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.beginPath();
+              }}
             >
               Clear signature
             </Button>
           </div>
-          <label className="flex items-start gap-2 text-sm">
+          <label className="flex gap-2 text-sm items-center">
             <input
               type="checkbox"
               checked={consent}
