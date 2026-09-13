@@ -9,6 +9,10 @@ import {
   type PublicContract,
 } from "@/lib/clientApi";
 
+const serializeSignature = (canvas: HTMLCanvasElement): string => {
+  return canvas.toDataURL("image/png");
+};
+
 const ContractSigning = ({ token }: { token: string }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const contractToken = React.useMemo(() => {
@@ -102,7 +106,9 @@ const ContractSigning = ({ token }: { token: string }) => {
 
   const submit = async (event: React.SubmitEvent) => {
     event.preventDefault();
-    const signature = canvasRef.current?.toDataURL("image/png").split(",")[1];
+    const signature = canvasRef.current
+      ? serializeSignature(canvasRef.current).split(",")[1]
+      : undefined;
     if (
       !name.trim() ||
       !consent ||
@@ -146,11 +152,11 @@ const ContractSigning = ({ token }: { token: string }) => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
     if (!context) return;
-    context.lineWidth = 2.5;
+    context.lineWidth = 3.5;
     context.lineCap = "round";
     context.lineJoin = "round";
     context.strokeStyle = "#111827";
-  }, []);
+  }, [contract]);
 
   if (pending && !contract)
     return <main className="container py-16">Loading contract...</main>;
@@ -251,7 +257,7 @@ const ContractSigning = ({ token }: { token: string }) => {
             <Label>Draw your signature</Label>
             <canvas
               ref={canvasRef}
-              width={800}
+              width={720}
               height={180}
               className="h-40 w-full touch-none rounded-md border bg-white"
               onPointerDown={startDrawing}
