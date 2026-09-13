@@ -168,14 +168,12 @@ const ContractSigning = ({ token }: { token: string }) => {
         <section className="space-y-4 border-t pt-6">
           <h2 className="text-xl font-semibold">Contract signed</h2>
           <p className="text-muted-foreground">
-            Your signed contract has been recorded. You can download a copy or
-            print it for your records.
+            Your signed contract has been recorded. You can download a copy for your records.
           </p>
           <div className="flex flex-wrap gap-3">
             <Button type="button" onClick={downloadPdf}>
               Download PDF
             </Button>
-            
           </div>
         </section>
       ) : (

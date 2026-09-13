@@ -36,7 +36,13 @@ export const fetchPublicContract = async (
 
 export const signPublicContract = async (
   token: string,
-  data: { clientName: string; clientSignature: string; consentVersion: string, clientEmail: string, clientPhone: string },
+  data: {
+    clientName: string;
+    clientSignature: string;
+    consentVersion: string;
+    clientEmail: string;
+    clientPhone: string;
+  },
 ) => {
   const response = await fetch(
     `${API_BASE_URL}/contracts/public/${encodeURIComponent(token)}/sign`,
