@@ -75,6 +75,13 @@ const projectItems = [
       "A full-featured online store with payment integration, inventory management, and real-time order tracking.",
     link: "https://oop-online-store-frontend.vercel.app",
   },
+  {
+    id: "project-2",
+    title: "Car Dealership Homepage",
+    description:
+      "A sleek and responsive homepage for a car dealership, showcasing featured vehicles, promotions, and customer testimonials.",
+    link: "https://bonyambe-sudo.github.io/premium-auto/",
+  },
 ];
 
 const SECTIONS = [
