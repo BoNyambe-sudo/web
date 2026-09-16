@@ -8,8 +8,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://bonyambe-sudo.github.io/web/",
-  base: "/web/",
+  site: "https://bonyambe-sudo.github.io",
+  base: "/web",
   trailingSlash: "always",
 
   integrations: [react(), sitemap()],
