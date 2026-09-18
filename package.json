@@ -38,5 +38,8 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
     "prettier-plugin-astro": "^0.14.1"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
   }
 }
