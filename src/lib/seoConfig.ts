@@ -3,7 +3,7 @@ import { facebookLink, instagramLink, linkedinLink, xLink } from "./constants";
 export const SITE_NAME = "Bo Nyambe";
 export const SITE_URL = "https://bonyambe-sudo.github.io/web/";
 export const SITE_DESCRIPTION =
-  "Bo Nyambe builds fast, SEO-optimized websites, with Astro, NestJS and Angular, that rank well and convert visitors into customers. Serving Zambian and global clients, Bo Nyambe is your trusted partner for web development and digital solutions.";
+  "Bo Nyambe builds fast, SEO-optimized applications with the right stack for your goals: NestJS + Angular for complex apps, Astro + Sanity for content sites, Next.js + Sanity for e-commerce. Serving Zambian and global clients, Bo Nyambe is your trusted partner for web development and digital solutions.";
 
 export const BLOG_CATEGORIES = [
   "Technology",
@@ -60,6 +60,12 @@ export const getOrganizationSchema = () => {
       "Angular",
       "NestJS",
       "Astro",
+      "Next.js",
+      "React",
+      "Sanity",
+      "Headless CMS",
+      "E-commerce",
+      "MongoDB",
       "Node.js",
       "JavaScript",
       "HTML",

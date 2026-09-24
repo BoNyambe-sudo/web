@@ -28,9 +28,9 @@ const FAQS = [
       "I work with startups, agencies, small businesses, and founders who want modern, scalable web platforms across commerce, SaaS, and enterprise projects.",
   },
   {
-    question: "Why NestJS and Angular?",
+    question: "How do you choose the right tech stack?",
     answer:
-      "NestJS delivers enterprise-grade backend architecture while Angular provides a resilient, testable frontend. Together they create apps built to scale and rank.",
+      "I match the stack to your business goal. NestJS powers every backend for scalability and maintainability. For complex applications and E-commerce, I pair Angular with NestJS. For content and SEO-focused sites, I build with Astro plus a headless Sanity CMS or a custom React/Angular CMS. For small to medium E-commerce, I use Next.js with Sanity on a single server — API and SEO-optimized storefront together.",
   },
 ];
 
@@ -38,7 +38,7 @@ const SERVICES = [
   {
     title: "Custom Web Applications",
     description:
-      "NestJS backend and Angular or React frontend for dashboards, SaaS, marketplaces, and business-critical apps.",
+      "The right stack for your goal: Angular + NestJS for complex apps and enterprise E-commerce, Astro + Sanity for content and SEO, Next.js + Sanity for small to medium E-commerce.",
     icon: "rocket",
   },
   {
@@ -77,7 +77,7 @@ const FEATURED_PROJECTS = [
   {
     title: "SEO Blog Platform",
     description:
-      "A content-first website built for ranking, fast indexing, and high visibility across niche search queries.",
+      "A content-first website built with Astro and a headless Sanity CMS for ranking, fast indexing, and high visibility across niche search queries.",
     badge: "SEO-ready content",
   },
   {
@@ -91,8 +91,8 @@ const FEATURED_PROJECTS = [
 
 <Layout
   title="High-Performance Web Development"
-  description="Build fast, SEO-optimized NestJS and Angular applications designed to convert visitors into customers. Book a strategy call or explore services."
-  keywords="NestJS Angular developer, Web development services in Zambia,SEO web design Zambia, performance optimization Zambia, Zambia web developer, website development Zambia, website design Zambia, software development Zambia, web developer Lusaka, responsive web design, ecommerce website Zambia, SEO services Zambia, custom software development Zambia, WordPress development Zambia"
+  description="Build fast, SEO-optimized applications with the right stack for your goals. NestJS + Angular for complex apps, Astro + Sanity for content sites, Next.js + Sanity for e-commerce. Book a strategy call or explore services."
+  keywords="NestJS Angular developer, Next.js developer, Sanity developer, Astro developer, headless CMS, Angular NestJS developer, Web development services in Zambia,SEO web design Zambia, performance optimization Zambia, Zambia web developer, website development Zambia, website design Zambia, software development Zambia, web developer Lusaka, responsive web design, ecommerce website Zambia, SEO services Zambia, custom software development Zambia, WordPress development Zambia"
   canonical={SITE_URL}
 >
   <ScrollToTop />
@@ -146,6 +146,8 @@ const FEATURED_PROJECTS = [
               <span class="rounded-full bg-card/30 px-3 py-2">Angular</span>
               <span class="rounded-full bg-card/30 px-3 py-2">Astro</span>
               <span class="rounded-full bg-card/30 px-3 py-2">React</span>
+              <span class="rounded-full bg-card/30 px-3 py-2">Next.js</span>
+              <span class="rounded-full bg-card/30 px-3 py-2">Sanity</span>
               <span class="rounded-full bg-card/30 px-3 py-2"
                 >Lighthouse 95+</span
               >
@@ -359,21 +361,24 @@ const FEATURED_PROJECTS = [
       >
         <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div class="text-center md:text-start">
-            <span
-              class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
-              >Why this stack</span
-            >
-            <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-              NestJS + Angular for speed, scale, and predictable growth.
-            </h2>
-            <p
-              class="mt-6 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg"
-            >
-              NestJS delivers enterprise backend architecture while Angular
-              provides resilient, maintainable frontends. Together they ensure
-              your app can handle real traffic, evolve safely, and rank
-              strongly.
-            </p>
+             <span
+               class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+               >Why these stacks</span
+             >
+             <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+               The right stack for the right business goal.
+             </h2>
+             <p
+               class="mt-6 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg"
+             >
+               NestJS powers every backend for scalable, maintainable
+               architecture. For complex applications and enterprise E-commerce,
+               I pair Angular with NestJS for enterprise-grade, testable
+               frontends. For content and SEO sites, I build with Astro plus a
+               headless Sanity CMS. For small to medium E-commerce, I use Next.js
+               with Sanity on a single server — API and SEO-optimized
+               storefront together.
+             </p>
             <a
               href="/web/services/"
               class="mt-8 inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80"
@@ -386,17 +391,22 @@ const FEATURED_PROJECTS = [
                 {
                   title: "Reliable architecture",
                   description:
-                    "Code that stays maintainable as your business grows.",
+                    "NestJS backends with Angular frontends — code that stays maintainable as your business grows.",
                 },
                 {
                   title: "SEO-ready foundations",
                   description:
-                    "Structured pages, metadata, and performance work together for visibility.",
+                    "Astro and Next.js with Sanity deliver structured pages, metadata, and performance work together for visibility.",
                 },
                 {
                   title: "Built for conversion",
                   description:
                     "Interfaces designed to guide users and capture leads with clear CTAs.",
+                },
+                {
+                  title: "Scalable commerce",
+                  description:
+                    "Angular + NestJS for enterprise E-commerce, Next.js + Sanity for fast storefronts.",
                 },
               ].map((item) => (
                 <div class="rounded-3xl border border-border bg-card p-6 shadow-sm">

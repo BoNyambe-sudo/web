@@ -22,6 +22,10 @@ import MongoDB from "@/components/icons/MongoDB";
 import Angular from "@/components/icons/Angular";
 import NestJS from "@/components/icons/NestJS";
 import NodeJS from "@/components/icons/NodeJS";
+import Astro from "@/components/icons/Astro";
+import NextJS from "@/components/icons/NextJS";
+import ReactIcon from "@/components/icons/React";
+import Sanity from "@/components/icons/Sanity";
 import { WHATSAPP_LINK, EMAIL } from "@/lib/constants";
 import { SITE_URL } from "@/lib/seoConfig";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -35,10 +39,10 @@ type TechStackItem = {
 
 const techStackItems: TechStackItem[] = [
   {
-    label: "MongoDB",
-    icon: <MongoDB />,
-    color: "bg-green-50 text-green-700 border-green-200",
-    colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800",
+    label: "NestJS",
+    icon: <NestJS  />,
+    color: "bg-red-50 text-red-700 border-red-200",
+    colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800",
   },
   {
     label: "Angular",
@@ -47,10 +51,34 @@ const techStackItems: TechStackItem[] = [
     colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800",
   },
   {
-    label: "Nest JS",
-    icon: <NestJS />,
-    color: "bg-red-50 text-red-700 border-red-200",
-    colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800",
+    label: "Astro",
+    icon: <Astro />,
+    color: "bg-orange-50 text-orange-700 border-orange-200",
+    colorDark: "dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800",
+  },
+  {
+    label: "React",
+    icon: <ReactIcon />,
+    color: "bg-blue-50 text-blue-700 border-blue-200",
+    colorDark: "dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
+  },
+  {
+    label: "Next.js",
+    icon: <NextJS />,
+    color: "bg-slate-50 text-slate-700 border-slate-200",
+    colorDark: "dark:bg-slate-950 dark:text-slate-300 dark:border-slate-800",
+  },
+  {
+    label: "Sanity",
+    icon: <Sanity />,
+    color: "bg-teal-50 text-teal-700 border-teal-200",
+    colorDark: "dark:bg-teal-950 dark:text-teal-300 dark:border-teal-800",
+  },
+  {
+    label: "MongoDB",
+    icon: <MongoDB />,
+    color: "bg-green-50 text-green-700 border-green-200",
+    colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800",
   },
   {
     label: "Node.js",
@@ -91,7 +119,7 @@ const SECTIONS = [
   { id: "contact", label: "Contact" },
 ];
 
-const COLORS = ["#6cac48", "#b52e31", "#ea2845", "#8cc84b"] as const;
+const COLORS = ["#ea2845", "#b52e31", "#FF4500", "#61DAFB", "#000000", "#00B0A0", "#6cac48", "#8cc84b"] as const;
 const SECTION_DURATION = 5000;
 const CAROUSEL_INTERVAL = 2500;
 const ANIM_CLASSES = [
@@ -462,15 +490,17 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                 id="tech-stack-title"
                 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mt-3 tech-anim"
               >
-                Technologies I Work With
+                Tech Stack by Business Goal
               </h2>
               <p className="text-muted-foreground text-xs sm:text-sm mt-4 tech-anim">
-                I use the MANN stack - MongoDB, Angular, NestJS, and Node.js -
-                for end-to-end Typescript development. It gives me flexible,
-                scalable data, modular backend architecture, and responsive UIs
-                in one cohesive stack. That means faster builds, cleaner code,
-                and apps that scale without losing performance or
-                maintainability.
+                I choose the right stack for the right business goal. NestJS
+                powers every backend for scalability and maintainability. For
+                complex applications and enterprise E-commerce, I pair Angular
+                with NestJS. For content and SEO-focused sites, I build with
+                Astro alongside a custom React or Angular CMS, or Astro plus a
+                headless Sanity CMS. For small to medium E-commerce, I use
+                Next.js with Sanity on a single server — API and SEO-optimized
+                storefront together.
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
