@@ -22,6 +22,10 @@ import MongoDB from "@/components/icons/MongoDB";
 import Angular from "@/components/icons/Angular";
 import NestJS from "@/components/icons/NestJS";
 import NodeJS from "@/components/icons/NodeJS";
+import Astro from "@/components/icons/Astro";
+import NextJS from "@/components/icons/NextJS";
+import ReactIcon from "@/components/icons/React";
+import Sanity from "@/components/icons/Sanity";
 import { WHATSAPP_LINK, EMAIL } from "@/lib/constants";
 import { SITE_URL } from "@/lib/seoConfig";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -33,32 +37,7 @@ type TechStackItem = {
   colorDark: string;
 };
 
-const techStackItems: TechStackItem[] = [
-  {
-    label: "MongoDB",
-    icon: <MongoDB />,
-    color: "bg-green-50 text-green-700 border-green-200",
-    colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800",
-  },
-  {
-    label: "Angular",
-    icon: <Angular />,
-    color: "bg-red-50 text-red-700 border-red-200",
-    colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800",
-  },
-  {
-    label: "Nest JS",
-    icon: <NestJS />,
-    color: "bg-red-50 text-red-700 border-red-200",
-    colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800",
-  },
-  {
-    label: "Node.js",
-    icon: <NodeJS />,
-    color: "bg-green-50 text-green-700 border-green-200",
-    colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800",
-  },
-];
+
 
 interface CarouselItem {
   id: number;
@@ -91,7 +70,16 @@ const SECTIONS = [
   { id: "contact", label: "Contact" },
 ];
 
-const COLORS = ["#6cac48", "#b52e31", "#ea2845", "#8cc84b"] as const;
+const COLORS = [
+  "#ea2845",
+  "#b52e31",
+  "#D83333",
+  "#61DAFB",
+  "#000000",
+  "#F03E2F",
+  "#6cac48",
+  "#8cc84b",
+] as const;
 const SECTION_DURATION = 5000;
 const CAROUSEL_INTERVAL = 2500;
 const ANIM_CLASSES = [
@@ -104,6 +92,58 @@ const ANIM_CLASSES = [
 const Services = ({ images }: { images: Record<string, string> }) => {
   const isMobile = useIsMobile();
   const reducedMotion = useRef(false);
+
+  const techStackItems: TechStackItem[] = [
+    {
+      label: "NestJS",
+      icon: <NestJS size={isMobile ? 32 : 64} />,
+      color: "bg-red-50 text-red-700 border-red-200",
+      colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800",
+    },
+    {
+      label: "Angular",
+      icon: <Angular size={isMobile ? 32 : 64} />,
+      color: "bg-red-50 text-red-700 border-red-200",
+      colorDark: "dark:bg-red-950 dark:text-red-300 dark:border-red-800",
+    },
+    {
+      label: "Astro",
+      icon: <Astro size={isMobile ? 32 : 64} />,
+      color: "bg-pink-50 text-pink-700 border-pink-200",
+      colorDark: "dark:bg-pink-950 dark:text-pink-300 dark:border-pink-800",
+    },
+    {
+      label: "React",
+      icon: <ReactIcon size={isMobile ? 32 : 64} />,
+      color: "bg-teal-50 text-teal-700 border-teal-200",
+      colorDark: "dark:bg-teal-950 dark:text-teal-300 dark:border-teal-800",
+    },
+    {
+      label: "Next.js",
+      icon: <NextJS size={isMobile ? 32 : 64} />,
+      color: "bg-slate-50 text-slate-700 border-slate-200",
+      colorDark: "dark:bg-slate-950 dark:text-slate-300 dark:border-slate-800",
+    },
+    {
+      label: "Sanity",
+      icon: <Sanity size={isMobile ? 32 : 64} />,
+      color: "bg-orange-50 text-orange-700 border-orange-200",
+      colorDark:
+        "dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800",
+    },
+    {
+      label: "MongoDB",
+      icon: <MongoDB size={isMobile ? 32 : 64} />,
+      color: "bg-green-50 text-green-700 border-green-200",
+      colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800",
+    },
+    {
+      label: "Node.js",
+      icon: <NodeJS size={isMobile ? 32 : 64} />,
+      color: "bg-green-50 text-green-700 border-green-200",
+      colorDark: "dark:bg-green-950 dark:text-green-300 dark:border-green-800",
+    },
+  ];
 
   useEffect(() => {
     if (typeof window !== "undefined" && !reducedMotion.current) {
@@ -129,10 +169,10 @@ const Services = ({ images }: { images: Record<string, string> }) => {
   const carouselItems: CarouselItem[] = [
     {
       id: 0,
-      title: "Custom Admin Panels",
+      title: "Performance First",
       description:
-        "Powerful dashboards with real-time data visualization, role-based access control, and intuitive management interfaces.",
-      image: images.adminPanel,
+        "Optimized loading with code splitting, lazy loading, efficient caching, and Core Web Vitals optimization.",
+      image: images.performance,
     },
     {
       id: 1,
@@ -150,10 +190,10 @@ const Services = ({ images }: { images: Record<string, string> }) => {
     },
     {
       id: 3,
-      title: "Dark/Light Mode",
+      title: "Custom Admin Panels",
       description:
-        "Seamless theme switching with CSS custom properties, respecting user preferences and system settings.",
-      image: images.theme,
+        "Powerful dashboards with real-time data visualization, role-based access control, and intuitive management interfaces.",
+      image: images.adminPanel,
     },
     {
       id: 4,
@@ -164,10 +204,10 @@ const Services = ({ images }: { images: Record<string, string> }) => {
     },
     {
       id: 5,
-      title: "Performance First",
+      title: "Dark/Light Mode",
       description:
-        "Optimized loading with code splitting, lazy loading, efficient caching, and Core Web Vitals optimization.",
-      image: images.performance,
+        "Seamless theme switching with CSS custom properties, respecting user preferences and system settings.",
+      image: images.theme,
     },
   ];
 
@@ -462,31 +502,33 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                 id="tech-stack-title"
                 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mt-3 tech-anim"
               >
-                Technologies I Work With
+                Tech Stack by Business Goal
               </h2>
               <p className="text-muted-foreground text-xs sm:text-sm mt-4 tech-anim">
-                I use the MANN stack - MongoDB, Angular, NestJS, and Node.js -
-                for end-to-end Typescript development. It gives me flexible,
-                scalable data, modular backend architecture, and responsive UIs
-                in one cohesive stack. That means faster builds, cleaner code,
-                and apps that scale without losing performance or
-                maintainability.
+                I choose the right stack for the right business goal. NestJS
+                powers every backend for scalability and maintainability. For
+                complex applications and enterprise E-commerce, I pair Angular
+                with NestJS. For content and SEO-focused sites, I build with
+                Astro alongside a custom React or Angular CMS, or Astro plus a
+                headless Sanity CMS. For small to medium E-commerce, I use
+                Next.js with Sanity on a single server — API and SEO-optimized
+                storefront together.
               </p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
+            <div className="grid grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6">
               {techStackItems.map((item, index) => (
                 <div
                   key={item.label}
-                  className="flex flex-col items-center gap-3 tech-anim"
+                  className="flex flex-col items-center gap-2 tech-anim"
                 >
                   <div
-                    className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center rounded-xl border-2 shadow-md transition-all duration-300"
+                    className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center rounded-xl border-2 shadow-md transition-all duration-300"
                     style={{ borderColor: COLORS[index % COLORS.length] }}
                   >
                     {item.icon}
                   </div>
                   <span
-                    className={`text-sm font-medium px-3 py-1 rounded-full ${item.color} ${item.colorDark}`}
+                    className={`text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full ${item.color} ${item.colorDark}`}
                   >
                     {item.label}
                   </span>
@@ -535,7 +577,7 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                       <img
                         src={item.image}
                         alt={`image of ${item.title}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </div>
                     <div className="flex flex-col gap-1 md:gap-4 text-center md:text-start w-full md:w-1/2">
