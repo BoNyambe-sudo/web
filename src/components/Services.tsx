@@ -115,8 +115,8 @@ const Services = ({ images }: { images: Record<string, string> }) => {
     {
       label: "React",
       icon: <ReactIcon size={isMobile ? 32 : 64} />,
-      color: "bg-blue-50 text-blue-700 border-blue-200",
-      colorDark: "dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800",
+      color: "bg-teal-50 text-teal-700 border-teal-200",
+      colorDark: "dark:bg-teal-950 dark:text-teal-300 dark:border-teal-800",
     },
     {
       label: "Next.js",
