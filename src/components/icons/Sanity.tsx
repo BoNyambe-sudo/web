@@ -1,7 +1,12 @@
 const Sanity = ({ size = 64 }: { size?: number }) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-      <rect fill="#F03E2F" height={size} width={size}></rect>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 128 128"
+      width={size}
+      height={size}
+    >
+      {/* <rect fill="#F03E2F" height={size} width={size}></rect> */}
       <path
         fill="#FFFFFF"
         d="M39.4229 33.1629C39.4229 44.1614 46.3362 50.7055 60.1767 54.1563L74.8429 57.4971C87.9417 60.453 95.9185 67.7945 95.9185 79.7554C96.0204 84.9662 94.296 90.053 91.0345 94.1634C91.0345 82.23 84.751 75.7822 69.595 71.9052L55.1947 68.6881C43.6633 66.1035 34.7628 60.068 34.7628 47.076C34.7021 42.0589 36.3415 37.1644 39.4229 33.1629Z"

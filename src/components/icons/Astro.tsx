@@ -1,6 +1,6 @@
 const Astro = ({ size = 64 }: { size?: number }) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none">
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 64 64" fill="none">
       <path
         fill="#17191e"
         d="M23.002 54.512c-2.891-2.643-3.735-8.196-2.53-12.22 2.088 2.537 4.982 3.341 7.98 3.794 4.628.7 9.173.439 13.472-1.677.491-.242.946-.564 1.483-.89a7.9 7.9 0 0 1 .368 3.554c-.343 2.929-1.8 5.191-4.118 6.906-.927.686-1.908 1.299-2.865 1.946-2.941 1.987-3.737 4.318-2.632 7.709.026.082.05.165.11.367a7.73 7.73 0 0 1-3.435-2.937c-.883-1.359-1.303-2.86-1.325-4.486-.011-.79-.011-1.589-.117-2.368-.26-1.901-1.152-2.752-2.834-2.802-1.725-.05-3.09 1.017-3.452 2.697-.027.128-.067.256-.107.406z"
@@ -26,8 +26,8 @@ const Astro = ({ size = 64 }: { size?: number }) => {
           gradientTransform="matrix(.64 0 0 .64 -19.1 -23.04)"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#D83333" />
-          <stop offset="1" stop-color="#F041FF" />
+          <stop stopColor="#D83333" />
+          <stop offset="1" stopColor="#F041FF" />
         </linearGradient>
       </defs>
     </svg>
