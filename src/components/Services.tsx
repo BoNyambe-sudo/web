@@ -73,7 +73,7 @@ const SECTIONS = [
 const COLORS = [
   "#ea2845",
   "#b52e31",
-  "#D83333",
+  "#E63BAB",
   "#61DAFB",
   "#000000",
   "#F03E2F",
