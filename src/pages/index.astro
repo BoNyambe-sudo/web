@@ -99,11 +99,74 @@ const FEATURED_PROJECTS = [
   <div class="bg-background text-foreground">
     <Header />
 
-    <section
-      class="relative overflow-hidden bg-cover bg-center text-foreground reveal"
-      style="background-image: url(/web/assets/hero.webp)"
-    >
-      <div class="absolute inset-0 bg-background/70"></div>
+    <section class="hero-pattern relative overflow-hidden text-foreground reveal">
+      <svg
+        class="hero-grid pointer-events-none absolute inset-0 h-full w-full text-primary"
+        aria-hidden="true"
+        focusable="false"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <pattern
+            id="hero-grid-pattern"
+            width="56"
+            height="56"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M56 0H0V56"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-opacity="0.18"></path>
+            <circle cx="0" cy="0" r="1.5" fill="currentColor" fill-opacity="0.5"
+            ></circle>
+            <circle
+              cx="28"
+              cy="28"
+              r="1.5"
+              fill="currentColor"
+              fill-opacity="0.35"></circle>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#hero-grid-pattern)"></rect>
+      </svg>
+
+      <svg
+        class="hero-circuit pointer-events-none absolute inset-0 h-full w-full text-primary"
+        aria-hidden="true"
+        focusable="false"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <g
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        >
+          <path
+            d="M0 120h120l40 40h160l40-40h180"
+            stroke-opacity="0.25"></path>
+          <path d="M0 200h80l40 40h120" stroke-opacity="0.15"></path>
+          <path
+            d="M220 640h140l40-40h160l40 40h240"
+            stroke-opacity="0.25"></path>
+          <path d="M520 720h120l40-40h160" stroke-opacity="0.15"></path>
+        </g>
+        <g fill="currentColor">
+          <circle cx="320" cy="160" r="4" fill-opacity="0.6"></circle>
+          <circle cx="160" cy="240" r="4" fill-opacity="0.4"></circle>
+          <circle cx="360" cy="600" r="4" fill-opacity="0.6"></circle>
+          <circle cx="640" cy="680" r="4" fill-opacity="0.4"></circle>
+        </g>
+      </svg>
+
+      <div class="hero-glow pointer-events-none absolute inset-0"></div>
+      <div
+        class="hero-fade pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background"
+      >
+      </div>
+
       <div class="relative mx-auto max-w-6xl px-4 py-28 sm:px-6 lg:px-8">
         <div class="max-w-3xl space-y-8 text-center sm:text-start">
           <span
@@ -512,6 +575,37 @@ const FEATURED_PROJECTS = [
   </script>
 
   <style>
+    .hero-pattern {
+      background-color: var(--background);
+    }
+
+    .hero-glow {
+      background:
+        radial-gradient(
+          55rem 30rem at 12% 0%,
+          color-mix(in oklab, var(--primary) 22%, transparent),
+          transparent 70%
+        ),
+        radial-gradient(
+          45rem 28rem at 92% 12%,
+          color-mix(in oklab, var(--primary) 14%, transparent),
+          transparent 70%
+        ),
+        radial-gradient(
+          60rem 34rem at 50% 118%,
+          color-mix(in oklab, var(--primary) 10%, transparent),
+          transparent 70%
+        );
+    }
+
+    .hero-fade {
+      opacity: 0.9;
+    }
+
+    .hero-circuit {
+      opacity: 0.55;
+    }
+
     .reveal {
       opacity: 0;
       transform: translateY(30px);
