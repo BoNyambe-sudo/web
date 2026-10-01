@@ -99,7 +99,9 @@ const FEATURED_PROJECTS = [
   <div class="bg-background text-foreground">
     <Header />
 
-    <section class="hero-pattern relative overflow-hidden text-foreground reveal">
+    <section
+      class="hero-pattern relative overflow-hidden text-foreground reveal"
+    >
       <svg
         class="hero-grid pointer-events-none absolute inset-0 h-full w-full text-primary"
         aria-hidden="true"
@@ -144,13 +146,10 @@ const FEATURED_PROJECTS = [
           stroke-width="1.5"
           stroke-linecap="round"
         >
-          <path
-            d="M0 120h120l40 40h160l40-40h180"
-            stroke-opacity="0.25"></path>
+          <path d="M0 120h120l40 40h160l40-40h180" stroke-opacity="0.25"></path>
           <path d="M0 200h80l40 40h120" stroke-opacity="0.15"></path>
-          <path
-            d="M220 640h140l40-40h160l40 40h240"
-            stroke-opacity="0.25"></path>
+          <path d="M220 640h140l40-40h160l40 40h240" stroke-opacity="0.25"
+          ></path>
           <path d="M520 720h120l40-40h160" stroke-opacity="0.15"></path>
         </g>
         <g fill="currentColor">
@@ -163,59 +162,190 @@ const FEATURED_PROJECTS = [
 
       <div class="hero-glow pointer-events-none absolute inset-0"></div>
       <div
-        class="hero-fade pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background"
+        class="hero-fade pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-b from-transparent to-background"
       >
       </div>
 
       <div class="relative mx-auto max-w-6xl px-4 py-28 sm:px-6 lg:px-8">
-        <div class="max-w-3xl space-y-8 text-center sm:text-start">
-          <span
-            class="inline-flex rounded-full bg-primary/30 px-4 py-2 text-xs md:text-sm font-semibold uppercase tracking-[0.3em] text-primary"
-            >High-Performance Web Development</span
-          >
-          <h1
-            class="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
-          >Build Fast, <span class="text-primary"
-              >High-Converting</span
-            > Websites That Turn Visitors Into Clients
-          </h1>
-          <p
-            class="text-base leading-8 text-foreground/80 sm:text-xl sm:leading-9"
-          >
-            I engineer custom, lightning-fast web applications designed to rank higher on Google, capture more leads, and grow your revenue.
-          </p>
+        <div class="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+          <div class="max-w-3xl space-y-8 text-center sm:text-start">
+            <span
+              class="inline-flex rounded-full bg-primary/30 px-4 py-2 text-xs md:text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+              >High-Performance Web Development</span
+            >
+            <h1
+              class="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
+            >
+              Build Fast, <span class="text-primary">High-Converting</span> Websites
+              That Turn Visitors Into Clients
+            </h1>
+            <p
+              class="text-base leading-8 text-foreground/80 sm:text-xl sm:leading-9"
+            >
+              I engineer custom, lightning-fast web applications designed to
+              rank higher on Google, capture more leads, and grow your revenue.
+            </p>
 
-          <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <a
-              href="/web/website-survey/"
-              class="inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80"
-              >Book a Free Strategy Call</a
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <a
+                href="/web/website-survey/"
+                class="inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground text-nowrap shadow-xl transition hover:bg-primary/80"
+                >Book a Free Strategy Call</a
+              >
+              <a
+                href="/web/services/"
+                class="inline-flex h-14 items-center justify-center rounded-lg border border-border bg-background px-10 text-lg font-bold shadow-xl transition hover:bg-muted text-nowrap"
+                >View Case Studies</a
+              >
+            </div>
+
+            <div
+              class="rounded-3xl border border-border/20 bg-card/20 p-6 text-sm text-foreground shadow-xl shadow-border/10 backdrop-blur-md"
             >
-            <a
-              href="/web/services/"
-              class="inline-flex h-14 items-center justify-center rounded-lg border border-border bg-background px-10 text-lg font-bold shadow-xl transition hover:bg-muted"
-              >View Case Studies</a
-            >
+              <p class="font-semibold">Built with:</p>
+              <div
+                class="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.25em] text-muted-foreground"
+              >
+                <span class="rounded-full bg-card/30 px-3 py-2">NestJS</span>
+                <span class="rounded-full bg-card/30 px-3 py-2">Angular</span>
+                <span class="rounded-full bg-card/30 px-3 py-2">Astro</span>
+                <span class="rounded-full bg-card/30 px-3 py-2">React</span>
+                <span class="rounded-full bg-card/30 px-3 py-2">Next.js</span>
+                <span class="rounded-full bg-card/30 px-3 py-2">Sanity</span>
+                <span class="rounded-full bg-card/30 px-3 py-2"
+                  >Lighthouse 95+</span
+                >
+                <span class="rounded-full bg-card/30 px-3 py-2"
+                  >Mobile first</span
+                >
+              </div>
+            </div>
           </div>
 
-          <div
-            class="rounded-3xl border border-border/20 bg-card/20 p-6 text-sm text-foreground shadow-xl shadow-border/10 backdrop-blur-md"
-          >
-            <p class="font-semibold">Built with:</p>
-            <div
-              class="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.25em] text-muted-foreground"
+          <div class="relative hidden lg:block" aria-hidden="true">
+            <svg
+              class="hero-orbit pointer-events-none absolute left-1/2 top-1/2 h-[125%] w-[125%] -translate-x-1/2 -translate-y-1/2 text-primary"
+              viewBox="0 0 600 600"
+              fill="none"
             >
-              <span class="rounded-full bg-card/30 px-3 py-2">NestJS</span>
-              <span class="rounded-full bg-card/30 px-3 py-2">Angular</span>
-              <span class="rounded-full bg-card/30 px-3 py-2">Astro</span>
-              <span class="rounded-full bg-card/30 px-3 py-2">React</span>
-              <span class="rounded-full bg-card/30 px-3 py-2">Next.js</span>
-              <span class="rounded-full bg-card/30 px-3 py-2">Sanity</span>
-              <span class="rounded-full bg-card/30 px-3 py-2"
-                >Lighthouse 95+</span
+              <circle
+                cx="300"
+                cy="300"
+                r="230"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-opacity="0.18"></circle>
+              <circle
+                cx="300"
+                cy="300"
+                r="290"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-opacity="0.1"
+                stroke-dasharray="6 12"></circle>
+              <circle
+                cx="530"
+                cy="300"
+                r="5"
+                fill="currentColor"
+                fill-opacity="0.55"></circle>
+              <circle
+                cx="160"
+                cy="128"
+                r="4"
+                fill="currentColor"
+                fill-opacity="0.4"></circle>
+              <circle
+                cx="228"
+                cy="549"
+                r="4"
+                fill="currentColor"
+                fill-opacity="0.4"></circle>
+            </svg>
+
+            <div
+              class="relative rounded-3xl border border-border/40 bg-card/30 p-5 shadow-2xl shadow-border/20 backdrop-blur-md"
+            >
+              <div
+                class="flex items-center gap-2 border-b border-border/40 pb-4"
               >
-              <span class="rounded-full bg-card/30 px-3 py-2">Mobile first</span
+                <span class="h-3 w-3 rounded-full bg-primary/70"></span>
+                <span class="h-3 w-3 rounded-full bg-primary/40"></span>
+                <span class="h-3 w-3 rounded-full bg-border"></span>
+                <span
+                  class="ml-3 flex-1 truncate rounded-full bg-background/60 px-3 py-1.5 text-xs tracking-widest text-muted-foreground"
+                  >bonyambe-sudo.github.io/web/</span
+                >
+              </div>
+
+              <div
+                class="space-y-3 pt-5 text-xs tracking-widest text-muted-foreground"
               >
+                <div class="flex items-center gap-3">
+                  <span class="text-primary/70">01</span>
+                  <span class="h-2 w-1/3 rounded-full bg-foreground/15"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-primary/70">02</span>
+                  <span class="h-2 w-1/2 rounded-full bg-primary/50"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-primary/70">03</span>
+                  <span class="h-2 w-2/5 rounded-full bg-foreground/10"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-primary/70">04</span>
+                  <span class="h-2 w-3/5 rounded-full bg-foreground/10"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-primary/70">05</span>
+                  <span class="h-2 w-1/4 rounded-full bg-primary/30"></span>
+                </div>
+              </div>
+
+              <div class="mt-6 grid grid-cols-3 gap-3 text-center">
+                {
+                  [
+                    { value: "95+", label: "Lighthouse" },
+                    { value: "<1s", label: "Load time" },
+                    { value: "100", label: "SEO score" },
+                  ].map((stat) => (
+                    <div class="rounded-2xl border border-border/40 bg-background/40 px-3 py-4">
+                      <p class="text-xl font-black text-primary">
+                        {stat.value}
+                      </p>
+                      <p class="mt-1 text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+                        {stat.label}
+                      </p>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+
+            <div
+              class="hero-float absolute -left-10 top-16 rounded-2xl border border-border/40 bg-card/40 px-4 py-3 shadow-xl backdrop-blur-md"
+            >
+              <p
+                class="text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground"
+              >
+                Stack
+              </p>
+              <p class="mt-1 text-sm font-bold">NestJS · Angular · Astro · Next.js · Sanity </p>
+            </div>
+
+            <div
+              class="hero-float-delayed absolute -right-6 bottom-10 rounded-2xl border border-primary/40 bg-card/40 px-4 py-3 shadow-xl backdrop-blur-md"
+            >
+              <p
+                class="text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground"
+              >
+                Deploy
+              </p>
+              <p class="mt-1 flex items-center gap-2 text-sm font-bold">
+                <span class="h-2 w-2 rounded-full bg-primary"></span>
+                Shipped weekly
+              </p>
             </div>
           </div>
         </div>
@@ -264,7 +394,9 @@ const FEATURED_PROJECTS = [
             together to convert visitors into customers.
           </p>
         </div>
-        <div class="rounded-3xl border border-border bg-card p-6 shadow-sm reveal">
+        <div
+          class="rounded-3xl border border-border bg-card p-6 shadow-sm reveal"
+        >
           <div class="space-y-5">
             <div>
               <h3 class="text-xl font-semibold">What you get</h3>
@@ -424,24 +556,24 @@ const FEATURED_PROJECTS = [
       >
         <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div class="text-center md:text-start">
-             <span
-               class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
-               >Why these stacks</span
-             >
-             <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-               The right stack for the right business goal.
-             </h2>
-             <p
-               class="mt-6 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg"
-             >
-               NestJS powers every backend for scalable, maintainable
-               architecture. For complex applications and enterprise E-commerce,
-               I pair Angular with NestJS for enterprise-grade, testable
-               frontends. For content and SEO sites, I build with Astro plus a
-               headless Sanity CMS. For small to medium E-commerce, I use Next.js
-               with Sanity on a single server — API and SEO-optimized
-               storefront together.
-             </p>
+            <span
+              class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+              >Why these stacks</span
+            >
+            <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+              The right stack for the right business goal.
+            </h2>
+            <p
+              class="mt-6 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg"
+            >
+              NestJS powers every backend for scalable, maintainable
+              architecture. For complex applications and enterprise E-commerce,
+              I pair Angular with NestJS for enterprise-grade, testable
+              frontends. For content and SEO sites, I build with Astro plus a
+              headless Sanity CMS. For small to medium E-commerce, I use Next.js
+              with Sanity on a single server — API and SEO-optimized storefront
+              together.
+            </p>
             <a
               href="/web/services/"
               class="mt-8 inline-flex h-14 items-center justify-center rounded-lg bg-primary px-10 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80"
@@ -524,7 +656,9 @@ const FEATURED_PROJECTS = [
         </div>
       </section>
 
-      <section class="space-y-8 border-t border-border/70 py-20 text-center reveal">
+      <section
+        class="space-y-8 border-t border-border/70 py-20 text-center reveal"
+      >
         <h2 class="text-4xl font-black tracking-tight sm:text-5xl">
           Let’s build a website that actually performs.
         </h2>
@@ -604,6 +738,42 @@ const FEATURED_PROJECTS = [
 
     .hero-circuit {
       opacity: 0.55;
+    }
+
+    .hero-orbit {
+      animation: hero-spin 60s linear infinite;
+    }
+
+    .hero-float {
+      animation: hero-float 7s ease-in-out infinite;
+    }
+
+    .hero-float-delayed {
+      animation: hero-float 7s ease-in-out infinite 1.2s;
+    }
+
+    @keyframes hero-spin {
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    @keyframes hero-float {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-orbit,
+      .hero-float,
+      .hero-float-delayed {
+        animation: none;
+      }
     }
 
     .reveal {
