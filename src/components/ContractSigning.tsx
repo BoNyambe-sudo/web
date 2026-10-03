@@ -460,14 +460,14 @@ const ContractSigning = ({ token }: { token: string }) => {
         </div>
       </article>
       {signed || contract.status === "SIGNED" ? (
-        <section className="space-y-4 border-t pt-6">
+        <section className="space-y-4 border-t pt-6 text-center md:text-start">
           <h2 className="text-xl font-semibold">Contract signed</h2>
           <p className="text-muted-foreground">
             Your signed contract has been recorded. You can download a copy for
             your records.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button className="px-12 py-6 text-lg" type="button" onClick={downloadPdf}>
+            <Button className="px-12 py-6 text-lg w-full md:w-auto" type="button" onClick={downloadPdf}>
               Download PDF
             </Button>
           </div>
