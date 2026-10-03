@@ -298,7 +298,7 @@ const ContractSigning = ({ token }: { token: string }) => {
             </h2>
             <p className="mt-4 text-sm leading-6 text-foreground/80">
               The Developer agrees to deliver the web development package
-              selected below (Check one):
+              selected below:
             </p>
             <div className="mt-4 space-y-2">
               {packageOptions.map((option) => {
@@ -467,7 +467,7 @@ const ContractSigning = ({ token }: { token: string }) => {
             your records.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button type="button" onClick={downloadPdf}>
+            <Button className="px-12 py-6 text-lg" type="button" onClick={downloadPdf}>
               Download PDF
             </Button>
           </div>
