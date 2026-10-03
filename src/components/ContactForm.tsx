@@ -54,7 +54,7 @@ const ContactForm = () => {
         </div>
         <div className="space-y-2">
           <Label htmlFor="message">Message</Label>
-          <Textarea id="message" className="min-h-[160px]" placeholder="Describe your project, challenges, and goals" value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
+          <Textarea id="message" className="min-h-40" placeholder="Describe your project, challenges, and goals" value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
         </div>
 
         {status === "success" && <p className="text-sm text-primary">Message sent successfully. I'll get back to you within one business day.</p>}
