@@ -33,9 +33,13 @@ const getStoredResponses = (): Record<string, string | number> => {
 
 interface PrimalSurveyProps {
   inline?: boolean;
+  compact?: boolean;
 }
 
-const PrimalSurvey = ({ inline = false }: PrimalSurveyProps) => {
+const PrimalSurvey = ({
+  inline = false,
+  compact = false,
+}: PrimalSurveyProps) => {
   const [direction, setDirection] = React.useState<"forward" | "backward">(
     "forward",
   );
@@ -156,7 +160,7 @@ const PrimalSurvey = ({ inline = false }: PrimalSurveyProps) => {
         }
       >
         <div
-          className={`w-full ${inline ? "max-w-2xl mx-auto" : "max-w-xl"} space-y-6`}
+          className={`w-full ${inline ? "max-w-2xl mx-auto" : "max-w-xl"} ${compact ? "space-y-3" : "space-y-6"}`}
         >
           <div className="space-y-2">
             <div className="flex items-center justify-between">
