@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import ScrollToTop from "@/components/ScrollToTop.astro";
+import PrimalSurvey from "@/components/PrimalSurvey.tsx";
 import { SITE_URL, SITE_DESCRIPTION } from "@/lib/seoConfig";
 
 const FAQS = [
@@ -331,7 +332,9 @@ const FEATURED_PROJECTS = [
               >
                 Stack
               </p>
-              <p class="mt-1 text-sm font-bold">NestJS · Angular · Astro · Next.js · Sanity </p>
+              <p class="mt-1 text-sm font-bold">
+                NestJS · Angular · Astro · Next.js · Sanity
+              </p>
             </div>
 
             <div
@@ -373,6 +376,8 @@ const FEATURED_PROJECTS = [
     </section>
 
     <main class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      
+
       <section
         id="problem"
         class="grid gap-12 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"
@@ -630,6 +635,23 @@ const FEATURED_PROJECTS = [
             }
           </div>
         </div>
+      </section>
+
+      <section id="business-survey" class="py-16 sm:py-20">
+        <div class="mx-auto mb-8 max-w-2xl space-y-3 text-center">
+          <span
+            class="text-sm font-semibold uppercase tracking-[0.3em] text-primary"
+          >
+            Your next step
+          </span>
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Find the right website strategy for your business
+          </h2>
+          <p class="text-base leading-7 text-muted-foreground">
+            Answer a few quick questions and get a personalized recommendation.
+          </p>
+        </div>
+        <PrimalSurvey client:load inline />
       </section>
 
       <section id="faq" class="space-y-10 border-t border-border/70 py-20">
