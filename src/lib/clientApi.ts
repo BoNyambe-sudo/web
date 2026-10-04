@@ -5,6 +5,10 @@ export interface PublicContract {
   status: string;
   clientName: string;
   clientEmail: string;
+  clientPhone?: string;
+  clientAddress?: string;
+  developerName: string;
+  developerEmail: string;
   effectiveDate: string;
   package: string;
   deliverables: string;
@@ -42,6 +46,7 @@ export const signPublicContract = async (
     consentVersion: string;
     clientEmail: string;
     clientPhone: string;
+    clientAddress: string;
   },
 ) => {
   const response = await fetch(
