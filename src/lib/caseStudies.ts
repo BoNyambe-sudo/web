@@ -10,7 +10,7 @@ export const caseStudies: CaseStudy[] = [
       "A production-ready monorepo with authentication, multi-tenancy, Stripe billing, analytics, and audit logging. Built with NestJS, Angular, and MongoDB.",
     shortDescription:
       "Full-stack B2B SaaS platform with multi-tenancy, Stripe billing, and real-time analytics.",
-    thumbnail: "/web/case-studies/saas-growth-engine-thumb.webp",
+    thumbnail: "/web/case-studies/sass-engine.webp",
     badge: "Lighthouse 95+",
     techStack: [
       { name: "NestJS", color: "bg-red-500", icon: "nestjs" },
@@ -213,7 +213,7 @@ saas-growth-engine/
       "A modern technical blog platform featuring a Sanity Studio headless CMS for content authoring and an Astro 7.x server-rendered frontend deployed on Vercel. Built from scratch with SEO as the primary constraint.",
     shortDescription:
       "Content-first blog platform with Astro, Sanity CMS, and comprehensive SEO foundation.",
-    thumbnail: "/web/case-studies/seo-blog-platform-thumb.webp",
+    thumbnail: "/web/case-studies/seo-blog-platform.webp",
     badge: "SEO Score 100",
     techStack: [
       { name: "Astro", color: "bg-pink-500", icon: "astro" },
@@ -374,7 +374,7 @@ Data flow: Content is authored in Sanity Studio → synced to Sanity's CDN → A
       "Built as a pnpm monorepo: Next.js 16 web client, NestJS 12 WebSocket backend, and shared TypeScript contract package. Deployed on Vercel + Render with MongoDB Atlas and Upstash Redis.",
     shortDescription:
       "Real-time analytics platform with WebSocket streaming, alerting, and API key management.",
-    thumbnail: "/web/case-studies/real-time-analytics-thumb.webp",
+    thumbnail: "/web/case-studies/real-time-analytics.webp",
     badge: "Enterprise Architecture",
     techStack: [
       { name: "Next.js", color: "bg-slate-500", icon: "nextjs" },
