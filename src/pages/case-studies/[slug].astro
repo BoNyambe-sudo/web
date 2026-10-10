@@ -3,9 +3,13 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import ScrollToTop from "@/components/ScrollToTop.astro";
-import { getCaseStudy, getAllCaseStudySlugs, caseStudies } from "@/lib/caseStudies";
+import {
+  getCaseStudy,
+  getAllCaseStudySlugs,
+  caseStudies,
+} from "@/lib/caseStudies";
 import { SITE_URL } from "@/lib/seoConfig";
-import { formatDateShort } from "@/lib/formattedDate";
+import TechIcon from "@/components/icons/TechIcon.astro";
 
 export async function getStaticPaths() {
   const slugs = getAllCaseStudySlugs();
@@ -16,7 +20,7 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  caseStudy: typeof caseStudies[0];
+  caseStudy: (typeof caseStudies)[0];
 }
 
 const { caseStudy } = Astro.props;
@@ -27,7 +31,8 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
 <Layout
   title={caseStudy.title}
   description={caseStudy.description}
-  keywords={caseStudy.techStack.map(t => t.name).join(", ") + ", case study, portfolio, web development"}
+  keywords={caseStudy.techStack.map((t) => t.name).join(", ") +
+    ", case study, portfolio, web development"}
   image={caseStudy.thumbnail}
   type="article"
   canonical={canonical}
@@ -52,13 +57,16 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
           <div class="flex items-center gap-3 flex-wrap">
             <span
               class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium"
-            >{caseStudy.badge}</span>
+              >{caseStudy.badge}</span
+            >
             <div class="flex items-center gap-1 text-sm text-muted-foreground">
               <span class="text-foreground">Case Study</span>
             </div>
           </div>
           <h1 class="text-3xl lg:text-4xl font-bold">{caseStudy.title}</h1>
-          <p class="text-lg text-muted-foreground max-w-2xl">{caseStudy.tagline}</p>
+          <p class="text-lg text-muted-foreground max-w-2xl">
+            {caseStudy.tagline}
+          </p>
         </header>
 
         <div class="flex flex-wrap gap-3">
@@ -66,18 +74,48 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
             href={caseStudy.links.live}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 h-10 px-6 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/80 transition"
+            class="inline-flex items-center justify-center gap-2 h-10 px-6 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/80 transition"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              ></path><polyline points="15 3 21 3 21 9"></polyline><line
+                x1="10"
+                y1="14"
+                x2="21"
+                y2="3"></line></svg
+            >
             View Live Project
           </a>
           <a
             href={caseStudy.links.github}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 h-10 px-6 rounded-lg border border-border bg-background text-foreground font-semibold hover:bg-muted transition"
+            class="inline-flex items-center justify-center gap-2 h-10 px-6 rounded-lg border border-border bg-background text-foreground font-semibold hover:bg-muted transition"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+              ></path></svg
+            >
             View Source Code
           </a>
         </div>
@@ -89,88 +127,101 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
 
         <section class="prose prose-lg max-w-none">
           <h2>Architecture</h2>
-          <pre class="bg-muted p-4 rounded-lg overflow-x-auto text-sm"><code>{caseStudy.architecture}</code></pre>
+          <pre
+            class="bg-muted/50 dark:bg-muted/30 p-4 rounded-lg overflow-x-auto text-sm border border-border"><code>{caseStudy.architecture}</code></pre>
         </section>
 
         <section class="prose prose-lg max-w-none">
           <h2>Key Design Decisions</h2>
           <ul>
-            {caseStudy.keyDecisions.map((decision) => (
-              <li>{decision}</li>
-            ))}
+            {caseStudy.keyDecisions.map((decision) => <li>{decision}</li>)}
           </ul>
         </section>
 
         <section class="prose prose-lg max-w-none">
           <h2>Features Implemented</h2>
-          {caseStudy.features.map((feature) => (
-            <div class="mb-6">
-              <h3>{feature.title}</h3>
-              <ul>
-                {feature.items.map((item) => (
-                  <li>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {
+            caseStudy.features.map((feature) => (
+              <div class="mb-6">
+                <h3>{feature.title}</h3>
+                <ul>
+                  {feature.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
         </section>
 
-        {caseStudy.projectStructure && (
-          <section class="prose prose-lg max-w-none">
-            <h2>Project Structure</h2>
-            <pre class="bg-muted p-4 rounded-lg overflow-x-auto text-sm"><code>{caseStudy.projectStructure}</code></pre>
-          </section>
-        )}
+        {
+          caseStudy.projectStructure && (
+            <section class="prose prose-lg max-w-none">
+              <h2>Project Structure</h2>
+              <pre class="bg-muted/50 dark:bg-muted/30 p-4 rounded-lg overflow-x-auto text-sm border border-border">
+                <code>{caseStudy.projectStructure}</code>
+              </pre>
+            </section>
+          )
+        }
 
         <section class="prose prose-lg max-w-none">
           <h2>Challenges & Solutions</h2>
-          {caseStudy.challenges.map((challenge) => (
-            <div class="mb-6 p-4 rounded-lg bg-card border border-border">
-              <h3 class="font-semibold mb-2">{challenge.title}</h3>
-              <p>{challenge.solution}</p>
-            </div>
-          ))}
+          {
+            caseStudy.challenges.map((challenge) => (
+              <div class="mb-6 p-4 rounded-lg bg-card border border-border">
+                <h3 class="font-semibold mb-2">{challenge.title}</h3>
+                <p>{challenge.solution}</p>
+              </div>
+            ))
+          }
         </section>
 
-        {caseStudy.results && caseStudy.results.length > 0 && (
-          <section class="prose prose-lg max-w-none">
-            <h2>Results</h2>
-            <table class="w-full border-collapse">
-              <thead>
-                <tr class="border-b border-border">
-                  <th class="text-left p-3 font-semibold">Metric</th>
-                  <th class="text-left p-3 font-semibold">Target</th>
-                </tr>
-              </thead>
-              <tbody>
-                {caseStudy.results.map((result) => (
-                  <tr class="border-b border-border/50">
-                    <td class="p-3">{result.metric}</td>
-                    <td class="p-3 font-medium">{result.target}</td>
+        {
+          caseStudy.results && caseStudy.results.length > 0 && (
+            <section class="prose prose-lg max-w-none">
+              <h2>Results</h2>
+              <table class="w-full border-collapse">
+                <thead>
+                  <tr class="border-b border-border">
+                    <th class="text-left p-3 font-semibold">Metric</th>
+                    <th class="text-left p-3 font-semibold">Target</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </section>
-        )}
+                </thead>
+                <tbody>
+                  {caseStudy.results.map((result) => (
+                    <tr class="border-b border-border">
+                      <td class="p-3">{result.metric}</td>
+                      <td class="p-3 font-medium">{result.target}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )
+        }
 
-        {caseStudy.performance && caseStudy.performance.length > 0 && (
-          <section class="prose prose-lg max-w-none">
-            <h2>Performance & Reliability</h2>
-            <ul>
-              {caseStudy.performance.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </section>
-        )}
+        {
+          caseStudy.performance && caseStudy.performance.length > 0 && (
+            <section class="prose prose-lg max-w-none">
+              <h2>Performance & Reliability</h2>
+              <ul>
+                {caseStudy.performance.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
 
         <section class="prose prose-lg max-w-none">
           <h2>Future Enhancements</h2>
           <ul>
-            {caseStudy.futureEnhancements.map((enhancement) => (
-              <li>{enhancement}</li>
-            ))}
+            {
+              caseStudy.futureEnhancements.map((enhancement) => (
+                <li>{enhancement}</li>
+              ))
+            }
           </ul>
         </section>
 
@@ -199,14 +250,16 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
         <section class="prose prose-lg max-w-none">
           <h2>Tech Stack</h2>
           <div class="flex flex-wrap gap-2">
-            {caseStudy.techStack.map((tech) => (
-              <span
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium"
-                style={`background-color: ${tech.color}20; color: ${tech.color}`}
-              >
-                {tech.name}
-              </span>
-            ))}
+            {
+              caseStudy.techStack.map((tech) => (
+                <span
+                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium"
+                  style={`background-color: ${tech.color}20; color: ${tech.color}`}
+                >
+                  {tech.name}
+                </span>
+              ))
+            }
           </div>
         </section>
       </div>
@@ -220,18 +273,48 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
                 href={caseStudy.links.live}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/80 transition"
+                class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/80 transition"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  ><path
+                    d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                  ></path><polyline points="15 3 21 3 21 9"></polyline><line
+                    x1="10"
+                    y1="14"
+                    x2="21"
+                    y2="3"></line></svg
+                >
                 Live Demo
               </a>
               <a
                 href={caseStudy.links.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground font-medium hover:bg-muted transition"
+                class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground font-medium hover:bg-muted transition"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  ><path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                  ></path></svg
+                >
                 GitHub Repository
               </a>
             </div>
@@ -240,26 +323,26 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
           <div class="rounded-xl border border-border bg-card p-6">
             <h3 class="font-semibold mb-4">Technologies Used</h3>
             <div class="space-y-2">
-              {caseStudy.techStack.map((tech) => (
-                <div
-                  class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition"
-                >
-                  <span
-                    class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                    style={`background-color: ${tech.color}`}
-                  >
-                    {tech.name.charAt(0)}
-                  </span>
-                  <span class="text-sm font-medium">{tech.name}</span>
-                </div>
-              ))}
+              {
+                caseStudy.techStack.map((tech) => (
+                  <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition">
+                    <TechIcon name={tech.icon} size={24} class="shrink-0" />
+                    <span class="text-sm font-medium">{tech.name}</span>
+                  </div>
+                ))
+              }
             </div>
           </div>
 
-          <div class="rounded-xl border border-primary/20 bg-linear-to-br from-primary/5 to-background p-6">
-            <h3 class="font-semibold mb-3 text-primary">Interested in a similar project?</h3>
+          <div
+            class="rounded-xl border border-primary/20 bg-linear-to-br from-primary/5 to-background p-6"
+          >
+            <h3 class="font-semibold mb-3 text-primary">
+              Interested in a similar project?
+            </h3>
             <p class="text-sm text-muted-foreground mb-4">
-              Let's discuss how I can build a custom solution for your business needs.
+              Let's discuss how I can build a custom solution for your business
+              needs.
             </p>
             <a
               href="/web/website-survey/"
@@ -308,14 +391,17 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
   }
   .prose pre {
     background-color: var(--muted);
+    background-color: color-mix(in srgb, var(--muted) 50%, transparent);
     padding: 1rem;
     border-radius: 0.5rem;
     overflow-x: auto;
     font-size: 0.875rem;
     margin-bottom: 1rem;
+    border: 1px solid var(--border);
   }
   .prose code {
     background-color: var(--muted);
+    background-color: color-mix(in srgb, var(--muted) 50%, transparent);
     padding: 0.25rem 0.375rem;
     border-radius: 0.25rem;
     font-size: 0.875rem;
@@ -326,7 +412,8 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
     border-collapse: collapse;
     margin-bottom: 1.5rem;
   }
-  .prose th, .prose td {
+  .prose th,
+  .prose td {
     border: 1px solid var(--border);
     padding: 0.75rem;
     text-align: left;
@@ -335,5 +422,7 @@ const canonical = `${SITE_URL}case-studies/${caseStudy.slug}/`;
     background-color: var(--muted);
     font-weight: 600;
   }
+  .prose tbody tr {
+    border-bottom: 1px solid var(--border);
+  }
 </style>
-</Layout>

@@ -1,0 +1,35 @@
+---
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 24, class: className = "" } = Astro.props;
+
+import NestJS from "./NestJS.astro";
+import Angular from "./Angular.astro";
+import MongoDB from "./MongoDB.astro";
+import AstroIcon from "./Astro.astro";
+import Sanity from "./Sanity.astro";
+import NextJS from "./NextJS.astro";
+---
+
+{
+  name.toLowerCase() === "nestjs" && <NestJS client:load class={className} size={size} />
+}
+{
+  name.toLowerCase() === "angular" && <Angular client:load class={className} size={size} />
+}
+{
+  name.toLowerCase() === "mongodb" && <MongoDB client:load class={className} size={size} />
+}
+{
+  name.toLowerCase() === "astro" && <AstroIcon client:load class={className} size={size} />
+}
+{
+  name.toLowerCase() === "sanity" && <Sanity client:load class={className} size={size} />
+}
+{
+  name.toLowerCase() === "nextjs" && <NextJS client:load class={className} size={size} />
+}

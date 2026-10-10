@@ -34,13 +34,11 @@ const canonical = `${SITE_URL}case-studies/`;
         caseStudies.map((project) => (
           <article class="group hover:shadow-xl transition-all duration-300 border border-border/50 rounded-xl bg-card h-full flex flex-col overflow-hidden">
             <div class="aspect-video w-full overflow-hidden">
-              <div class="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-                <span class="text-6xl opacity-50">
-                  {project.title === "SaaS Growth Engine" && "⚡"}
-                  {project.title === "SEO Blog Platform" && "📝"}
-                  {project.title === "Real-Time Analytics Dashboard" && "📊"}
-                </span>
-              </div>
+              <img
+                src={project.thumbnail}
+                alt={project.title}
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
             </div>
             <div class="flex-1 flex flex-col p-6">
               <div class="flex items-center gap-2 mb-3">
