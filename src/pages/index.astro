@@ -74,18 +74,21 @@ const FEATURED_PROJECTS = [
     description:
       "A scalable admin platform built with NestJS, Angular, and Stripe-ready payments for subscription growth.",
     badge: "Lighthouse 95+",
+    slug: "saas-growth-engine",
   },
   {
     title: "SEO Blog Platform",
     description:
       "A content-first website built with Astro and a headless Sanity CMS for ranking, fast indexing, and high visibility across niche search queries.",
     badge: "SEO-ready content",
+    slug: "seo-blog-platform",
   },
   {
     title: "Real-Time Analytics Dashboard",
     description:
       "A responsive dashboard with real-time data, secure auth, and reliable performance under heavy user load.",
     badge: "Enterprise architecture",
+    slug: "real-time-analytics-dashboard",
   },
 ];
 ---
@@ -507,6 +510,15 @@ const FEATURED_PROJECTS = [
                   <p class="text-sm leading-7 text-muted-foreground">
                     {project.description}
                   </p>
+                  <div class="flex items-center gap-3 pt-2 border-t border-border/50">
+                    <a
+                      href={`/web/case-studies/${project.slug}/`}
+                      class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition flex-1 justify-center"
+                    >
+                      Read Case Study
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </a>
+                  </div>
                 </div>
               </div>
             ))

@@ -49,13 +49,37 @@ interface CarouselItem {
 const projectItems = [
   {
     id: "project-1",
+    title: "SaaS Growth Engine",
+    description:
+      "A full-stack B2B SaaS platform with multi-tenancy, Stripe billing, real-time analytics, and audit logging. Built with NestJS, Angular, and MongoDB.",
+    link: "https://your-domain.vercel.app",
+    caseStudySlug: "saas-growth-engine",
+  },
+  {
+    id: "project-2",
+    title: "SEO Blog Platform",
+    description:
+      "A content-first blog platform built with Astro and Sanity CMS featuring comprehensive SEO, on-demand ISR, fuzzy search, and portable text rendering.",
+    link: "https://search-and-signal.vercel.app",
+    caseStudySlug: "seo-blog-platform",
+  },
+  {
+    id: "project-3",
+    title: "Real-Time Analytics Dashboard",
+    description:
+      "A production-grade real-time analytics platform with WebSocket streaming, threshold alerting, searchable logs, and API key management. Next.js + NestJS.",
+    link: "https://analytics-dashboard.vercel.app",
+    caseStudySlug: "real-time-analytics-dashboard",
+  },
+  {
+    id: "project-4",
     title: "E-Commerce Platform",
     description:
       "A full-featured online store with payment integration, inventory management, and real-time order tracking.",
     link: "https://oop-online-store-frontend.vercel.app",
   },
   {
-    id: "project-2",
+    id: "project-5",
     title: "Car Dealership Homepage",
     description:
       "A sleek and responsive homepage for a car dealership, showcasing featured vehicles, promotions, and customer testimonials.",
@@ -668,17 +692,30 @@ const Services = ({ images }: { images: Record<string, string> }) => {
                     <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
                       {project.description}
                     </p>
-                    <Button variant="outline" size="sm">
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2"
-                      >
-                        View Deployed Project{" "}
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </Button>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      <Button variant="outline" size="sm">
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2"
+                        >
+                          View Deployed Project{" "}
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </Button>
+                      {project.caseStudySlug && (
+                        <Button variant="outline" size="sm">
+                          <a
+                            href={`/web/case-studies/${project.caseStudySlug}/`}
+                            className="inline-flex items-center gap-2"
+                          >
+                            Read Case Study
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        </Button>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground mt-2">
                       <code className="bg-muted px-1.5 py-0.5 rounded text-xs">
                         {project.link}

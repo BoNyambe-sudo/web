@@ -1,0 +1,89 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ScrollToTop from "@/components/ScrollToTop.astro";
+import { caseStudies } from "@/lib/caseStudies";
+import { SITE_URL } from "@/lib/seoConfig";
+import Github from "@/components/icons/Github.astro";
+import type { TechStackItem } from "@/types/caseStudy";
+
+const canonical = `${SITE_URL}case-studies/`;
+---
+
+<Layout
+  title="Case Studies"
+  description="Explore detailed case studies of production-grade web applications: SaaS Growth Engine, SEO Blog Platform, and Real-Time Analytics Dashboard. Each includes architecture, challenges, tech stack, and live links."
+  keywords="case studies, portfolio, SaaS, blog platform, analytics dashboard, NestJS, Angular, Astro, Next.js, web development projects"
+  canonical={canonical}
+  type="website"
+>
+  <ScrollToTop />
+  <Header />
+  <main class="container py-10">
+    <header class="text-center max-w-3xl mx-auto mb-16">
+      <span class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Portfolio</span>
+      <h1 class="mt-4 text-3xl lg:text-4xl font-bold tracking-tight">Case Studies</h1>
+      <p class="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+        Deep dives into production-grade applications I've built. Each case study covers architecture, challenges, tech decisions, and measurable results.
+      </p>
+    </header>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+      {
+        caseStudies.map((project) => (
+          <article class="group hover:shadow-xl transition-all duration-300 border border-border/50 rounded-xl bg-card h-full flex flex-col overflow-hidden">
+            <div class="aspect-video w-full overflow-hidden">
+              <div class="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                <span class="text-6xl opacity-50">
+                  {project.title === "SaaS Growth Engine" && "⚡"}
+                  {project.title === "SEO Blog Platform" && "📝"}
+                  {project.title === "Real-Time Analytics Dashboard" && "📊"}
+                </span>
+              </div>
+            </div>
+            <div class="flex-1 flex flex-col p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="px-2 py-0.5 bg-primary/10 text-primary rounded-full text-xs font-medium">{project.badge}</span>
+              </div>
+              <h3 class="text-xl font-semibold text-foreground">{project.title}</h3>
+              <p class="text-sm text-muted-foreground mt-2 line-clamp-3 flex-1">{project.shortDescription}</p>
+            </div>
+            <div class="p-6 pt-0">
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                {project.techStack.slice(0, 4).map((tech: TechStackItem) => (
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium border" style={`border-color: ${tech.color}60; color: ${tech.color}`}>
+                    {tech.name}
+                  </span>
+                ))}
+                {project.techStack.length > 4 && (
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium border border-border text-muted-foreground">+{project.techStack.length - 4} more</span>
+                )}
+              </div>
+              <div class="flex items-center gap-3 pt-4 border-t border-border/50">
+                <a href={project.links.live} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition flex-1 justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  Live Demo
+                </a>
+                <a href={project.links.github} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition flex-1 justify-center">
+                  <Github class="h-3.5 w-3.5" />
+                  Source
+                </a>
+              </div>
+              <a href={`/web/case-studies/${project.slug}/`} class="block mt-4 text-center text-sm font-medium text-primary hover:text-primary/80 transition">Read Full Case Study →</a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <section class="mt-20 text-center">
+      <p class="text-muted-foreground mb-4">Want to see more work or discuss a custom project?</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/web/services/" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-lg font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80 w-full sm:w-auto text-nowrap">Explore Services</a>
+        <a href="/web/website-survey/" class="inline-flex h-12 items-center justify-center rounded-lg border border-border bg-background px-8 text-lg font-bold shadow-xl transition hover:bg-muted w-full sm:w-auto text-nowrap">Start a Project</a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
