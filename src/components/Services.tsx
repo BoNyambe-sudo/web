@@ -52,7 +52,7 @@ const projectItems = [
     title: "SaaS Growth Engine",
     description:
       "A full-stack B2B SaaS platform with multi-tenancy, Stripe billing, real-time analytics, and audit logging. Built with NestJS, Angular, and MongoDB.",
-    link: "https://your-domain.vercel.app",
+    link: "https://sass-engine.vercel.app",
     caseStudySlug: "saas-growth-engine",
   },
   {
@@ -60,7 +60,7 @@ const projectItems = [
     title: "SEO Blog Platform",
     description:
       "A content-first blog platform built with Astro and Sanity CMS featuring comprehensive SEO, on-demand ISR, fuzzy search, and portable text rendering.",
-    link: "https://search-and-signal.vercel.app",
+    link: "https://seo-blog-platform-sv5z.vercel.app",
     caseStudySlug: "seo-blog-platform",
   },
   {
@@ -68,7 +68,7 @@ const projectItems = [
     title: "Real-Time Analytics Dashboard",
     description:
       "A production-grade real-time analytics platform with WebSocket streaming, threshold alerting, searchable logs, and API key management. Next.js + NestJS.",
-    link: "https://analytics-dashboard.vercel.app",
+    link: "https://real-time-analytics-78wd.vercel.app",
     caseStudySlug: "real-time-analytics-dashboard",
   },
   {
