@@ -40,8 +40,19 @@ const organizationSchema = getOrganizationSchema();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
 
-    <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+    <title>
+      {
+        pageTitle.length > 70
+          ? pageTitle.substring(0, 67).trimEnd() + "..."
+          : pageTitle
+      }
+    </title>
+    <meta
+      name="description"
+      content={description.length > 160
+        ? description.substring(0, 157).trimEnd() + "..."
+        : description}
+    />
     {keywords && <meta name="keywords" content={keywords} />}
     <meta name="author" content={SITE_NAME} />
     <meta name="robots" content={robots} />
