@@ -542,6 +542,77 @@ Data flow: Content is authored in Sanity Studio → synced to Sanity's CDN → A
       ci: "GitHub Actions",
     },
   },
+  {
+    slug: "smart-irrigation-zambia",
+    title: "Smart Irrigation Zambia",
+    tagline:
+      "Smart Irrigation Zambia — Full-stack e-commerce and operations platform for selling, quoting, and installing irrigation systems across Zambia",
+    description:
+      "A Next.js 16 web app serving farmers (self-serve 5-step ordering with geolocation and site photos) and an admin operations team (live SSE dashboard, farm map, status pipeline). Built with Next.js, Prisma, PostgreSQL, and NextAuth.",
+    shortDescription:
+      "E-commerce and operations platform for irrigation systems with 5-step ordering, geolocation, and real-time admin dashboard.",
+    thumbnail: "/web/case-studies/smart-irrigation-zambia.webp",
+    badge: "Real-time Ops",
+    techStack: [
+      { name: "Next.js", color: "bg-slate-500", icon: "nextjs" },
+      { name: "React", color: "bg-teal-500", icon: "react" },
+      { name: "TypeScript", color: "bg-blue-500", icon: "typescript" },
+      { name: "Tailwind CSS", color: "bg-teal-500", icon: "tailwind" },
+      { name: "Prisma", color: "bg-slate-700", icon: "prisma" },
+      { name: "PostgreSQL", color: "bg-blue-700", icon: "postgres" },
+      { name: "NextAuth", color: "bg-black", icon: "nextauth" },
+    ],
+    links: {
+      live: "https://irrigation-system-delta.vercel.app",
+      github: "https://github.com/BoNyambe-sudo/irrigation-system.git",
+    },
+    overview: `Smart Irrigation Zambia is a Next.js 16 web application serving farmers (self-serve 5-step ordering with geolocation and site photos) and an admin operations team (live SSE dashboard, farm map, status pipeline).`,
+    architecture: `Browser (React 19) -> Next.js App Router (Server Actions/RSC) -> Prisma 7 -> PostgreSQL 16; SSE stream via /api/events over in-memory pub/sub.`,
+    keyDecisions: [
+      "Server Actions for mutations; Route Handlers only where needed",
+      "In-memory realtime bus for SSE broadcasts",
+      "Client-only maps via dynamic import with ssr: false",
+      "Mockable payment layer separated from order logic",
+    ],
+    features: [
+      {
+        title: "Customer Ordering",
+        items: [
+          "Product grid with type filters",
+          "5-step checkout: customer, location, farm, payment, confirm",
+          "Geolocation + draggable map",
+          "Site photo uploads",
+          "Order tracking by ID or phone",
+        ],
+      },
+      {
+        title: "Admin Operations",
+        items: [
+          "Dashboard counts and revenue",
+          "Live orders table via SSE with toast + chime",
+          "Order detail with timeline and map",
+          "Product CRUD",
+          "Farm map with all farms",
+        ],
+      },
+    ],
+    challenges: [
+      {
+        title: "In-memory realtime bus is process-local",
+        solution: "Replace with Redis pub/sub for multi-instance.",
+      },
+    ],
+    futureEnhancements: [
+      "Real payment provider integration",
+      "Object storage for photos",
+      "Tests and CI",
+    ],
+    deployment: {
+      frontend: "Vercel",
+      database: "PostgreSQL (Docker)",
+      ci: "GitHub Actions",
+    },
+  },
 ];
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {
