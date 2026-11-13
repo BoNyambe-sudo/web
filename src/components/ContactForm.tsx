@@ -4,14 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { sendInquiry } from "@/lib/clientApi";
-import { WHATSAPP_LINK, EMAIL } from "@/lib/constants";
+import { EMAIL } from "@/lib/constants";
 
 const ContactForm = () => {
   const [formData, setFormData] = React.useState({ name: "", email: "", subject: "", message: "" });
   const [pending, setPending] = React.useState(false);
   const [status, setStatus] = React.useState<"idle" | "success" | "error">("idle");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
       setStatus("error");
@@ -62,7 +62,7 @@ const ContactForm = () => {
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">I typically respond within one business day.</p>
-          <Button type="submit" disabled={pending}>{pending ? "Sending..." : "Send Message"}</Button>
+          <Button className="py-6 px-12" type="submit" disabled={pending}>{pending ? "Sending..." : "Send Message"}</Button>
         </div>
       </form>
     </div>

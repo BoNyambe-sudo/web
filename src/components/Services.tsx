@@ -76,16 +76,16 @@ const projectItems = [
     title: "Smart Irrigation Zambia",
     description:
       "E-commerce and operations platform for irrigation systems with 5-step ordering, geolocation, real-time admin dashboard, and SSE notifications.",
-    link: "https://smart-irrigation-zambia.vercel.app",
+    link: "https://irrigation-system-delta.vercel.app",
     caseStudySlug: "smart-irrigation-zambia",
   },
-  {
+  /* {
     id: "project-5",
     title: "E-Commerce Platform",
     description:
       "A full-featured online store with payment integration, inventory management, and real-time order tracking.",
     link: "https://oop-online-store-frontend.vercel.app",
-  },
+  }, */
   {
     id: "project-5",
     title: "Car Dealership Homepage",
