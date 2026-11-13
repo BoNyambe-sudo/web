@@ -13,15 +13,101 @@ const { htmlContent, class: className } = Astro.props;
 <script is:inline>
   (function() {
     const article = document.querySelector('.blog-renderer article');
-    if (article) {
-      article.querySelectorAll('table').forEach(function(table) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'table-wrapper';
-        table.parentNode.insertBefore(wrapper, table);
-        wrapper.appendChild(table);
-      });
-    }
+    if (!article) return;
+
+    article.querySelectorAll('table').forEach(function(table) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-wrapper';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
+    upgradeGettyEmbeds(article);
   })();
+
+  function parseGettyEmbed(src) {
+    try {
+      const url = new URL(src, 'https://embed.gettyimages.com');
+      const match = url.pathname.match(/^\/embed\/(\d+)$/);
+      if (url.protocol !== 'https:' || url.hostname !== 'embed.gettyimages.com' || !match) {
+        return null;
+      }
+      return { src: url.href, id: match[1] };
+    } catch {
+      return null;
+    }
+  }
+
+  function getDimension(value, fallback) {
+    const dimension = Number(value);
+    return Number.isInteger(dimension) && dimension > 0 && dimension <= 2000 ? dimension : fallback;
+  }
+
+  function upgradeGettyEmbeds(root) {
+    const pairs = [];
+    const gettyContainerSelector = 'div[data-getty-embed], div.getty.embed.image';
+
+    root.querySelectorAll(gettyContainerSelector).forEach(function(div) {
+      const iframe = div.querySelector('iframe');
+      if (iframe) pairs.push({ container: div, iframe });
+    });
+
+    root.querySelectorAll('iframe[src*="embed.gettyimages.com/embed/"]').forEach(function(iframe) {
+      if (iframe.closest(gettyContainerSelector)) return;
+      const container = iframe.parentElement;
+      if (container) pairs.push({ container, iframe });
+    });
+
+    pairs.forEach(function(pair) {
+      const { container, iframe } = pair;
+      const embed = parseGettyEmbed(iframe.getAttribute('src') || '');
+      if (!embed) return;
+
+      const width = getDimension(iframe.getAttribute('width'), 594);
+      const height = getDimension(iframe.getAttribute('height'), 418);
+
+      const figure = document.createElement('figure');
+      figure.className = 'my-8 w-full blog-renderer-getty';
+      figure.style.cssText = 'margin: 2rem 0;';
+
+      const wrap = document.createElement('div');
+      wrap.className = 'relative w-full overflow-hidden';
+      wrap.style.cssText = 'aspect-ratio: ' + width + ' / ' + height + ';';
+
+      const clone = iframe.cloneNode(true);
+      clone.removeAttribute('width');
+      clone.removeAttribute('height');
+      clone.className = 'absolute left-0 top-0 max-w-none border-0';
+      clone.style.cssText =
+        'position:absolute;top:0;left:0;width:' +
+        width +
+        'px;height:' +
+        height +
+        'px;transform:scale(1);transform-origin:top left;border:0;margin:0;';
+
+      wrap.appendChild(clone);
+      figure.appendChild(wrap);
+
+      const figcaption = document.createElement('figcaption');
+      figcaption.className = 'mt-1 text-left text-xs text-muted-foreground';
+      figcaption.style.cssText = 'margin-top: 0.5rem; font-size: 0.75rem; color: var(--muted-foreground); text-align: left;';
+      const a = document.createElement('a');
+      a.href = 'https://www.gettyimages.com/detail/' + embed.id;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = 'Embed from Getty Images';
+      figcaption.appendChild(a);
+      figure.appendChild(figcaption);
+
+      container.parentNode.replaceChild(figure, container);
+
+      new ResizeObserver(function(entries) {
+        const entry = entries[0];
+        if (!entry) return;
+        clone.style.transform = 'scale(' + entry.contentRect.width / width + ')';
+      }).observe(wrap);
+    });
+  }
 </script>
 
 <style is:global>
