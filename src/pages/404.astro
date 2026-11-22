@@ -1,5 +1,15 @@
 ---
-const siteBase = import.meta.env.BASE_URL;
+// Catch-all redirect for the old GitHub Pages site (bonyambe-sudo.github.io/web/).
+// GitHub Pages serves this 404.html for any URL without a generated page. We
+// redirect the visitor to the same path on the new domain (www.bonyambe.com),
+// using clean URLs without trailing slashes.
+import "../styles/global.css";
+import { SITE_NAME } from "@/lib/seoConfig";
+import ThemeScript from "@/components/ThemeScript.astro";
+
+const NEW_SITE_ORIGIN = "https://www.bonyambe.com";
+const NEW_SITE_LABEL = "www.bonyambe.com";
+const base = import.meta.env.BASE_URL; // "/web/"
 ---
 
 <!doctype html>
@@ -7,14 +17,47 @@ const siteBase = import.meta.env.BASE_URL;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>Page not found - Bo Nyambe</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={NEW_SITE_ORIGIN + "/"} />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <title>Redirecting... - {SITE_NAME}</title>
+    <ThemeScript />
+    <script is:inline define:vars={{ NEW_SITE_ORIGIN, base }}>
+      (function () {
+        var path = window.location.pathname;
+        var stripped =
+          path.indexOf(base) === 0
+            ? path.slice(base.length)
+            : path.replace(/^\/web\/?/, "");
+        if (stripped.charAt(0) !== "/") stripped = "/" + stripped;
+        if (stripped.length > 1) stripped = stripped.replace(/\/+$/, "");
+        if (stripped === "") stripped = "/";
+        window.location.replace(NEW_SITE_ORIGIN + stripped + window.location.search);
+      })();
+    </script>
   </head>
-  <body>
-    <main>
-      <h1>Page not found</h1>
-      <p>The page you requested does not exist.</p>
-      <a href={siteBase}>Return home</a>
+  <body class="bg-background text-foreground">
+    <main class="flex min-h-screen items-center justify-center px-6 py-16">
+      <div
+        class="w-full max-w-md rounded-3xl border border-border bg-card p-8 text-center shadow-xl shadow-border/10 sm:p-10"
+      >
+        <div
+          class="mx-auto mb-6 h-10 w-10 animate-spin rounded-full border-2 border-muted border-t-primary"
+          aria-hidden="true"
+        >
+        </div>
+        <h1 class="text-xl font-bold tracking-tight sm:text-2xl">
+          Taking you to the new site
+        </h1>
+        <p class="mt-2 text-sm leading-6 text-muted-foreground">
+          This page has moved. Redirecting you now...
+        </p>
+        <a
+          href={NEW_SITE_ORIGIN + "/"}
+          class="mt-6 inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80"
+          >Continue to {NEW_SITE_LABEL}</a
+        >
+      </div>
     </main>
   </body>
 </html>
