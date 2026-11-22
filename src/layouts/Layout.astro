@@ -1,36 +1,34 @@
 ---
+// This site is redirect-only. The canonical site lives at https://www.bonyambe.com
+// (deployed separately on Vercel). Every page here just redirects visitors and
+// search engines to the same path on the new domain, so legacy links like
+// bonyambe-sudo.github.io/web/... keep working.
 import "../styles/global.css";
-import {
-  SITE_NAME,
-  SITE_URL,
-  SITE_DESCRIPTION,
-  getOrganizationSchema,
-} from "@/lib/seoConfig";
+import { SITE_NAME } from "@/lib/seoConfig";
 import ThemeScript from "@/components/ThemeScript.astro";
 
 interface Props {
-  title?: string;
-  description?: string;
-  keywords?: string;
-  image?: string;
-  type?: string;
-  canonical?: string;
-  robots?: string;
+  // Optional explicit destination; otherwise derived from the current path.
+  redirectTo?: string;
 }
 
-const {
-  title,
-  description = SITE_DESCRIPTION,
-  keywords,
-  image = `${SITE_URL}favicon.svg`,
-  type = "website",
-  canonical,
-  robots = "index, follow",
-} = Astro.props;
+const NEW_SITE_ORIGIN = "https://www.bonyambe.com";
+const NEW_SITE_LABEL = "www.bonyambe.com";
+const base = import.meta.env.BASE_URL; // "/web/"
 
-const pageTitle = title ? `${title} - ${SITE_NAME}` : SITE_NAME;
-const canonicalHref = canonical || Astro.url.href;
-const organizationSchema = getOrganizationSchema();
+const buildNewUrl = (): string => {
+  const path = Astro.url.pathname;
+  const stripped = path.startsWith(base)
+    ? path.slice(base.length)
+    : path.replace(/^\/web\/?/, "");
+  let newPath = stripped.startsWith("/") ? stripped : "/" + stripped;
+  // The new site uses clean URLs without trailing slashes. Keep "/" for the root.
+  if (newPath.length > 1) newPath = newPath.replace(/\/+$/, "");
+  if (newPath === "") newPath = "/";
+  return NEW_SITE_ORIGIN + newPath + Astro.url.search;
+};
+
+const newUrl = Astro.props.redirectTo || buildNewUrl();
 ---
 
 <!doctype html>
@@ -38,63 +36,36 @@ const organizationSchema = getOrganizationSchema();
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content={Astro.generator} />
-
-    <title>
-      {
-        pageTitle.length > 70
-          ? pageTitle.substring(0, 67).trimEnd() + "..."
-          : pageTitle
-      }
-    </title>
-    <meta
-      name="description"
-      content={description.length > 160
-        ? description.substring(0, 157).trimEnd() + "..."
-        : description}
-    />
-    {keywords && <meta name="keywords" content={keywords} />}
-    <meta name="author" content={SITE_NAME} />
-    <meta name="robots" content={robots} />
-    <meta name="language" content="English" />
-    <meta name="revisit-after" content="7 days" />
-
-    <link rel="canonical" href={canonicalHref} />
-    <link rel="sitemap" href={`${import.meta.env.BASE_URL}sitemap-index.xml`} />
-
-    <meta property="og:type" content={type} />
-    <meta property="og:url" content={canonicalHref} />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={image} />
-    <meta property="og:site_name" content={SITE_NAME} />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content={canonicalHref} />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
-    <meta name="twitter:creator" content="@franknyambe213" />
-
-    <link rel="icon" type="image/svg+xml" href="/web/favicon.svg" />
-    <link rel="apple-touch-icon" href="/web/favicon.svg" />
-    <meta name="theme-color" content="#0f172a" />
-
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(organizationSchema)}
-    />
-
+    <meta name="robots" content="noindex, follow" />
+    <meta http-equiv="refresh" content={`0;url=${newUrl}`} />
+    <link rel="canonical" href={newUrl} />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <title>Redirecting... - {SITE_NAME}</title>
     <ThemeScript />
   </head>
   <body class="bg-background text-foreground">
-    <a
-      href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-100 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
-      >Skip to main content</a
-    >
-    <main id="main-content">
-      <slot />
+    <main class="flex min-h-screen items-center justify-center px-6 py-16">
+      <div
+        class="w-full max-w-md rounded-3xl border border-border bg-card p-8 text-center shadow-xl shadow-border/10 sm:p-10"
+      >
+        <div
+          class="mx-auto mb-6 h-10 w-10 animate-spin rounded-full border-2 border-muted border-t-primary"
+          aria-hidden="true"
+        >
+        </div>
+        <h1 class="text-xl font-bold tracking-tight sm:text-2xl">
+          Taking you to the new site
+        </h1>
+        <p class="mt-2 text-sm leading-6 text-muted-foreground">
+          This page has moved. Redirecting you now...
+        </p>
+        <a
+          href={newUrl}
+          class="mt-6 inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-bold text-primary-foreground shadow-xl transition hover:bg-primary/80"
+          >Continue to {NEW_SITE_LABEL}</a
+        >
+        <p class="mt-5 text-xs break-all text-muted-foreground">{newUrl}</p>
+      </div>
     </main>
   </body>
 </html>

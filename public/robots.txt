@@ -1,4 +1,6 @@
+# This GitHub Pages site (bonyambe-sudo.github.io/web/) has moved to
+# https://www.bonyambe.com. Pages are kept only to redirect old links.
+# Crawling is allowed so search engines can follow the canonical/meta-refresh
+# redirects and transfer ranking signals to the new domain. No sitemap is served.
 User-agent: *
 Allow: /
-
-Sitemap: https://bonyambe-sudo.github.io/web/sitemap-index.xml
